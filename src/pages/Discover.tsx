@@ -16,39 +16,25 @@ import discoverLogo from "@/assets/discover_logo.png";
 import { theme } from "@/design-system/theme/theme";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { BottomArrow, TopArrow } from "@/components/Arrows";
+import { mediaPropertyStore } from "@/data/stores";
+import { observer } from "mobx-react-lite";
+import { runInAction } from "mobx";
 
-export const Discover = () => {
+export const Discover = observer(() => {
   const [bgImage, setBgImage] = useState<ImageSourcePropType | undefined>(undefined);
-  const [data, setData] = useState<MediaPropertyModel[]>([]);
-  useEffect(() => {
-    fetch("https://host-76-74-28-232.contentfabric.io/as/mw/properties?include_public=true")
-      // @ts-ignore
-      .then((res) => res.json())
-      .then(props => {
-        const properties: MediaPropertyModel[] = props.contents.map((p: any) => MediaPropertyModel.parse(p));
-        setData(
-          properties
-          // properties.map((item: MediaPropertyModel) => {
-          //   // TODO: replace with real baseUrl, token
-          //   const uri = item.image?.url("https://host-76-74-28-232.contentfabric.io/") + `?authorization=eyJxc3BhY2VfaWQiOiJpc3BjMlJVb1JlOWVSMnYzM0hBUlFVVlNwMXJZWHp3MSJ9&height=${Math.round(theme.sizes.propertyCard.height)}`;
-          //   const bigImageUri = item.image_tv?.url("https://host-76-74-28-232.contentfabric.io/") + `?authorization=eyJxc3BhY2VfaWQiOiJpc3BjMlJVb1JlOWVSMnYzM0hBUlFVVlNwMXJZWHp3MSJ9&height=${Math.round(scaledPixels(1080))}`;
-          //   const program: ProgramInfo = {
-          //     id: item.id,
-          //     title: item.displayName,
-          //     image: { uri },
-          //     bigImage: { uri: bigImageUri },
-          //     description: ""
-          //   };
-          //   return program;
-          // })
-        );
-      });
-  }, []);
+  const data = mediaPropertyStore.properties.values().toArray();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const renderItem = useCallback(({ item }: { item: MediaPropertyModel }) => {
-    return <PropertyCard property={item} onFocus={() => setBgImage(item.image_tv?.urlSource())} onSelect={() => {
-      // navigation.navigate("PropertyDetail", { programInfo: item });
-    }} />;
+    return <PropertyCard
+      property={item}
+      onFocus={() => setBgImage(runInAction(() => item.image_tv?.urlSource()))}
+      onSelect={() => {
+        // navigation.navigate("PropertyDetail", { programInfo: item });
+      }} />;
+  }, []);
+
+  useEffect(() => {
+    mediaPropertyStore.fetchProperties().finally()
   }, []);
 
   const theme = useTheme();
@@ -64,7 +50,7 @@ export const Discover = () => {
           header={
             <SpatialNavigationNode>
               <SpatialNavigationFocusableView>
-                <Image style={styles.logo} source={discoverLogo} />
+                <Image style={styles.logo} source={discoverLogo} resizeMode={"contain"} />
               </SpatialNavigationFocusableView>
             </SpatialNavigationNode>
           }
@@ -79,8 +65,7 @@ export const Discover = () => {
       </DefaultFocus>
     </ImageBackground>
   </Page>;
-};
-
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -112,7 +97,6 @@ const styles = StyleSheet.create({
   logo: {
     height: scaledPixels(210),
     width: scaledPixels(876),
-    resizeMode: 'contain',
     marginBottom: scaledPixels(20),
   }
 });

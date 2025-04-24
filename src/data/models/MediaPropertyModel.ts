@@ -47,4 +47,6 @@ export const MediaPropertyModel = z.object({
   }
 }));
 
+export type PermissionStates = Map<string, { authorized: boolean }>
+
 export type MediaPropertyModel = z.infer<typeof MediaPropertyModel>;

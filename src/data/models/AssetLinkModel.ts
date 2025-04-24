@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
+import { fabricConfigStore } from "@/data/stores";
 
 export const AssetLinkModel = z.object({
   ".": z.object({ container: z.string() }),
@@ -21,7 +22,7 @@ export const AssetLinkModel = z.object({
   }
 })).transform(obj => ({
   ...obj,
-  url(baseUrl: string = "https://host-76-74-28-232.contentfabric.io/"): string | undefined {
+  url(baseUrl: string = fabricConfigStore.config?.fabricBaseUrl!): string | undefined {
     if (!obj.path) return undefined;
     if (!baseUrl.endsWith("/")) {
       baseUrl += "/";

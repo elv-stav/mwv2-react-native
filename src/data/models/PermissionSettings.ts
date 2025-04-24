@@ -1,6 +1,21 @@
 import { z } from "zod";
 
+export const ResolvedPermissionSchema = z.object({
+  authorized: z.boolean(),
+  permission_item_ids: z.array(z.string()).nullish(),
+  behavior: z.string().nullish(),
+  alternate_page_id: z.string().nullish(),
+  secondary_market_purchase_option: z.string().nullish(),
+});
+
+export type ResolvedPermissions = z.infer<typeof ResolvedPermissionSchema>
+
+// This model is used for "raw" permissions, as they obtained from the server, AND resolved permissions, after
+// client-side processing.
 export const PermissionSettings = z.object({
+    // Only applies to "resolved" permissions. This will always come back from API as "undefined""
+    authorized: z.string().nullish(),
+
     // Permission items required to access this object.
     permission_item_ids: z.array(z.string()).nullish(),
 
@@ -25,6 +40,12 @@ export const PermissionSettings = z.object({
     search_permissions_behavior: z.string().nullish(),
     search_permissions_alternate_page_id: z.string().nullish(),
     search_permissions_secondary_market_purchase_option: z.string().nullish(),
+
+    // Resolved permissions
+    _property: ResolvedPermissionSchema.nullish(),
+    _search: ResolvedPermissionSchema.nullish(),
+    _page: ResolvedPermissionSchema.nullish(),
+    _content: ResolvedPermissionSchema.nullish(),
   }
 );
 

@@ -5,32 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d30a55f7-b746-4030-83fc-8b99fdf77b4f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/assets/arrow-left.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/discover_logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Arrows.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/cards/PropertyCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/models/AssetLinkModel.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/models/MediaPageModel.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/models/MediaPropertyModel.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/models/PermissionSettings.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/helpers/scaledPixels.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/helpers/useFocusAnimation.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/theme/colors.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/theme/scale.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/theme/sizes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/theme/spacings.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/theme/theme.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/theme/theme.types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/theme/typography.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/design-system/typings/emotion.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/Discover.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/react-app-env.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/routing/RootStackParamList.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/cards/PropertyCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cards/PropertyCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/models/AssetLinkModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/models/AssetLinkModel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/models/MediaPropertyModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/models/MediaPropertyModel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/models/PermissionSettings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/models/PermissionSettings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Discover.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Discover.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,8 +22,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -60,28 +43,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/stav/git/mwv2-react-native/src/assets&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editing.templates&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/stav/git/mwv2-react-native/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/stav/git/mwv2-react-native/src/data/helpers",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editing.templates",
+    "ts.external.directory.path": "/Users/stav/git/mwv2-react-native/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/data/helpers" />
       <recent name="$PROJECT_DIR$/src/assets" />
       <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/src/design-system" />
       <recent name="$PROJECT_DIR$/src/design-system/helpers" />
-      <recent name="$PROJECT_DIR$/src/theme" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/design-system/helpers" />
@@ -108,7 +91,7 @@
       <workItem from="1745448011018" duration="2010000" />
       <workItem from="1745450482347" duration="18000" />
       <workItem from="1745450522817" duration="5390000" />
-      <workItem from="1745515805562" duration="523000" />
+      <workItem from="1745515805562" duration="15041000" />
     </task>
     <servers />
   </component>
