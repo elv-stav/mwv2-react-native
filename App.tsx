@@ -11,6 +11,7 @@ import styled from "@emotion/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Discover } from "@/pages/Discover";
 import { RootStackParamList } from "@/routing/RootStackParamList";
+import { PropertyDetail } from "@/pages/PropertyDetail";
 
 SpatialNavigation.configureRemoteControl({
   remoteControlSubscriber: (callback) => {
@@ -61,7 +62,7 @@ export default function App() {
               initialRouteName="Discover"
             >
               <Stack.Screen name="Discover" component={Discover} />
-              {/*<Stack.Screen name="PropertyDetail" component={PropertyDetail} />*/}
+              <Stack.Screen name="PropertyDetail" component={PropertyDetail} />
             </Stack.Navigator>
           </Container>
         </SpatialNavigationDeviceTypeProvider>

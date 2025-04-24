@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d30a55f7-b746-4030-83fc-8b99fdf77b4f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/Typography.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/PropertyDetail.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/cards/PropertyCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cards/PropertyCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/models/AssetLinkModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/models/AssetLinkModel.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/models/MediaPropertyModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/models/MediaPropertyModel.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/models/PermissionSettings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/models/PermissionSettings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Discover.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Discover.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routing/RootStackParamList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routing/RootStackParamList.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +45,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/stav/git/mwv2-react-native/src/data/helpers",
+    "last_opened_file_path": "/Users/stav/git/mwv2-react-native/src/components",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -60,11 +58,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components" />
+      <recent name="$PROJECT_DIR$/src/pages" />
       <recent name="$PROJECT_DIR$/src/data/helpers" />
       <recent name="$PROJECT_DIR$/src/assets" />
-      <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/src/design-system" />
-      <recent name="$PROJECT_DIR$/src/design-system/helpers" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/design-system/helpers" />
@@ -91,7 +89,7 @@
       <workItem from="1745448011018" duration="2010000" />
       <workItem from="1745450482347" duration="18000" />
       <workItem from="1745450522817" duration="5390000" />
-      <workItem from="1745515805562" duration="15041000" />
+      <workItem from="1745515805562" duration="15618000" />
     </task>
     <servers />
   </component>

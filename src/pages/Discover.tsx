@@ -29,7 +29,7 @@ export const Discover = observer(() => {
       property={item}
       onFocus={() => setBgImage(runInAction(() => item.image_tv?.urlSource()))}
       onSelect={() => {
-        // navigation.navigate("PropertyDetail", { programInfo: item });
+        navigation.navigate("PropertyDetail", { property: item });
       }} />;
   }, []);
 
