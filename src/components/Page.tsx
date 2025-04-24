@@ -1,0 +1,66 @@
+import { Direction } from '@bam.tech/lrud';
+import { useIsFocused } from '@react-navigation/native';
+import { ReactNode, useCallback, useEffect } from 'react';
+import { SpatialNavigationRoot, useLockSpatialNavigation } from 'react-tv-space-navigation';
+// import { useMenuContext } from './Menu/MenuContext';
+import { Keyboard } from 'react-native';
+// import { GoBackConfiguration } from './GoBackConfiguration';
+
+type Props = { children: ReactNode };
+
+/**
+ * Locks/unlocks the navigator when the native keyboard is shown/hidden.
+ * Allows for the native focus to take over when the keyboard is open,
+ * and to go back to our own system when the keyboard is closed.
+ */
+const SpatialNavigationKeyboardLocker = () => {
+  const lockActions = useLockSpatialNavigation();
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      lockActions.lock();
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      lockActions.unlock();
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [lockActions]);
+
+  return null;
+};
+
+/**
+ * Root element of components that are full screen pages.
+ * @param children
+ * @constructor
+ */
+export const Page = ({ children }: Props) => {
+  const isFocused = useIsFocused();
+  // const { isOpen: isMenuOpen, toggleMenu } = useMenuContext();
+
+  // const isActive = isFocused && !isMenuOpen;
+  const isActive = isFocused;
+
+  // const onDirectionHandledWithoutMovement = useCallback(
+  //   (movement: Direction) => {
+  //     if (movement === 'left') {
+  //       toggleMenu(true);
+  //     }
+  //   },
+  //   [toggleMenu],
+  // );
+
+  return (
+    <SpatialNavigationRoot
+      isActive={isActive}
+      // onDirectionHandledWithoutMovement={onDirectionHandledWithoutMovement}
+    >
+      {/*<GoBackConfiguration />*/}
+      <SpatialNavigationKeyboardLocker />
+      {children}
+    </SpatialNavigationRoot>
+  );
+};

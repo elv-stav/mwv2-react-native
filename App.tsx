@@ -1,10 +1,16 @@
 import "@expo/metro-runtime";
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { Directions, SpatialNavigation, SpatialNavigationRoot } from "react-tv-space-navigation";
+import { useWindowDimensions } from 'react-native';
+import { Directions, SpatialNavigation, SpatialNavigationDeviceTypeProvider } from "react-tv-space-navigation";
 import { useFonts } from "@/hookes/useFonts";
 import RemoteControlManager from "@/remote-control/RemoteControlManager";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
+import { theme } from "@/design-system/theme/theme";
+import { NavigationContainer } from "@react-navigation/native";
+import { ThemeProvider } from "@emotion/react";
+import styled from "@emotion/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Discover } from "@/pages/Discover";
+import { RootStackParamList } from "@/routing/RootStackParamList";
 
 SpatialNavigation.configureRemoteControl({
   remoteControlSubscriber: (callback) => {
@@ -31,27 +37,42 @@ SpatialNavigation.configureRemoteControl({
   },
 });
 
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
 export default function App() {
+  const { height, width } = useWindowDimensions();
   const areFontsLoaded = useFonts();
 
   if (!areFontsLoaded) {
     return null;
   }
   return (
-    <View style={styles.container}>
-      <SpatialNavigationRoot>
-        <Text>Open up App.tsx to start working on your app!</Text>
-      </SpatialNavigationRoot>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <ThemeProvider theme={theme}>
+        <SpatialNavigationDeviceTypeProvider>
+          <Container width={width} height={height}>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                contentStyle: {
+                  backgroundColor: theme.colors.background.main,
+                },
+              }}
+              initialRouteName="Discover"
+            >
+              <Stack.Screen name="Discover" component={Discover} />
+              {/*<Stack.Screen name="PropertyDetail" component={PropertyDetail} />*/}
+            </Stack.Navigator>
+          </Container>
+        </SpatialNavigationDeviceTypeProvider>
+      </ThemeProvider>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const Container = styled.View<{ width: number; height: number }>(({ width, height }) => ({
+  width,
+  height,
+  flexDirection: 'row-reverse',
+  backgroundColor: theme.colors.background.main,
+}));
