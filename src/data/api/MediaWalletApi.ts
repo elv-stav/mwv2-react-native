@@ -11,8 +11,9 @@ export const MediaWalletApi = {
 
   getProperty(propertyId: string): Promise<MediaPropertyModel> {
     return request("GET", `properties/${propertyId}`, MediaPropertyModel, {
-      // TODO: TEMP. REMOVE!
-      authorization: "eyJxc3BhY2VfaWQiOiJpc3BjMlJVb1JlOWVSMnYzM0hBUlFVVlNwMXJZWHp3MSJ9",
+      // TODO: TEMP. PUT THIS SOMEWHERE ELSE.
+      //  This token is pre-generated for the "main" network
+      authorization: "eyJxc3BhY2VfaWQiOiAiaXNwYzJSVW9SZTllUjJ2MzNIQVJRVVZTcDFyWVh6dzEifQ==",
     });
   }
 };
