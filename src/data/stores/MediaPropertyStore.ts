@@ -4,11 +4,12 @@ import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { PermissionResolver } from "@/data/helpers/PermissionResolver";
 import useObservable from "@/data/helpers/useObservable";
+import { Dict } from "@/utils/Dict";
 
 /** Keys are propertyId, values are the corresponding MediaProperty */
-type PropertyMap = Record<string, MediaPropertyModel>
+type PropertyMap = Dict<MediaPropertyModel>
 /** Keys are propertyId, and values are a map of PageId->Page object */
-type PageMap = Record<string, Record<string, MediaPageModel>>
+type PageMap = Dict<Dict<MediaPageModel>>
 
 export class MediaPropertyStore {
 

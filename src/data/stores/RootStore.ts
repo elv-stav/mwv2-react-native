@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { MediaPropertyStore } from "@/data/stores/MediaPropertyStore";
 import { FabricConfigStore } from "@/data/stores/FabricConfigStore";
 import { TokenStore } from "@/data/stores/TokenStore";
+import { Dict } from "@/utils/Dict";
 
 export class RootStore {
   mediaPropertyStore: MediaPropertyStore;
@@ -9,7 +10,7 @@ export class RootStore {
   tokenStore: TokenStore;
 
   // Cache of shortened URLs
-  shortURLs: Record<string, string> = {};
+  shortURLs: Dict<string> = {};
 
   constructor() {
     makeAutoObservable(this);
