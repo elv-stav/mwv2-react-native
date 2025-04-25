@@ -7,9 +7,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Image, ImageBackground, ImageSourcePropType, StyleSheet } from "react-native";
 import { useTheme } from "@emotion/react";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Page } from "@/components/Page";
-import { RootStackParamList } from "@/routing/RootStackParamList";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { PropertyCard } from "@/components/cards/PropertyCard";
 import discoverLogo from "@/assets/discover_logo.png";
@@ -18,23 +16,25 @@ import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { BottomArrow, TopArrow } from "@/components/Arrows";
 import { mediaPropertyStore } from "@/data/stores";
 import { observer } from "mobx-react-lite";
-import { runInAction } from "mobx";
+import { action } from "mobx";
+import { useRouter } from "expo-router";
 
-export const Discover = observer(() => {
+const Discover = observer(() => {
   const [bgImage, setBgImage] = useState<ImageSourcePropType | undefined>(undefined);
   const data = mediaPropertyStore.properties.values().toArray();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const router = useRouter();
   const renderItem = useCallback(({ item }: { item: MediaPropertyModel }) => {
     return <PropertyCard
       property={item}
-      onFocus={() => setBgImage(runInAction(() => item.image_tv?.urlSource()))}
-      onSelect={() => {
-        navigation.navigate("PropertyDetail", { property: item });
-      }} />;
+      onFocus={action(() => setBgImage(item.image_tv?.urlSource()))}
+      onSelect={action(() => {
+        router.navigate(`/properties/${item.id}`);
+        // navigation.navigate("PropertyDetail", { property: item });
+      })} />;
   }, []);
 
   useEffect(() => {
-    mediaPropertyStore.fetchProperties().finally()
+    mediaPropertyStore.fetchProperties().finally();
   }, []);
 
   const theme = useTheme();
@@ -66,6 +66,8 @@ export const Discover = observer(() => {
     </ImageBackground>
   </Page>;
 });
+
+export default Discover;
 
 const styles = StyleSheet.create({
   container: {
