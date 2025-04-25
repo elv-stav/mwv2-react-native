@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { FabricConfigModel } from "@/data/models/FabricConfigModel";
+import waitFor from "@/data/helpers/waitFor";
 
 export class FabricConfigStore {
   config: FabricConfigModel | undefined;
@@ -12,21 +13,19 @@ export class FabricConfigStore {
 
   fetchConfig() {
     fetch("https://main.net955305.contentfabric.io/config")
-      .then(async response => FabricConfigModel.parse(await response.json()))
+      .then(response => response.json())
+      .then(json => FabricConfigModel.parse(json))
       .then(config => {
         console.log("New config fetched", config);
         this.config = config;
         setTimeout(() => this.fetchConfig(), 3 * 60 * 1000);
+      })
+      .catch((reason) => {
+        console.error("Failed to fetch config", reason);
       });
   }
 
   promiseConfig(): Promise<FabricConfigModel> {
-    const that = this;
-    return new Promise<FabricConfigModel>((resolve) => {
-      (function waitForConfig(){
-        if (that.config) return resolve(that.config);
-        setTimeout(waitForConfig, 30);
-      })();
-    })
+    return waitFor(() => this.config);
   }
 }
