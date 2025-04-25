@@ -7,8 +7,8 @@ import { useLocalSearchParams } from "expo-router";
 import { mediaPropertyStore } from "@/data/stores";
 
 const PropertyDetail = observer(() => {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const property = mediaPropertyStore.observeProperty(id)
+  const { propertyId } = useLocalSearchParams<{ propertyId: string }>();
+  const property = mediaPropertyStore.observeProperty(propertyId);
 
   if (!property) {
     return;
