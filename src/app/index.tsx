@@ -21,7 +21,7 @@ import { useRouter } from "expo-router";
 
 const Discover = observer(() => {
   const [bgImage, setBgImage] = useState<ImageSourcePropType | undefined>(undefined);
-  const data = mediaPropertyStore.properties.values().toArray();
+  const data = Object.values(mediaPropertyStore.properties);
   const router = useRouter();
   const renderItem = useCallback(({ item }: { item: MediaPropertyModel }) => {
     return <PropertyCard

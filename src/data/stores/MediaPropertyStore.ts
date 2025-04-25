@@ -1,22 +1,21 @@
-import { action, flow, makeAutoObservable, runInAction } from "mobx";
+import { action, makeAutoObservable, runInAction } from "mobx";
 import { MediaWalletApi } from "@/data/api/MediaWalletApi";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { PermissionResolver } from "@/data/helpers/PermissionResolver";
-import { objectOutputType, RecordType, ZodBoolean } from "zod";
-import { ZodType } from "zod/lib/types";
 import useObservable from "@/data/helpers/useObservable";
 import { mediaPropertyStore } from "@/data/stores/index";
 
+/** Keys are propertyId, values are the corresponding MediaProperty */
+type PropertyMap = Record<string, MediaPropertyModel>
+/** Keys are propertyId, and values are a map of PageId->Page object */
+type PageMap = Record<string, Record<string, MediaPageModel>>
+
 export class MediaPropertyStore {
 
-  // m.top.properties is an array of properties that show up on the Discover page.
-  // m.propertyMap is a cache of ALL properties keyed by their IDs.
-  // This includes properties individually fetched (e.g. from links or subproperty switching)
-  properties = new Map<string, MediaPropertyModel>();
+  properties: PropertyMap = {};
 
-  // Keys are propertyId, and values are a map of PageId->Page object
-  pages = new Map<string, Map<string, MediaPageModel>>();
+  pages: PageMap = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -28,7 +27,7 @@ export class MediaPropertyStore {
       return;
     }
 
-    const propertyMap = new Map<string, MediaPropertyModel>();
+    const propertyMap: PropertyMap = {};
     runInAction(() => {
       properties.forEach((property) => {
         this._processProperty(property, propertyMap);
@@ -52,25 +51,22 @@ export class MediaPropertyStore {
    */
   observeProperty(propertyId: string): MediaPropertyModel | undefined {
     return useObservable(
-      mediaPropertyStore.properties.get(propertyId),
+      mediaPropertyStore.properties[propertyId],
       () => mediaPropertyStore.fetchProperty(propertyId).finally()
     );
   }
 
-  _processProperty = action((property: MediaPropertyModel, propertyMap: Map<string, MediaPropertyModel> = this.properties) => {
-    propertyMap.set(property.id, property);
-    const pages = this.pages.get(property.id) || new Map<string, MediaPageModel>();
-    pages.set(property.main_page.id, property.main_page);
-    this.pages.set(property.id, pages);
-    const a: RecordType<string, objectOutputType<{
-      authorized: ZodBoolean
-    }, ZodType<any, any, any>, "strip">> | null | undefined = property.permission_auth_state;
+  _processProperty = action((property: MediaPropertyModel, propertyMap: PropertyMap = this.properties) => {
+    propertyMap[property.id] = property;
+    const pages = this.pages[property.id] || {};
+    pages[property.main_page.id] = property.main_page;
+    this.pages[property.id] = pages;
     PermissionResolver.ResolvePermissions({
       item: property,
       parentPermissions: null,
       permissionStates: property.permission_auth_state
     });
 
-    propertyMap.set(property.id, property);
+    propertyMap[property.id] = property;
   });
 }
