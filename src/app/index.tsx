@@ -43,26 +43,26 @@ const Discover = observer(() => {
 
   return <Page>
     <ImageBackground style={styles.container} source={bgImage} resizeMode={"cover"}>
-      <DefaultFocus>
-        <SpatialNavigationVirtualizedGrid
-          data={data}
-          renderItem={renderItem}
-          numberOfColumns={5}
-          headerSize={styles.logo.height + styles.logo.marginBottom}
-          header={
+      <SpatialNavigationVirtualizedGrid
+        data={data}
+        renderItem={renderItem}
+        numberOfColumns={5}
+        headerSize={styles.logo.height + styles.logo.marginBottom}
+        header={
+          <DefaultFocus>
             <SpatialNavigationFocusableView>
               <Image style={styles.logo} source={discoverLogo} resizeMode={"contain"} />
             </SpatialNavigationFocusableView>
-          }
-          itemHeight={theme.sizes.propertyCard.height * theme.scale.focused}
-          rowContainerStyle={styles.rowStyle}
-          ascendingArrow={<BottomArrow />}
-          ascendingArrowContainerStyle={styles.bottomArrowContainer}
-          descendingArrow={<TopArrow />}
-          descendingArrowContainerStyle={styles.topArrowContainer}
-          scrollInterval={150}
-        />
-      </DefaultFocus>
+          </DefaultFocus>
+        }
+        itemHeight={theme.sizes.propertyCard.height * theme.scale.focused}
+        rowContainerStyle={styles.rowStyle}
+        ascendingArrow={<BottomArrow />}
+        ascendingArrowContainerStyle={styles.bottomArrowContainer}
+        descendingArrow={<TopArrow />}
+        descendingArrowContainerStyle={styles.topArrowContainer}
+        scrollInterval={150}
+      />
     </ImageBackground>
   </Page>;
 });
