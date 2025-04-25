@@ -2,6 +2,7 @@ import { action, makeAutoObservable, runInAction } from "mobx";
 import { fabricConfigStore } from "@/data/stores/index";
 import Env from "@/data/Env";
 import { ActivationDataModel } from "@/data/models/ActivationDataModel";
+import { makePersistable } from "mobx-persist-store";
 
 export class TokenStore {
   fabricToken?: string = undefined;
@@ -13,6 +14,11 @@ export class TokenStore {
 
   constructor() {
     makeAutoObservable(this);
+    makePersistable(this, {
+      name: "TokenStore",
+      properties: ["fabricToken", "clusterToken", "walletAddress", "userEmail"],
+      storage: window.localStorage
+    }).finally();
   }
 
   /**
