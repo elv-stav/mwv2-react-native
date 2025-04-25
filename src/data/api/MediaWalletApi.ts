@@ -7,6 +7,13 @@ export const MediaWalletApi = {
   getProperties(): Promise<MediaPropertyModel[]> {
     return request("GET", "properties", PagedContentSchema(MediaPropertyModel), { include_public: true })
       .then(response => response.contents);
+  },
+
+  getProperty(propertyId: string): Promise<MediaPropertyModel> {
+    return request("GET", `properties/${propertyId}`, MediaPropertyModel, {
+      // TODO: TEMP. REMOVE!
+      authorization: "eyJxc3BhY2VfaWQiOiJpc3BjMlJVb1JlOWVSMnYzM0hBUlFVVlNwMXJZWHp3MSJ9",
+    });
   }
 };
 

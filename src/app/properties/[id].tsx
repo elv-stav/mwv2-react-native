@@ -1,5 +1,5 @@
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { Typography } from "@/components/Typography";
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
@@ -8,13 +8,11 @@ import { mediaPropertyStore } from "@/data/stores";
 
 const PropertyDetail = observer(() => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const property = mediaPropertyStore.properties.get(id);
+  const property = mediaPropertyStore.observeProperty(id)
 
-  useEffect(() => {
-    mediaPropertyStore.fetchProperties().finally();
-  }, []);
-
-  if (!property) return;
+  if (!property) {
+    return;
+  }
 
   return (
     <Page>

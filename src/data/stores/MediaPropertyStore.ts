@@ -5,6 +5,8 @@ import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { PermissionResolver } from "@/data/helpers/PermissionResolver";
 import { objectOutputType, RecordType, ZodBoolean } from "zod";
 import { ZodType } from "zod/lib/types";
+import useObservable from "@/data/helpers/useObservable";
+import { mediaPropertyStore } from "@/data/stores/index";
 
 export class MediaPropertyStore {
 
@@ -34,6 +36,26 @@ export class MediaPropertyStore {
       this.properties = propertyMap;
     });
   };
+
+  async fetchProperty(propertyId: string) {
+    try {
+      const property = await MediaWalletApi.getProperty(propertyId);
+      runInAction(() => this._processProperty(property));
+    } catch (e) {
+      // rootStore.Log("Error fetching property. Token expired?", e);
+    }
+  }
+
+  /**
+   * Observes the property and fetches a new copy from network, regardless of cache hit/miss.
+   * @param propertyId
+   */
+  observeProperty(propertyId: string): MediaPropertyModel | undefined {
+    return useObservable(
+      mediaPropertyStore.properties.get(propertyId),
+      () => mediaPropertyStore.fetchProperty(propertyId).finally()
+    );
+  }
 
   _processProperty = action((property: MediaPropertyModel, propertyMap: Map<string, MediaPropertyModel> = this.properties) => {
     propertyMap.set(property.id, property);
