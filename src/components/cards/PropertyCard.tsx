@@ -1,7 +1,7 @@
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import styled from "@emotion/native";
-import { Animated, Text, Image } from "react-native";
+import { Animated, Image } from "react-native";
 import { useFocusAnimation } from "@/design-system/helpers/useFocusAnimation";
 import React from "react";
 import { observer } from "mobx-react-lite";

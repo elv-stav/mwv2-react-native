@@ -1,7 +1,6 @@
 import {
   DefaultFocus,
   SpatialNavigationFocusableView,
-  SpatialNavigationNode,
   SpatialNavigationVirtualizedGrid
 } from "react-tv-space-navigation";
 import React, { useCallback, useEffect, useState } from "react";

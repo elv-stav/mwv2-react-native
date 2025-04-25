@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { action, runInAction } from "mobx";
 import { mediaPropertyStore, rootStore, tokenStore } from "@/data/stores";
-import { ActivityIndicator, Button, ImageBackground, StyleSheet, View } from "react-native";
+import { ActivityIndicator, ImageBackground, StyleSheet } from "react-native";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { Typography } from "@/components/Typography";
 import QRCode from "react-qr-code";
@@ -10,8 +10,7 @@ import { theme } from "@/design-system/theme/theme";
 import TvButton from "@/components/TvButton";
 import Loader from "@/components/Loader";
 import { Page } from "@/components/Page";
-import { DefaultFocus, SpatialNavigationFocusableView, SpatialNavigationView } from "react-tv-space-navigation";
-import Center from "@/components/Center";
+import { DefaultFocus, SpatialNavigationView } from "react-tv-space-navigation";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 
 const SignIn = observer(() => {

@@ -1,4 +1,4 @@
-import { Animated, Button, View } from "react-native";
+import { Animated, View } from "react-native";
 import { ButtonProps } from "react-native/Libraries/Components/Button";
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
 import { forwardRef } from "react";

@@ -1,6 +1,5 @@
-import { Direction } from '@bam.tech/lrud';
 import { useIsFocused } from '@react-navigation/native';
-import { ReactNode, useCallback, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { SpatialNavigationRoot, useLockSpatialNavigation } from 'react-tv-space-navigation';
 // import { useMenuContext } from './Menu/MenuContext';
 import { Keyboard } from 'react-native';
