@@ -60,7 +60,7 @@ const SignIn = observer(() => {
   const router = useRouter();
   useEffect(() => {
     if (signInComplete) {
-      router.replace(`/properties/${propertyId}`, );
+      router.replace(`/properties/${propertyId}`);
     }
   }, [signInComplete]);
 
@@ -86,7 +86,6 @@ const QrAndCode = observer(({ url, code }: { url?: string, code: string }) => {
   useEffect(() => {
     (async function () {
         if (url) {
-          console.log("SHORTEN URL: ", url);
           setShortUrl(await rootStore.CreateShortURL(url));
         }
       }

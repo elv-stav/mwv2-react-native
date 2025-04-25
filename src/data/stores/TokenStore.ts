@@ -3,6 +3,7 @@ import { fabricConfigStore } from "@/data/stores/index";
 import Env from "@/data/Env";
 import { ActivationDataModel } from "@/data/models/ActivationDataModel";
 import { makePersistable } from "mobx-persist-store";
+import Log from "@/utils/Log";
 
 export class TokenStore {
   fabricToken?: string = undefined;
@@ -25,7 +26,7 @@ export class TokenStore {
    * Clears current activation data and fetches a new one.
    */
   async refreshActivationData() {
-    console.log("refreshing activation data");
+    Log.d("refreshing activation data");
     this.activationData = undefined;
     return fabricConfigStore.promiseConfig()
       .then(config => fetch(
@@ -43,13 +44,12 @@ export class TokenStore {
       .then(action(activationData => {
         runInAction(() => {
           this.activationData = activationData;
-          console.log("saving new data================", this.activationData);
         });
       }));
   }
 
   async checkToken(activationData: ActivationDataModel): Promise<any> {
-    console.log("checking token", activationData);
+    Log.w("checking token", activationData);
     return fabricConfigStore.promiseConfig()
       .then(action(config => fetch(`${config.authdBaseUrl}/wlt/login/redirect/metamask/${activationData.id}/${activationData.passcode}`)))
       .then(async response => {

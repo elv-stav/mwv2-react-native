@@ -24,11 +24,8 @@ async function request<R>(method: "GET" | "POST", path: string, resultParser: Zo
     Object.keys(query).forEach((key) => {
       url.searchParams.set(key, query[key]);
     });
-    console.log("going to fetch " + url);
     const response: Response = await fetch(url, { method });
     const json = await response.json();
-    let result = resultParser.parse(json);
-    console.log("fetched: ", result);
-    return result;
+    return resultParser.parse(json);
   });
 }
