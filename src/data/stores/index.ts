@@ -10,6 +10,7 @@ configure({
 export const rootStore = action(() => new RootStore())();
 export const fabricConfigStore = rootStore.fabricConfigStore;
 export const mediaPropertyStore = rootStore.mediaPropertyStore;
+export const tokenStore = rootStore.tokenStore;
 
 declare global {
   interface Window {

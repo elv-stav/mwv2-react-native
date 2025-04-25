@@ -14,7 +14,7 @@ import discoverLogo from "@/assets/discover_logo.png";
 import { theme } from "@/design-system/theme/theme";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { BottomArrow, TopArrow } from "@/components/Arrows";
-import { mediaPropertyStore } from "@/data/stores";
+import { mediaPropertyStore, tokenStore } from "@/data/stores";
 import { observer } from "mobx-react-lite";
 import { action } from "mobx";
 import { useRouter } from "expo-router";
@@ -28,8 +28,11 @@ const Discover = observer(() => {
       property={item}
       onFocus={action(() => setBgImage(item.image_tv?.urlSource()))}
       onSelect={action(() => {
-        router.navigate(`/properties/${item.id}`);
-        // navigation.navigate("PropertyDetail", { property: item });
+        if (tokenStore.isLoggedIn || item.login?.settings?.disable_login) {
+          router.navigate(`/properties/${item.id}`);
+        } else {
+          router.navigate(`/signin/${item.id}`);
+        }
       })} />;
   }, []);
 
