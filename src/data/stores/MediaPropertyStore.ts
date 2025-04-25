@@ -4,7 +4,6 @@ import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { PermissionResolver } from "@/data/helpers/PermissionResolver";
 import useObservable from "@/data/helpers/useObservable";
-import { mediaPropertyStore } from "@/data/stores/index";
 
 /** Keys are propertyId, values are the corresponding MediaProperty */
 type PropertyMap = Record<string, MediaPropertyModel>
@@ -51,8 +50,8 @@ export class MediaPropertyStore {
    */
   observeProperty(propertyId: string): MediaPropertyModel | undefined {
     return useObservable(
-      mediaPropertyStore.properties[propertyId],
-      () => mediaPropertyStore.fetchProperty(propertyId).finally()
+      this.properties[propertyId],
+      () => this.fetchProperty(propertyId)
     );
   }
 

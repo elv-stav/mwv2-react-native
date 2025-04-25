@@ -44,6 +44,10 @@ export const MediaPropertyModel = z.object({
 
   get displayName(): string {
     return obj.title || obj.name;
+  },
+
+  get loginBackgroundImage() {
+    return obj.login?.styling?.background_image_tv || obj.login?.styling?.background_image_desktop;
   }
 }));
 

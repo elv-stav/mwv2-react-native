@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { FabricConfigModel } from "@/data/models/FabricConfigModel";
 import waitFor from "@/data/helpers/waitFor";
+import Env from "@/data/Env";
 
 export class FabricConfigStore {
   config: FabricConfigModel | undefined;
@@ -12,7 +13,7 @@ export class FabricConfigStore {
   }
 
   fetchConfig() {
-    fetch("https://main.net955305.contentfabric.io/config")
+    fetch(Env.configUrl)
       .then(response => response.json())
       .then(json => FabricConfigModel.parse(json))
       .then(config => {

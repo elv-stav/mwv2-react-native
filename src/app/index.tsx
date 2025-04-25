@@ -51,11 +51,9 @@ const Discover = observer(() => {
           numberOfColumns={5}
           headerSize={styles.logo.height + styles.logo.marginBottom}
           header={
-            <SpatialNavigationNode>
-              <SpatialNavigationFocusableView>
-                <Image style={styles.logo} source={discoverLogo} resizeMode={"contain"} />
-              </SpatialNavigationFocusableView>
-            </SpatialNavigationNode>
+            <SpatialNavigationFocusableView>
+              <Image style={styles.logo} source={discoverLogo} resizeMode={"contain"} />
+            </SpatialNavigationFocusableView>
           }
           itemHeight={theme.sizes.propertyCard.height * theme.scale.focused}
           rowContainerStyle={styles.rowStyle}
