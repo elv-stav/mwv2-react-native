@@ -22,6 +22,14 @@ export class TokenStore {
     }).finally();
   }
 
+  signOut() {
+    this.fabricToken = undefined;
+    this.clusterToken = undefined;
+    this.walletAddress = undefined;
+    this.userEmail = undefined;
+    this.activationData = undefined;
+  }
+
   /**
    * Clears current activation data and fetches a new one.
    */

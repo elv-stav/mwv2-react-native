@@ -6,7 +6,6 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { Image, ImageBackground, ImageSourcePropType, StyleSheet } from "react-native";
 import { useTheme } from "@emotion/react";
-import { Page } from "@/components/Page";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { PropertyCard } from "@/components/cards/PropertyCard";
 import discoverLogo from "@/assets/discover_logo.png";
@@ -41,8 +40,12 @@ const Discover = observer(() => {
 
   const theme = useTheme();
 
-  return <Page>
-    <ImageBackground style={styles.container} source={bgImage} resizeMode={"cover"}>
+  // Increase left padding when logged in to accommodate for menu width
+  const isLoggedIn = tokenStore.isLoggedIn;
+  const padding = isLoggedIn ? { paddingLeft: 190 } : {};
+
+  return <>
+    <ImageBackground style={[styles.container, padding]} source={bgImage} resizeMode={"cover"}>
       <SpatialNavigationVirtualizedGrid
         data={data}
         renderItem={renderItem}
@@ -64,7 +67,7 @@ const Discover = observer(() => {
         scrollInterval={150}
       />
     </ImageBackground>
-  </Page>;
+  </>;
 });
 
 export default Discover;

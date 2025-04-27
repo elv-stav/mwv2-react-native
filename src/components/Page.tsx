@@ -1,9 +1,7 @@
 import { useIsFocused } from '@react-navigation/native';
 import { ReactNode, useEffect } from 'react';
 import { SpatialNavigationRoot, useLockSpatialNavigation } from 'react-tv-space-navigation';
-// import { useMenuContext } from './Menu/MenuContext';
 import { Keyboard } from 'react-native';
-// import { GoBackConfiguration } from './GoBackConfiguration';
 
 type Props = { children: ReactNode };
 
