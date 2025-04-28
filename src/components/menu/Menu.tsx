@@ -4,13 +4,14 @@ import { StyleSheet } from "react-native";
 import { SpatialNavigationNode, SpatialNavigationView } from "react-tv-space-navigation";
 import TvButton from "@/components/TvButton";
 import { LinearGradient } from "expo-linear-gradient";
-import { action } from "mobx";
+import { useRouter } from "expo-router";
 
 type MenuProps = {
   onMenuItemSelected?: () => void,
 }
 
 const Menu = observer(({ onMenuItemSelected }: MenuProps) => {
+  const router = useRouter();
   const isLoggedIn = tokenStore.isLoggedIn;
   if (!isLoggedIn) {
     // No menu while not logged in
@@ -23,10 +24,9 @@ const Menu = observer(({ onMenuItemSelected }: MenuProps) => {
           <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
                           colors={["#000000FF", "#000000DD", "#00000000"]}
                           style={isActive ? styles.containerOpen : { ...styles.container, width: 90 }}>
-            <TvButton title={"HOME"} />
+            <TvButton title={"HOME"} onSelect={()=>router.dismissTo("/")} />
             <TvButton title={"My Items"} />
-            <TvButton title={"Profile"} />
-            <TvButton title={"temp:signout"} onPress={action(() => tokenStore.signOut())} />
+            <TvButton title={"Profile"} onSelect={() => router.navigate("/profile")} />
           </LinearGradient>
         </SpatialNavigationView>
       );

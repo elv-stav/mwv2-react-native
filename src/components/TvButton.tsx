@@ -17,15 +17,18 @@ const ButtonContent = forwardRef<View, { label: string; isFocused: boolean }>((p
   );
 });
 
-const TvButton = ({ title, onPress }: ButtonProps) => {
-  return (
-    <SpatialNavigationFocusableView onSelect={onPress}>
-      {({ isFocused, isRootActive }) => (
-        <ButtonContent label={title} isFocused={isFocused && isRootActive} />
-      )}
-    </SpatialNavigationFocusableView>
-  );
-};
+type TvButtonProps = Omit<ButtonProps, 'onPress'> & { onSelect?: () => void }
+
+const TvButton = ({ title, onSelect }: TvButtonProps) => {
+    return (
+      <SpatialNavigationFocusableView onSelect={onSelect}>
+        {({ isFocused, isRootActive }) => (
+          <ButtonContent label={title} isFocused={isFocused && isRootActive} />
+        )}
+      </SpatialNavigationFocusableView>
+    );
+  }
+;
 
 export default TvButton;
 

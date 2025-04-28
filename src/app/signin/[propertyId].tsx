@@ -73,9 +73,9 @@ const SignIn = observer(() => {
         <Loader /*className={"sign-in-page__qr-loader"}*/ />}
       <SpatialNavigationView direction={"horizontal"} style={styles.buttonContainer}>
         <DefaultFocus>
-          <TvButton onPress={action(() => tokenStore.refreshActivationData())} title={"Request New Code"} />
+          <TvButton onSelect={action(() => tokenStore.refreshActivationData())} title={"Request New Code"} />
         </DefaultFocus>
-        <TvButton onPress={() => router.back()} title={"Back"} />
+        <TvButton onSelect={() => router.back()} title={"Back"} />
       </SpatialNavigationView>
     </ImageBackground>
   </Page>;
