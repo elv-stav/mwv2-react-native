@@ -1,5 +1,7 @@
 // Mostly copied from Android.
 // The resolved permissions are stored in the permission object under [._content / ._page / ._property / ._search]
+import Log from "@/utils/Log";
+
 export const PermissionResolver = {
   /**
    * Recursively resolves permissions and updates entities with resolved permissions.
@@ -7,22 +9,22 @@ export const PermissionResolver = {
    * @param parentPermissions optional parent's resolved permission object
    * @param permissionStates the Property level set of every permission_item_id and whether the user is authorized to access it.
    */
-  ResolvePermissions: function ({ item, parentPermissions, permissionStates }) {
-    _sanitizePermissions({ item });
+  ResolvePermissions: function ({item, parentPermissions, permissionStates}) {
+    _sanitizePermissions({item});
 
     // Special cases
-    if (resolveSpecialPermissions({ permissions: item.permissions, permissionStates })) {
-      // // rootStore.Log(`Short-circuiting content permission resolution for ${item}`);
+    if (resolveSpecialPermissions({permissions: item.permissions, permissionStates})) {
+      Log.d(`Short-circuiting content permission resolution for ${item}`);
       return;
     }
 
-    resolveContentPermissions({ item, parentPermissions, permissionStates });
+    resolveContentPermissions({item, parentPermissions, permissionStates});
 
     // Iterate children and update their permissions too
-    const children = _getPermissionedChildren({ item });
+    const children = _getPermissionedChildren({item});
     children.forEach((child) => {
       if (child) {
-        this.ResolvePermissions({ item: child, parentPermissions: item.permissions._content, permissionStates });
+        this.ResolvePermissions({item: child, parentPermissions: item.permissions._content, permissionStates});
       }
     });
   }
@@ -31,7 +33,7 @@ export const PermissionResolver = {
 /**
  * @return {boolean} true if we can short-circuit the content permission resolution process.
  */
-function resolveSpecialPermissions({ permissions, permissionStates }) {
+function resolveSpecialPermissions({permissions, permissionStates}) {
   if (permissions.property_permissions) {
     const propertyPermissions = {
       permission_item_ids: permissions.property_permissions,
@@ -39,7 +41,7 @@ function resolveSpecialPermissions({ permissions, permissionStates }) {
       alternate_page_id: permissions.property_permissions_alternate_page_id,
       secondary_market_purchase_option: permissions.property_permissions_secondary_market_purchase_option
     };
-    permissions._property = merge({ parent: propertyPermissions, child: null, permissionStates });
+    permissions._property = merge({parent: propertyPermissions, child: null, permissionStates});
 
     const searchPermissions = {
       // Default to HIDE when not defined
@@ -47,7 +49,7 @@ function resolveSpecialPermissions({ permissions, permissionStates }) {
       alternatePageId: permissions.search_permissions_alternate_page_id,
       secondaryMarketPurchaseOption: permissions.search_permissions_secondary_market_purchase_option
     };
-    permissions._search = merge({ parent: searchPermissions, child: null, permissionStates });
+    permissions._search = merge({parent: searchPermissions, child: null, permissionStates});
 
     // An in-accessible property could still render a Page, so we can't short-circuit here.
     return false;
@@ -59,7 +61,7 @@ function resolveSpecialPermissions({ permissions, permissionStates }) {
       secondary_market_purchase_option: permissions.page_permissions_secondary_market_purchase_option
     };
 
-    permissions._page = merge({ parent: pagePermissions, child: null, permissionStates });
+    permissions._page = merge({parent: pagePermissions, child: null, permissionStates});
 
     // In the case of an unauthorized page, we can save ourselves from checking any content
     // permissions, because none of that content will be visible to the user
@@ -70,7 +72,7 @@ function resolveSpecialPermissions({ permissions, permissionStates }) {
 }
 
 // Updates [item] with resolved permissions.
-function resolveContentPermissions({ item, parentPermissions, permissionStates }) {
+function resolveContentPermissions({item, parentPermissions, permissionStates}) {
   if (!parentPermissions) {
     // top level, resolve with [item] as parent.
     if (item.permissions) {
@@ -89,7 +91,7 @@ function resolveContentPermissions({ item, parentPermissions, permissionStates }
   }
 }
 
-function merge({ parent, child, permissionStates }) {
+function merge({parent, child, permissionStates}) {
   if (!child) {
     // Child has nothing defined, [authorized] will be the same as the parent's, unless it still needs to be calculated.
     return compositePermissions({
@@ -105,19 +107,19 @@ function merge({ parent, child, permissionStates }) {
   if (parent.authorized === false) {
     // Parent is not authorized, everything down the line is not authorized
     // and will inherit behavior, unless it's not already set.
-    return compositePermissions({ authorized: false, primary: parent, fallback: child })
+    return compositePermissions({authorized: false, primary: parent, fallback: child});
   }
 
   // Parent is authorized, child will have to check its own permissions.
   // Child fields take precedence over parent fields.
   return compositePermissions({
-    authorized: isAuthorized({ permissions: child, permissionStates }),
+    authorized: isAuthorized({permissions: child, permissionStates}),
     primary: child,
     fallback: parent
   });
 }
 
-function compositePermissions({ authorized, primary, fallback }) {
+function compositePermissions({authorized, primary, fallback}) {
   fallback = fallback || {};
   let items;
   if (primary.permission_item_ids && (primary.permission_item_ids.length > 0)) {
@@ -131,10 +133,10 @@ function compositePermissions({ authorized, primary, fallback }) {
     behavior: primary.behavior || fallback.behavior,
     alternate_page_id: primary.alternate_page_id || fallback.alternate_page_id,
     secondary_market_purchase_option: primary.secondary_market_purchase_option || fallback.secondary_market_purchase_option,
-  }
+  };
 }
 
-function isAuthorized({ permissions, permissionStates }) {
+function isAuthorized({permissions, permissionStates}) {
   const permissionItems = permissions.permission_item_ids;
   // If not permissioned by any items - we're authorized
   if (!permissionItems || permissionItems.length === 0) return true;
@@ -146,7 +148,7 @@ function isAuthorized({ permissions, permissionStates }) {
 /**
  * Make sure .permissions conforms to the same structure for all items
  */
-function _sanitizePermissions({ item }) {
+function _sanitizePermissions({item}) {
   if (!item.permissions) {
     item.permissions = {};
   }
@@ -172,24 +174,24 @@ function _sanitizePermissions({ item }) {
 
     item.permissions = {
       permission_item_ids: itemIds
-    }
+    };
   }
 
   if (item.permissions.property_permissions === undefined && item.id.startsWith("iq__")) {
     // This is a Property, make sure it also has a property_permissions object
-    // rootStore.Log(`Found a page without page_permissions, creating default.`);
+    Log.d(`Found a page without page_permissions, creating default.`);
     item.permissions.property_permissions = [];
   }
 
   if (item.permissions.page_permissions === undefined && (item.id === "main" || item.id.startsWith("ppge"))) {
     // This is a Page, make sure it also has a page_permissions object
-    // rootStore.Log(`Found a page without page_permissions, creating default.`);
+    Log.d(`Found a page without page_permissions, creating default.`);
     item.permissions.page_permissions = [];
   }
 }
 
 // Returns child objects that also have (or can have) a .permissions field that needs to be resolved
-function _getPermissionedChildren({ item }) {
+function _getPermissionedChildren({item}) {
   const children = [
     // Properties contain their main page
     item.main_page,
@@ -198,7 +200,7 @@ function _getPermissionedChildren({ item }) {
   // MediaLists have a list of ids under 'media', we don't care about that,
   // but we DO want SectionItem's 'media' which points to an actual media object
   if (item.media && !Array.isArray(item.media) && typeof item.media === 'object') {
-    children.push(item.media)
+    children.push(item.media);
   }
 
   // Sections have SectionItems in .content

@@ -6,7 +6,6 @@ import { theme } from "@/design-system/theme/theme";
 import { fabricConfigStore, tokenStore } from "@/data/stores";
 import { StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
-import Log from "@/utils/Log";
 import Utils from "@/utils/elv-client-utils";
 
 const Profile = observer(({}) => {

@@ -1,10 +1,13 @@
-import { action, makeAutoObservable, runInAction } from "mobx";
+import { action, flow, makeAutoObservable, runInAction } from "mobx";
 import { MediaWalletApi } from "@/data/api/MediaWalletApi";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { PermissionResolver } from "@/data/helpers/PermissionResolver";
 import useObservable from "@/data/helpers/useObservable";
 import { Dict } from "@/utils/Dict";
+import Log from "@/utils/Log";
+import { mediaPropertyStore } from "@/data/stores/index";
+import { MediaSectionModel } from "@/data/models/MediaSectionModel";
 
 /** Keys are propertyId, values are the corresponding MediaProperty */
 type PropertyMap = Dict<MediaPropertyModel>
@@ -16,6 +19,9 @@ export class MediaPropertyStore {
   properties: PropertyMap = {};
 
   pages: PageMap = {};
+
+  // Keys are "propertyId_pageId", and values are an array of Section objects.
+  sections: Dict<MediaSectionModel[]> = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -41,7 +47,7 @@ export class MediaPropertyStore {
       const property = await MediaWalletApi.getProperty(propertyId);
       runInAction(() => this._processProperty(property));
     } catch (e) {
-      // rootStore.Log("Error fetching property. Token expired?", e);
+      Log.e("Error fetching property. Token expired?", e);
     }
   }
 
@@ -55,6 +61,48 @@ export class MediaPropertyStore {
       () => this.fetchProperty(propertyId)
     );
   }
+
+  getPageById = flow(function* ({ property, pageId }: {
+    property?: MediaPropertyModel,
+    pageId?: string,
+  }) {
+    if (!property || !pageId) {
+      return;
+    }
+    const that = mediaPropertyStore;
+    const cachedPage = that.pages[property.id]?.[pageId];
+    if (cachedPage) {
+      Log.d(`Page found in cache. Not fetching from network (id=${pageId})`);
+      return cachedPage;
+    }
+
+    const page = yield MediaWalletApi.getPage(property.id, pageId);
+    PermissionResolver.ResolvePermissions({
+      item: page,
+      parentPermissions: property.permissions?._content,
+      permissionStates: property.permission_auth_state
+    });
+    that.pages[property.id] = that.pages[property.id] || {};
+    that.pages[property.id][pageId] = page;
+    return page;
+  });
+
+  async fetchSections(property: MediaPropertyModel, page: MediaPageModel) {
+    const sections = await MediaWalletApi.getSections(property.id, page.layout.sections);
+    runInAction(() => {
+      sections.forEach((section) => {
+        PermissionResolver.ResolvePermissions({
+          item: section,
+          parentPermissions: page.permissions?._content,
+          permissionStates: property.permission_auth_state
+        });
+      });
+
+      this.sections[`${property.id}_${page.id}`] = sections;
+    });
+
+    return sections;
+  };
 
   _processProperty = action((property: MediaPropertyModel, propertyMap: PropertyMap = this.properties) => {
     propertyMap[property.id] = property;

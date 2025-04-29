@@ -2,30 +2,43 @@ import { fabricConfigStore } from "@/data/stores";
 import { ZodType } from "zod/lib/types";
 import { PagedContentSchema } from "@/data/models/PagedContentModel";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
+import { MediaPageModel } from "@/data/models/MediaPageModel";
+import { MediaSectionModel } from "@/data/models/MediaSectionModel";
+import makeAuthServiceRequest from "@/data/api/ElvHttp";
+import { FetchResponse } from "expo/build/winter/fetch/FetchResponse";
 
 export const MediaWalletApi = {
-  getProperties(): Promise<MediaPropertyModel[]> {
+  async getProperties(): Promise<MediaPropertyModel[]> {
     return request("GET", "properties", PagedContentSchema(MediaPropertyModel), { include_public: true })
       .then(response => response.contents);
   },
 
   getProperty(propertyId: string): Promise<MediaPropertyModel> {
-    return request("GET", `properties/${propertyId}`, MediaPropertyModel, {
-      // TODO: TEMP. PUT THIS SOMEWHERE ELSE.
-      //  This token is pre-generated for the "main" network
-      authorization: "eyJxc3BhY2VfaWQiOiAiaXNwYzJSVW9SZTllUjJ2MzNIQVJRVVZTcDFyWVh6dzEifQ==",
-    });
-  }
+    return request("GET", `properties/${propertyId}`, MediaPropertyModel);
+  },
+
+  getPage(propertyId: string, pageId: string): Promise<MediaPageModel> {
+    return request("GET", `properties/${propertyId}/pages/${pageId}`, MediaPageModel);
+  },
+
+  async getSections(propertyId: string, sectionIds: string[]): Promise<MediaSectionModel[]> {
+    return request("POST",
+      `properties/${propertyId}/sections`,
+      PagedContentSchema(MediaSectionModel),
+      { resolve_subsections: true },
+      JSON.stringify(sectionIds),
+    ).then(response => response.contents);
+  },
 };
 
-async function request<R>(method: "GET" | "POST", path: string, resultParser: ZodType<R, any, any>, query: any = {}) {
+async function request<R>(method: "GET" | "POST", path: string, resultParser: ZodType<R, any, any>, query: any = {}, body?: BodyInit) {
   return fabricConfigStore.promiseConfig().then(async config => {
     const url = new URL(fabricConfigStore.config!.authdBaseUrl);
     url.pathname += "/mw/" + path;
     Object.keys(query).forEach((key) => {
       url.searchParams.set(key, query[key]);
     });
-    const response: Response = await fetch(url, { method });
+    const response: FetchResponse = await makeAuthServiceRequest(url.toString(), { method, body });
     const json = await response.json();
     return resultParser.parse(json);
   });
