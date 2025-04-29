@@ -1,6 +1,5 @@
-import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
-import React, { useEffect, useState } from "react";
-import { Typography } from "@/components/Typography";
+import { DefaultFocus, SpatialNavigationView } from "react-tv-space-navigation";
+import React, { useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
 import { Router, useLocalSearchParams, useRouter } from "expo-router";
@@ -14,6 +13,13 @@ import Log from "@/utils/Log";
 import { Dict } from "@/utils/Dict";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
 import Utils from "@/utils/elv-client-utils";
+import { SectionTypes } from "@/data/models/SectionItemModel";
+import CarouselSection from "@/components/sections/CarouselSection";
+import HeroSection from "@/components/sections/HeroSection";
+import ContainerSection from "@/components/sections/ContainerSection";
+import TvButton from "@/components/TvButton";
+import { ImageBackground, StyleSheet, View } from "react-native";
+import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -52,11 +58,44 @@ type PropertyDetailViewProps = {
 }
 
 const PropertyDetailView = observer(({ property, page, sections, }: PropertyDetailViewProps) => {
+  const bgUrl = useMemo(() =>
+    sections
+      .find(section => section.type === SectionTypes.HERO)
+      ?.hero_items
+      ?.find(item => item.display?.background_image)
+      ?.display?.background_image?.urlSource()
+    || page.layout.background_image?.urlSource(), [sections]);
   return (<Page>
-    <SpatialNavigationFocusableView>
-      <Typography>oh hai {property.displayName}</Typography>
-    </SpatialNavigationFocusableView>
+    <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1, padding: scaledPixels(80) }}>
+      <SpatialNavigationView direction={"vertical"}>
+        <View style={styles.searchButtonContainer}>
+          <TvButton title={"Search"} />
+        </View>
+        <DefaultFocus>
+          {
+            sections.map(section => {
+              switch (section.type) {
+                case SectionTypes.AUTOMATIC:
+                case SectionTypes.MANUAL:
+                case SectionTypes.SEARCH:
+                  return <CarouselSection key={section.id} section={section} />;
+                case SectionTypes.HERO:
+                  return <HeroSection key={section.id} section={section} />;
+                case SectionTypes.CONTAINER:
+                  return <ContainerSection key={section.id} section={section} />;
+                default:
+                  return <></>;
+              }
+            })
+          }
+        </DefaultFocus>
+      </SpatialNavigationView>
+    </ImageBackground>
   </Page>);
+});
+
+const styles = StyleSheet.create({
+  searchButtonContainer: { width: "100%", alignItems: "flex-end" }
 });
 
 /**
@@ -163,6 +202,5 @@ const buildPurchaseUrl = async (permissionContext: PermissionContext, permission
   url.searchParams.append("authorization", Utils.B58(JSON.stringify(auth)));
   return rootStore.CreateShortURL(url.toString());
 };
-
 
 export default PropertyDetail;

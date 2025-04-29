@@ -34,3 +34,11 @@ export const SectionItemModel = z.object({
 });
 
 export type SectionItemModel = z.infer<typeof SectionItemModel>
+
+export enum SectionTypes {
+  MANUAL = "manual",
+  AUTOMATIC = "automatic",
+  SEARCH = "search",
+  HERO = "hero",
+  CONTAINER = "container",
+}
