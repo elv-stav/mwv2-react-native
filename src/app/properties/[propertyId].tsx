@@ -1,4 +1,4 @@
-import { DefaultFocus, SpatialNavigationView } from "react-tv-space-navigation";
+import { DefaultFocus, SpatialNavigationScrollView } from "react-tv-space-navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
@@ -20,6 +20,7 @@ import ContainerSection from "@/components/sections/ContainerSection";
 import TvButton from "@/components/TvButton";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
+import { BottomArrow, TopArrow } from "@/components/Arrows";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -67,35 +68,61 @@ const PropertyDetailView = observer(({ property, page, sections, }: PropertyDeta
     || page.layout.background_image?.urlSource(), [sections]);
   return (<Page>
     <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1, padding: scaledPixels(80) }}>
-      <SpatialNavigationView direction={"vertical"}>
+      <SpatialNavigationScrollView
+        style={{ overflow: "visible" }}
+        ascendingArrow={<BottomArrow />}
+        ascendingArrowContainerStyle={styles.bottomArrowContainer}
+        descendingArrow={<TopArrow />}
+        descendingArrowContainerStyle={styles.topArrowContainer}
+      >
         <View style={styles.searchButtonContainer}>
           <TvButton title={"Search"} />
         </View>
-        <DefaultFocus>
-          {
-            sections.map(section => {
-              switch (section.type) {
-                case SectionTypes.AUTOMATIC:
-                case SectionTypes.MANUAL:
-                case SectionTypes.SEARCH:
-                  return <CarouselSection key={section.id} section={section} />;
-                case SectionTypes.HERO:
-                  return <HeroSection key={section.id} section={section} />;
-                case SectionTypes.CONTAINER:
-                  return <ContainerSection key={section.id} section={section} />;
-                default:
-                  return <></>;
-              }
-            })
-          }
-        </DefaultFocus>
-      </SpatialNavigationView>
+        <View style={{ gap: scaledPixels(32) }}>
+          <DefaultFocus>
+            {
+              sections.map(section => {
+                switch (section.type) {
+                  case SectionTypes.AUTOMATIC:
+                  case SectionTypes.MANUAL:
+                  case SectionTypes.SEARCH:
+                    return <CarouselSection key={section.id} section={section} />;
+                  case SectionTypes.HERO:
+                    return <HeroSection key={section.id} section={section} />;
+                  case SectionTypes.CONTAINER:
+                    return <ContainerSection key={section.id} section={section} />;
+                  default:
+                    return <></>;
+                }
+              })
+            }
+          </DefaultFocus>
+        </View>
+      </SpatialNavigationScrollView>
     </ImageBackground>
   </Page>);
 });
 
 const styles = StyleSheet.create({
-  searchButtonContainer: { width: "100%", alignItems: "flex-end" }
+  searchButtonContainer: { width: "100%", alignItems: "flex-end" },
+  topArrowContainer: {
+    width: '100%',
+    height: 100,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: 0,
+    left: 0,
+  },
+  bottomArrowContainer: {
+    width: '100%',
+    height: 100,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: -15,
+    left: 0,
+  },
 });
 
 /**
