@@ -43,14 +43,11 @@ const ImageCard = observer(({
           height: '100%',
           width: '100%',
         }} />
-        {<Center style={{ position: "absolute", flex: 1, justifyContent: "center" }}>
-          {playable && <Ionicons name={"play"} color={"white"}
-                                 size={scaledPixels(90)}
-                                 style={{
-                                   position: "absolute",
-                                   opacity: 0.8,
-                                 }} />}
-        </Center>}
+        {<Overlay isFocused={isFocused}>
+          {(playable && !isFocused) && <Ionicons name={"play"} color={"white"}
+                                                 size={scaledPixels(90)}
+                                                 style={{ opacity: 0.8, }} />}
+        </Overlay>}
       </Container>
     )}
   </SpatialNavigationFocusableView>);
@@ -69,6 +66,15 @@ const Container = styled(Animated.View)<{
   borderWidth: 2,
   opacity: inaccessible ? 0.2 : 1,
   cursor: 'pointer',
+}));
+
+const Overlay = styled(Center)<{
+  isFocused: boolean;
+}>(({ isFocused, theme }) => ({
+  backgroundColor: isFocused ? "#000000cc" : "transparent",
+  position: "absolute",
+  flex: 1,
+  justifyContent: "center",
 }));
 
 export default ImageCard;
