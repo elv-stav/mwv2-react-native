@@ -14,10 +14,10 @@ import ImageCard from "@/components/cards/ImageCard";
 const CarouselCard = observer(({ sectionItem }: { sectionItem: SectionItemModel }) => {
   const { thumbnail, aspectRatio } = sectionItem.thumbnailAndRatio;
   return <ImageCard
-    title={sectionItem.display.title || ""}
     onSelect={() => onSectionItemClick(sectionItem, { propertyId: "TODO" })}
     imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
     aspectRatio={aspectRatio}
+    playable={MediaTypes.isPlayable(sectionItem.media?.media_type ?? undefined)}
   />;
 });
 
