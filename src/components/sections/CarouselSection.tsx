@@ -14,9 +14,7 @@ import { LeftArrow, RightArrow } from "@/components/Arrows";
 
 const CarouselSection = observer(({ section }: SectionComponentProps) => {
   const renderItem = useCallback(({ item, index }: { item: SectionItemModel, index: number }) => (
-    <CarouselCard sectionItem={item} onSelect={() => {
-      Log.w("click card", item.id);
-    }} />
+    <CarouselCard sectionItem={item} />
   ), []);
   return (
     <View style={{ height: theme.sizes.carousel.row.height, gap: theme.sizes.carousel.row.gap }}>

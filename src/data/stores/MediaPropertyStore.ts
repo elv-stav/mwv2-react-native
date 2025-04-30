@@ -8,6 +8,7 @@ import { Dict } from "@/utils/Dict";
 import Log from "@/utils/Log";
 import { mediaPropertyStore } from "@/data/stores/index";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
+import { MediaItemModel } from "@/data/models/MediaItemModel";
 
 /** Keys are propertyId, values are the corresponding MediaProperty */
 type PropertyMap = Dict<MediaPropertyModel>
@@ -22,6 +23,8 @@ export class MediaPropertyStore {
 
   // Keys are "propertyId_pageId", and values are an array of Section objects.
   sections: Dict<MediaSectionModel[]> = {};
+
+  mediaItems: Dict<MediaItemModel> = {};
 
   constructor() {
     makeAutoObservable(this);

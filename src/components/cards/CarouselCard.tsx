@@ -9,8 +9,17 @@ import { DisplaySettingsUtil } from "@/utils/DisplaySettingsUtil";
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
 import Utils from "@/utils/elv-client-utils";
 import { theme } from "@/design-system/theme/theme";
+import { MediaItemModel } from "@/data/models/MediaItemModel";
+import { runInAction } from "mobx";
+import { mediaPropertyStore } from "@/data/stores";
+import { PermissionUtil } from "@/data/helpers/PermissionUtil";
+import { router } from "expo-router";
+import { MediaTypes } from "@/utils/MediaTypes";
+import { PermissionSettings } from "@/data/models/PermissionSettings";
+import Log from "@/utils/Log";
+import ImageCard from "@/components/cards/ImageCard";
 
-const CarouselCard = observer(({ sectionItem, onSelect }: { sectionItem: SectionItemModel, onSelect: () => void }) => {
+const CarouselCard = observer(({ sectionItem }: { sectionItem: SectionItemModel }) => {
   const imageSource: ImageURISource | undefined = useMemo(() => {
     let display;
     if (sectionItem.use_media_settings && sectionItem.media) {
@@ -26,14 +35,58 @@ const CarouselCard = observer(({ sectionItem, onSelect }: { sectionItem: Section
     }
 
   }, [sectionItem]);
-  return (<SpatialNavigationFocusableView onSelect={onSelect}>
+  return (<SpatialNavigationFocusableView onSelect={() => onSectionItemClick(sectionItem, { propertyId: "TODO" })}>
     {({ isFocused }) => (
+      // TODO: convert to reuse ImageCard
       <Container isFocused={isFocused} style={useFocusAnimation(isFocused)}>
         <SectionItemImage source={imageSource} />
       </Container>
     )}
   </SpatialNavigationFocusableView>);
 });
+
+function onSectionItemClick(item: SectionItemModel, permissionContext: PermissionContext) {
+  switch (item.type) {
+    case "media":
+      onMediaItemClick(item.media!);
+      break;
+    case "page_link":
+      // Will only work once "MediaPropertyDetails" actually uses pageId
+      router.navigate(`/properties/${permissionContext.propertyId}/${item.page_id}`);
+      break;
+    case "subproperty_link":
+      const page = item.subproperty_page_id || "";
+      router.navigate(`/properties/${item.subproperty_id}/${page}`);
+      break;
+    default:
+      console.log(`NOT YET IMPLEMENTED! click on type: ${item.type}`);
+  }
+}
+
+const onMediaItemClick = (media: MediaItemModel) => {
+  // Cache the item before nav
+  runInAction(() => (mediaPropertyStore.mediaItems[media.id] = media));
+
+  const permissions = media.normalizedPermissions?._content;
+  if (PermissionUtil.showAlternatePage(permissions)) {
+    // On tv we don't really show alt page, we just show purcahse options and later on navigate to alternate_page_id
+    Log.w("IMPL: Purchase prompt");
+  } else if (PermissionUtil.showPurchaseOptions()) {
+    Log.w("IMPL: Purchase prompt");
+  } else if (media.type === "list" || media.type === "collection") {
+    console.log("TODO: show media grid");
+  } else if (false /*media is a live video that hasn't started yet*/) {
+    console.log("TODO: show Upcoming Video page (countdown page)");
+  } else if (media.media_type === MediaTypes.VIDEO || media.media_type === MediaTypes.LIVE_VIDEO) {
+    router.navigate(`/watch/${media.id}`);
+  } else if (media.media_type === MediaTypes.IMAGE || media.media_type === MediaTypes.GALLERY) {
+    router.navigate(`/gallery/${media.id}`);
+    // } else if (media.media_file || media.media_links) {
+    //   console.log("TODO: external content qr dialog");
+  } else {
+    Log.e("unhandled click", media);
+  }
+};
 
 const Container = styled(Animated.View)<{
   isFocused: boolean;

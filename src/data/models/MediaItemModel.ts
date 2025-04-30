@@ -21,9 +21,9 @@ export const MediaItemModel = DisplaySettingsModel.extend({
 
   // Live Video info
   live_video: z.boolean().nullish(),
-  start_time: z.date().nullish(),
-  stream_start_time: z.date().nullish(),
-  end_time: z.date().nullish(),
+  start_time: z.string().nullish(),
+  stream_start_time: z.string().nullish(),
+  end_time: z.string().nullish(),
   icons: z.array(z.object({
     icon: AssetLinkModel.nullish(),
   })).nullish(),
@@ -32,10 +32,22 @@ export const MediaItemModel = DisplaySettingsModel.extend({
   attributes: z.record(z.array(z.string())),
   // attributes: Map<String, List<String>> ?,
   tags: z.array(z.string()).nullish(),
-  permissions: z.union([z.array(z.string()), PermissionSettings.nullish()]),
+  permissions: z.union([
+    z.array(z.object({ permission_item_id: z.string() })),
+    PermissionSettings.nullish()
+  ]),
 
   // Media that is set to public=false, but also doesn't define any Permissions - is inaccessible.
   public: z.boolean().nullish(),
-});
+}).transform(obj => ({
+  ...obj,
+  get normalizedPermissions(): (PermissionSettings | undefined) {
+    return isPermissionSettings(obj.permissions) ? obj.permissions : undefined;
+  }
+}));
+
+function isPermissionSettings(f?: (PermissionSettings | any[] | null)): f is PermissionSettings {
+  return !Array.isArray(f);
+}
 
 export type MediaItemModel = z.infer<typeof MediaItemModel>
