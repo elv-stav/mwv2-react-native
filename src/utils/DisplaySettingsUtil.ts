@@ -2,11 +2,13 @@ import { AspectRatio } from "@/utils/AspectRatio";
 import { DisplaySettingsModel } from "@/data/models/DisplaySettingsModel";
 import { AssetLinkModel } from "@/data/models/AssetLinkModel";
 
+export type ThumbnailAndRatio = {
+  thumbnail?: AssetLinkModel;
+  aspectRatio?: number;
+}
+
 export const DisplaySettingsUtil = {
-  getThumbnailAndRatio: function (display: DisplaySettingsModel): ({
-    thumbnail?: AssetLinkModel;
-    aspect_ratio: number | null
-  } | null) {
+  getThumbnailAndRatio: function (display: DisplaySettingsModel): ThumbnailAndRatio {
     const forcedRatio = AspectRatio.fromString(display.aspect_ratio);
     let thumbnail;
     switch (forcedRatio) {
@@ -25,7 +27,7 @@ export const DisplaySettingsUtil = {
       // There's a thumbnail defined for the forced aspect ratio
       return {
         thumbnail: thumbnail,
-        aspect_ratio: forcedRatio
+        aspectRatio: forcedRatio ?? undefined
       };
     }
 
@@ -34,20 +36,20 @@ export const DisplaySettingsUtil = {
     if (display?.thumbnail_image_square) {
       return {
         thumbnail: display.thumbnail_image_square,
-        aspect_ratio: forcedRatio || AspectRatio.SQUARE
+        aspectRatio: forcedRatio || AspectRatio.SQUARE
       };
     } else if (display?.thumbnail_image_portrait) {
       return {
         thumbnail: display.thumbnail_image_portrait,
-        aspect_ratio: forcedRatio || AspectRatio.POSTER
+        aspectRatio: forcedRatio || AspectRatio.POSTER
       };
     } else if (display?.thumbnail_image_landscape) {
       return {
         thumbnail: display.thumbnail_image_landscape,
-        aspect_ratio: forcedRatio || AspectRatio.WIDE
+        aspectRatio: forcedRatio || AspectRatio.WIDE
       };
     } else {
-      return null;
+      return {};
     }
   }
 };

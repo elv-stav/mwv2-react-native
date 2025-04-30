@@ -22,17 +22,19 @@ export const AssetLinkModel = z.object({
   }
 })).transform(obj => ({
   ...obj,
-  url(baseUrl: string = fabricConfigStore.config?.fabricBaseUrl!): string | undefined {
+  url(height?: number): string | undefined {
+    let baseUrl: string = fabricConfigStore.config?.fabricBaseUrl!;
     if (!obj.path) return undefined;
     if (!baseUrl.endsWith("/")) {
       baseUrl += "/";
     }
-    return `${baseUrl}${obj.path}`;
+    const heightParam = height ? `?height=${Math.round(height)}` : "";
+    return `${baseUrl}${obj.path}${heightParam}`;
   }
 })).transform(obj => ({
   ...obj,
-  urlSource(baseUrl: string | undefined = undefined): ImageURISource | undefined {
-    const uri = obj.url(baseUrl);
+  urlSource(height?: number): ImageURISource | undefined {
+    const uri = obj.url(height);
     if (!uri) return undefined;
     return { uri };
   }

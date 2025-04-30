@@ -42,7 +42,7 @@ const ImageGallery = observer(({}) => {
       };
     }));
     const renderItem = useCallback(({ item }: { item: ImageData }) => (
-      <ImageCard id={"foo"} title={"title"} imageUrl={item.url?.uri} onFocus={() => {
+      <ImageCard title={""} imageSource={item.url} onFocus={() => {
         setSelectedImage(item.url);
       }} />), []);
     return (<Page>
@@ -59,7 +59,7 @@ const ImageGallery = observer(({}) => {
             orientation={"horizontal"}
             data={images}
             renderItem={renderItem}
-            itemSize={item => theme.sizes.carousel.card.height}
+            itemSize={theme.sizes.carousel.card.height}
             descendingArrow={<LeftArrow />}
             descendingArrowContainerStyle={styles.leftArrowContainer}
             ascendingArrow={<RightArrow />}
@@ -69,12 +69,13 @@ const ImageGallery = observer(({}) => {
       </ImageBackground>
     </Page>);
   } else {
-    const thumbnail = DisplaySettingsUtil.getThumbnailAndRatio(media)?.thumbnail;
+    const { thumbnail } = DisplaySettingsUtil.getThumbnailAndRatio(media);
     return <ImageBackground source={thumbnail?.urlSource()} style={{
       width: '100%',
       height: '100%',
       justifyContent: "flex-end",
     }}>
+      {/*@ts-ignore lineHeight as % probably only works on web */}
       <Typography style={{
         fontSize: scaledPixels(40),
         textAlign: "center",

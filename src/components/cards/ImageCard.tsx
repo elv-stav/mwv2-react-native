@@ -7,26 +7,24 @@ import { Animated, Image } from "react-native";
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
 
 type ImageCardProps = {
-  id: string;
   title: string;
-  imageUrl?: string;
+  imageSource?: ImageURISource;
   href?: string;
   onSelect?: () => void;
   onFocus?: () => void;
+  aspectRatio?: number;
 }
 
 /**
- * @param id {string} - unique id of the card, required for proper D-PAD navigation.
  * @param title {string} - title to show when highlighted
  * @param imageUrl {string} - url of the image to show. Must be a valid URL.
  * @param href {string} - Optional. url to navigate to when clicked. Should be mutually exclusive with onSelect.
  * @param onSelect {function} - Optional. callback to invoke when clicked. Should be mutually exclusive with href.
  */
-const ImageCard = observer(({ id, title, imageUrl, onSelect, onFocus }: ImageCardProps) => {
-  const imageSource: (ImageURISource | undefined) = imageUrl ? { uri: imageUrl } : undefined;
+const ImageCard = observer(({ title, imageSource, onSelect, onFocus, aspectRatio = 1.0 }: ImageCardProps) => {
   return (<SpatialNavigationFocusableView onSelect={onSelect} onFocus={onFocus}>
     {({ isFocused }) => (
-      <Container isFocused={isFocused} style={useFocusAnimation(isFocused)}>
+      <Container isFocused={isFocused} aspectRatio={aspectRatio} style={useFocusAnimation(isFocused)}>
         <Image source={imageSource} style={{
           height: '100%',
           width: '100%',
@@ -38,9 +36,10 @@ const ImageCard = observer(({ id, title, imageUrl, onSelect, onFocus }: ImageCar
 
 const Container = styled(Animated.View)<{
   isFocused: boolean;
-}>(({ isFocused, theme }) => ({
+  aspectRatio?: number;
+}>(({ isFocused, aspectRatio, theme }) => ({
   height: theme.sizes.carousel.card.height,
-  width: theme.sizes.propertyCard.width,
+  aspectRatio: aspectRatio,
   overflow: 'hidden',
   borderRadius: 12,
   borderColor: isFocused ? theme.colors.primary.light : 'transparent',

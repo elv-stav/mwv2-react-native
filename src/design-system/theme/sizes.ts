@@ -13,7 +13,7 @@ export const sizes = {
   },
   carousel: {
     card: {
-      height: scaledPixels(380)
+      height: scaledPixels(280)
     },
     title: {
       height: scaledPixels(32),

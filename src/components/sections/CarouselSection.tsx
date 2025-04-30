@@ -27,7 +27,9 @@ const CarouselSection = observer(({ section }: SectionComponentProps) => {
             orientation={"horizontal"}
             data={section.content}
             renderItem={renderItem}
-            itemSize={item => theme.sizes.carousel.card.height}
+            itemSize={item =>
+              theme.sizes.carousel.card.height * (item.thumbnailAndRatio.aspectRatio || 1.0) * theme.scale.focused
+            }
             descendingArrow={isActive ? <LeftArrow /> : undefined}
             descendingArrowContainerStyle={styles.leftArrowContainer}
             ascendingArrow={isActive ? <RightArrow /> : undefined}

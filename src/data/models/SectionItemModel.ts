@@ -3,6 +3,8 @@ import { DisplaySettingsModel } from "@/data/models/DisplaySettingsModel";
 import { PermissionSettings } from "@/data/models/PermissionSettings";
 import { AssetLinkModel } from "@/data/models/AssetLinkModel";
 import { MediaItemModel } from "@/data/models/MediaItemModel";
+import { DisplaySettingsUtil, ThumbnailAndRatio } from "@/utils/DisplaySettingsUtil";
+import { merge } from "@/utils/merge";
 
 export const SectionItemModel = z.object({
   id: z.string(),
@@ -31,6 +33,20 @@ export const SectionItemModel = z.object({
 
   // External link data
   url: z.string().nullish(),
+}).transform(obj => {
+  let display: DisplaySettingsModel;
+  if (obj.use_media_settings && obj.media) {
+    display = merge(obj.media, obj.display);
+  } else {
+    display = merge(obj.display, obj.media);
+  }
+  const thumbnailAndRatio: ThumbnailAndRatio = display && DisplaySettingsUtil.getThumbnailAndRatio(display) || {};
+  return ({
+    ...obj,
+    // Override display with the merged display that includes media settings.
+    display,
+    thumbnailAndRatio,
+  });
 });
 
 export type SectionItemModel = z.infer<typeof SectionItemModel>

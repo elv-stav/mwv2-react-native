@@ -8,7 +8,7 @@ export const MediaTypes = {
   VIDEO: "Video",
   LIVE_VIDEO: "Live Video",
 
-  isPlayable(type?: string) {
+  isPlayable(type?: string): boolean {
     return type === this.VIDEO || type === this.LIVE_VIDEO;
   }
 };
