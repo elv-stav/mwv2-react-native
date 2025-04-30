@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { Typography } from "@/components/Typography";
-import { Redirect, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { mediaPropertyStore } from "@/data/stores";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
 import { AspectRatio } from "@/utils/AspectRatio";
 import { Page } from "@/components/Page";
@@ -81,7 +81,7 @@ const ImageGallery = observer(({}) => {
         fontWeight: "700",
         width: "100%",
         backgroundColor: "#000000b2",
-        lineHeight: 1.2,
+        lineHeight: "150%",
         paddingHorizontal: scaledPixels(100),
         paddingVertical: scaledPixels(90),
         color: "#ffffff",

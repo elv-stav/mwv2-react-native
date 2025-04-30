@@ -6,7 +6,6 @@ import { Typography } from "@/components/Typography";
 import TvButton from "@/components/TvButton";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import CarouselCard from "@/components/cards/CarouselCard";
-import Log from "@/utils/Log";
 import { theme } from "@/design-system/theme/theme";
 import { useCallback } from "react";
 import { SectionItemModel } from "@/data/models/SectionItemModel";

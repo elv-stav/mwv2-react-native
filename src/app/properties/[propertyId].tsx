@@ -66,7 +66,7 @@ const PropertyDetailView = observer(({ property, page, sections, }: PropertyDeta
       ?.find(item => item.display?.background_image)
       ?.display?.background_image?.urlSource()
     || page.layout.background_image?.urlSource(), [sections]);
-  return (<Page>
+  return (<Page name={"propdetail"}>
     <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1, padding: scaledPixels(80) }}>
       <SpatialNavigationScrollView
         style={{ overflow: "visible" }}

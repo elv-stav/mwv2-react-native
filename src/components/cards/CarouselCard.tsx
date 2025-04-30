@@ -15,9 +15,7 @@ import { mediaPropertyStore } from "@/data/stores";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import { router } from "expo-router";
 import { MediaTypes } from "@/utils/MediaTypes";
-import { PermissionSettings } from "@/data/models/PermissionSettings";
 import Log from "@/utils/Log";
-import ImageCard from "@/components/cards/ImageCard";
 
 const CarouselCard = observer(({ sectionItem }: { sectionItem: SectionItemModel }) => {
   const imageSource: ImageURISource | undefined = useMemo(() => {

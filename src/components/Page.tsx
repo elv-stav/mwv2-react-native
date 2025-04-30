@@ -2,8 +2,13 @@ import { useIsFocused } from '@react-navigation/native';
 import { ReactNode, useEffect } from 'react';
 import { SpatialNavigationRoot, useLockSpatialNavigation } from 'react-tv-space-navigation';
 import { Keyboard } from 'react-native';
+import Log from "@/utils/Log";
 
-type Props = { children: ReactNode };
+type Props = {
+  children: ReactNode,
+  /** For debugging purposes, to identify the page in logs */
+  name?: string
+};
 
 /**
  * Locks/unlocks the navigator when the native keyboard is shown/hidden.
@@ -34,12 +39,15 @@ const SpatialNavigationKeyboardLocker = () => {
  * @param children
  * @constructor
  */
-export const Page = ({ children }: Props) => {
+export const Page = ({ children, name }: Props) => {
   const isFocused = useIsFocused();
   // const { isOpen: isMenuOpen, toggleMenu } = useMenuContext();
 
   // const isActive = isFocused && !isMenuOpen;
   const isActive = isFocused;
+  useEffect(() => {
+    Log.v(`Page(${name}) isActive: ${isActive}`);
+  }, []);
 
   // const onDirectionHandledWithoutMovement = useCallback(
   //   (movement: Direction) => {

@@ -6,11 +6,10 @@ import { StyleSheet } from "react-native";
 import { useFonts } from "@/hookes/useFonts";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "@/design-system/theme/theme";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import Head from "expo-router/head";
 import React, { useState } from "react";
-import { useNavigatorContext } from "expo-router/build/views/Navigator";
-import { NavigationRoute, ParamListBase, useRoute } from "@react-navigation/native";
+import { NavigationRoute, ParamListBase } from "@react-navigation/native";
 
 SpatialNavigation.configureRemoteControl({
   remoteControlSubscriber: (callback) => {
