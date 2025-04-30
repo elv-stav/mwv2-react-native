@@ -6,7 +6,11 @@ import { StyleSheet } from "react-native";
 import { useFonts } from "@/hookes/useFonts";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "@/design-system/theme/theme";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
+import Head from "expo-router/head";
+import React, { useState } from "react";
+import { useNavigatorContext } from "expo-router/build/views/Navigator";
+import { NavigationRoute, ParamListBase, useRoute } from "@react-navigation/native";
 
 SpatialNavigation.configureRemoteControl({
   remoteControlSubscriber: (callback) => {
@@ -35,6 +39,8 @@ SpatialNavigation.configureRemoteControl({
 
 const App = observer(({}) => {
   const areFontsLoaded = useFonts();
+  // For debugging purposes, we can use the route name as the document title.
+  const [docTitle, setDocTitle] = useState("");
 
   if (!areFontsLoaded) {
     return null;
@@ -42,15 +48,33 @@ const App = observer(({}) => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Head>
+        <title>{docTitle}</title>
+      </Head>
       <SpatialNavigationDeviceTypeProvider>
         <Stack screenOptions={{
           headerShown: false,
           contentStyle: styles.container,
+        }} screenListeners={{
+          state: (e) => {
+            setDocTitle(buildPath(e.data.state.routes.slice(-1)[0]));
+            // setDocTitle()
+            // console.log("Current route state:", (e.data.state.routes.slice(-1)[0]));
+          }
         }} />
       </SpatialNavigationDeviceTypeProvider>
     </ThemeProvider>
   );
 });
+
+// Only for debugging purposes, to build a path from the route name and params.
+function buildPath(route: NavigationRoute<ParamListBase, string>) {
+  let result = route.name;
+  Object.keys(route.params ?? {}).forEach((key) => {
+    result = result.replace(`[${key}]`, (route.params as Record<string, unknown>)?.[key]?.toString() ?? '');
+  });
+  return result;
+}
 
 export default App;
 

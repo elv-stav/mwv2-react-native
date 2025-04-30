@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { Typography } from "@/components/Typography";
-import { useLocalSearchParams } from "expo-router";
+import { Redirect, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { mediaPropertyStore } from "@/data/stores";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
 import { AspectRatio } from "@/utils/AspectRatio";
 import { Page } from "@/components/Page";
@@ -23,7 +23,17 @@ const ImageGallery = observer(({}) => {
   const { mediaId } = useLocalSearchParams<{ mediaId: string }>();
   // TODO: This only works if the media object was already cached before reaching this page.
   const media = mediaPropertyStore.mediaItems[mediaId];
+  const router = useRouter();
+  useFocusEffect(() => {
+    if (!media) {
+      // TODO: handle fetching media if it isn't already cached
+      router.back();
+    }
+  });
   const [selectedImage, setSelectedImage] = useState<ImageURISource | undefined>();
+  if (!media) {
+    return <></>;
+  }
   if (media.gallery) {
     const images: ImageData[] = media.gallery.map((galleryItem => {
       return {
@@ -42,7 +52,7 @@ const ImageGallery = observer(({}) => {
                          width: '100%',
                          height: '100%',
                          justifyContent: "flex-end",
-                         flexDirection:"column"
+                         flexDirection: "column"
                        }}>
         {
           <SpatialNavigationVirtualizedList
@@ -50,9 +60,9 @@ const ImageGallery = observer(({}) => {
             data={images}
             renderItem={renderItem}
             itemSize={item => theme.sizes.carousel.card.height}
-            descendingArrow={ <LeftArrow /> }
+            descendingArrow={<LeftArrow />}
             descendingArrowContainerStyle={styles.leftArrowContainer}
-            ascendingArrow={ <RightArrow /> }
+            ascendingArrow={<RightArrow />}
             ascendingArrowContainerStyle={styles.rightArrowContainer}
           />
         }
