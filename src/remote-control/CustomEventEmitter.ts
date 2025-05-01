@@ -30,7 +30,7 @@ export default class CustomEventEmitter<Events extends Record<EventType, unknown
     this.handlers.set(
       eventType,
       // @ts-expect-error TODO fix the type error
-      this.handlers.get(eventType).filter((h) => h !== handler),
+      this.handlers.get(eventType)?.filter((h) => h !== handler),
     );
   };
 

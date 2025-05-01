@@ -10,6 +10,7 @@ import { Stack } from "expo-router";
 import Head from "expo-router/head";
 import React, { useState } from "react";
 import { NavigationRoute, ParamListBase } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 SpatialNavigation.configureRemoteControl({
   remoteControlSubscriber: (callback) => {
@@ -61,6 +62,7 @@ const App = observer(({}) => {
             // console.log("Current route state:", (e.data.state.routes.slice(-1)[0]));
           }
         }} />
+        {(process.env.NODE_ENV == "development") && <Toast />}
       </SpatialNavigationDeviceTypeProvider>
     </ThemeProvider>
   );

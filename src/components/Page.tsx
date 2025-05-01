@@ -3,6 +3,7 @@ import { ReactNode, useEffect } from 'react';
 import { SpatialNavigationRoot, useLockSpatialNavigation } from 'react-tv-space-navigation';
 import { Keyboard } from 'react-native';
 import Log from "@/utils/Log";
+import { GoBackConfiguration } from "@/components/GoBackConfiguration";
 
 type Props = {
   children: ReactNode,
@@ -35,9 +36,7 @@ const SpatialNavigationKeyboardLocker = () => {
 };
 
 /**
- * Root element of components that are full screen pages.
- * @param children
- * @constructor
+ * Root element of components that are fullscreen pages.
  */
 export const Page = ({ children, name }: Props) => {
   const isFocused = useIsFocused();
@@ -63,7 +62,7 @@ export const Page = ({ children, name }: Props) => {
       isActive={isActive}
       // onDirectionHandledWithoutMovement={onDirectionHandledWithoutMovement}
     >
-      {/*<GoBackConfiguration />*/}
+      <GoBackConfiguration />
       <SpatialNavigationKeyboardLocker />
       {children}
     </SpatialNavigationRoot>

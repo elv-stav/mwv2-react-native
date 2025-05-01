@@ -1,12 +1,20 @@
 import { SupportedKeys } from './SupportedKeys';
 import { RemoteControlManagerInterface } from './RemoteControlManager.interface';
 import CustomEventEmitter from './CustomEventEmitter';
+import Toast from "react-native-toast-message";
 
 const LONG_PRESS_DURATION = 500;
 
 class RemoteControlManager implements RemoteControlManagerInterface {
   constructor() {
     window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('tizenhwkey', (ev: any) => {
+      if (ev.keyName === "back") {
+        Toast.show({ text1: "tizen back" });
+        ev.code = "Backspace"; // Map Tizen back key to Backspace
+        this.handleKeyDown(ev);
+      }
+    });
     window.addEventListener('keyup', this.handleKeyUp);
   }
 
