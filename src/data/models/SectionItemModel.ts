@@ -5,34 +5,35 @@ import { AssetLinkModel } from "@/data/models/AssetLinkModel";
 import { MediaItemModel } from "@/data/models/MediaItemModel";
 import { DisplaySettingsUtil, ThumbnailAndRatio } from "@/utils/DisplaySettingsUtil";
 import { merge } from "@/utils/merge";
+import { nullToUndefined } from "./zod-extensions";
 
 export const SectionItemModel = z.object({
   id: z.string(),
   type: z.string(),
-  media_type: z.string().nullish(),
-  media: MediaItemModel.nullish(),
-  use_media_settings: z.boolean().nullish(),
+  media_type: z.string().nullish().transform(nullToUndefined),
+  media: MediaItemModel.nullish().transform(nullToUndefined),
+  use_media_settings: z.boolean().nullish().transform(nullToUndefined),
 
   // Subproperty link data
-  subproperty_id: z.string().nullish(),
-  subproperty_page_id: z.string().nullish(),
+  subproperty_id: z.string().nullish().transform(nullToUndefined),
+  subproperty_page_id: z.string().nullish().transform(nullToUndefined),
 
 
   // Property link data
-  property_id: z.string().nullish(),
-  property_page_id: z.string().nullish(),
+  property_id: z.string().nullish().transform(nullToUndefined),
+  property_page_id: z.string().nullish().transform(nullToUndefined),
 
   // Page link data
-  page_id: z.string().nullish(),
+  page_id: z.string().nullish().transform(nullToUndefined),
 
-  display: DisplaySettingsModel.nullish(),
-  permissions: PermissionSettings.nullish(),
+  display: DisplaySettingsModel.nullish().transform(nullToUndefined),
+  permissions: PermissionSettings.nullish().transform(nullToUndefined),
 
   // SectionsItems inside a Banner section will have this field defined
-  banner_image: AssetLinkModel.nullish(),
+  banner_image: AssetLinkModel.nullish().transform(nullToUndefined),
 
   // External link data
-  url: z.string().nullish(),
+  url: z.string().nullish().transform(nullToUndefined),
 }).transform(obj => {
   let display: DisplaySettingsModel;
   if (obj.use_media_settings && obj.media) {
