@@ -11,7 +11,11 @@ import { MediaTypes } from "@/utils/MediaTypes";
 import Log from "@/utils/Log";
 import ImageCard from "@/components/cards/ImageCard";
 
-const CarouselCard = observer(({ sectionItem }: { sectionItem: SectionItemModel }) => {
+const CarouselCard = observer(({ sectionItem, context }: {
+  sectionItem: SectionItemModel,
+  context: PermissionContext
+}) => {
+  // context = { ...context, sectionItemId: sectionItem.id };
   const { thumbnail, aspectRatio } = sectionItem.thumbnailAndRatio;
   return <ImageCard
     onSelect={() => onSectionItemClick(sectionItem, { propertyId: "TODO" })}

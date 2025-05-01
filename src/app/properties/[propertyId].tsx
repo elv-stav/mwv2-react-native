@@ -58,7 +58,7 @@ type PropertyDetailViewProps = {
   sections: MediaSectionModel[]
 }
 
-const PropertyDetailView = observer(({ property, page, sections, }: PropertyDetailViewProps) => {
+const PropertyDetailView = observer(({ property, page, sections }: PropertyDetailViewProps) => {
   const bgUrl = useMemo(() =>
     sections
       .find(section => section.type === SectionTypes.HERO)
@@ -66,6 +66,12 @@ const PropertyDetailView = observer(({ property, page, sections, }: PropertyDeta
       ?.find(item => item.display?.background_image)
       ?.display?.background_image?.urlSource()
     || page.layout.background_image?.urlSource(), [sections]);
+
+  const permissionContext: PermissionContext = {
+    propertyId: property.id,
+    pageId: page.id,
+  };
+  const router = useRouter();
   return (<Page name={"propdetail"}>
     <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1, padding: scaledPixels(80) }}>
       <SpatialNavigationScrollView
@@ -76,7 +82,7 @@ const PropertyDetailView = observer(({ property, page, sections, }: PropertyDeta
         descendingArrowContainerStyle={styles.topArrowContainer}
       >
         <View style={styles.searchButtonContainer}>
-          <TvButton title={"Search"} />
+          <TvButton title={"Search"} onSelect={() => router.back()} />
         </View>
         <View style={{ gap: scaledPixels(32) }}>
           <DefaultFocus>
@@ -86,11 +92,11 @@ const PropertyDetailView = observer(({ property, page, sections, }: PropertyDeta
                   case SectionTypes.AUTOMATIC:
                   case SectionTypes.MANUAL:
                   case SectionTypes.SEARCH:
-                    return <CarouselSection key={section.id} section={section} />;
+                    return <CarouselSection key={section.id} section={section} context={permissionContext} />;
                   case SectionTypes.HERO:
-                    return <HeroSection key={section.id} section={section} />;
+                    return <HeroSection key={section.id} section={section} context={permissionContext} />;
                   case SectionTypes.CONTAINER:
-                    return <ContainerSection key={section.id} section={section} />;
+                    return <ContainerSection key={section.id} section={section} context={permissionContext} />;
                   default:
                     return <></>;
                 }
