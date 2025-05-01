@@ -16,7 +16,7 @@ export default async function makeAuthServiceRequest(url: string, init?: FetchRe
   init.headers = overrideHeaders(headers, [["Authorization", `Bearer ${token}`]]);
   try {
     const response = await fetch(url, init);
-    if (response.status == 403) {
+    if (response.status == 401) {
       // Token probably expired. Until we have a refresh API, just signout and pop to root
       tokenStore.signOut();
       router.dismissTo("/");
