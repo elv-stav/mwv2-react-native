@@ -44,6 +44,9 @@ class RemoteControlManager implements RemoteControlManagerInterface {
       return;
     }
 
+    // Prevent extra scrolling on tizen
+    event.preventDefault();
+
     if (mappedKey === SupportedKeys.Enter) {
       if (!this.isEnterKeyDown) {
         this.isEnterKeyDown = true;
