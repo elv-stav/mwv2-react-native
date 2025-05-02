@@ -103,9 +103,9 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
         descendingArrowContainerStyle={styles.topArrowContainer}
       >
         <View style={styles.searchButtonContainer}>
-          <TvButton title={"Search"} onSelect={() => {
+          <TvButton title={"Search"} onSelect={action(() => {
             router.navigate(`/search/${property.id}`);
-          }} />
+          })} />
         </View>
         <SpatialNavigationNode ref={sectionsNodeRef}>
           <View style={{ gap: scaledPixels(32) }}>

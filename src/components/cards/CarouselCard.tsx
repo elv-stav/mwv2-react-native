@@ -77,7 +77,7 @@ const onMediaItemClick = (media: MediaItemModel) => {
   } else if (PermissionUtil.showPurchaseOptions(permissions)) {
     Toast.show({ text1: "locked item: not yet impl" });
   } else if (media.type === "list" || media.type === "collection") {
-    console.log("TODO: show media grid");
+    router.navigate(`/view?mediaContainerId=${media.id}`);
   } else if (false /*media is a live video that hasn't started yet*/) {
     console.log("TODO: show Upcoming Video page (countdown page)");
   } else if (media.media_type === MediaTypes.VIDEO || media.media_type === MediaTypes.LIVE_VIDEO) {

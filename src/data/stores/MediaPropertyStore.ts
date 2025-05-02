@@ -22,7 +22,9 @@ export class MediaPropertyStore {
   pages: PageMap = {};
 
   // Keys are "propertyId_pageId", and values are an array of Section objects.
-  sections: Dict<MediaSectionModel[]> = {};
+  sectionsByPage: Dict<MediaSectionModel[]> = {};
+  // Each section is cached by its own id
+  sections: Dict<MediaSectionModel> = {};
 
   mediaItems: Dict<MediaItemModel> = {};
 
@@ -99,9 +101,10 @@ export class MediaPropertyStore {
           parentPermissions: page.permissions?._content,
           permissionStates: property.permission_auth_state
         });
+        this.sections[section.id] = section;
       });
 
-      this.sections[`${property.id}_${page.id}`] = sections;
+      this.sectionsByPage[`${property.id}_${page.id}`] = sections;
     });
 
     return sections;
