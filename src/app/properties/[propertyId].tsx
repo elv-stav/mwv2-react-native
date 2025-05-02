@@ -1,5 +1,5 @@
-import { DefaultFocus, SpatialNavigationScrollView } from "react-tv-space-navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import { SpatialNavigationNode, SpatialNavigationScrollView } from "react-tv-space-navigation";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
 import { Router, useLocalSearchParams, useRouter } from "expo-router";
@@ -21,6 +21,10 @@ import TvButton from "@/components/TvButton";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { BottomArrow, TopArrow } from "@/components/Arrows";
+import {
+  SpatialNavigationNodeRef
+} from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
+import RemoteControlManager from "@/remote-control/RemoteControlManager";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -72,6 +76,23 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
     pageId: page.id,
   };
   const router = useRouter();
+
+  // We're not setting <DefaultFocus> on the Page. But on the first keydown event,
+  // we'll focus the sections, skipping the Search button.
+  // TODO(stav): there's a bug here that users going from mouse to keyboard navigation,
+  //  will have their first keyboard event consumed.
+  const sectionsNodeRef = useRef<SpatialNavigationNodeRef | null>(null);
+  useEffect(() => {
+    const remoteControlListener = () => {
+      sectionsNodeRef?.current?.focus();
+      // First key handled, remove the listener.
+      RemoteControlManager.removeKeydownListener(remoteControlListener);
+      return true;
+    };
+    RemoteControlManager.addKeydownListener(remoteControlListener);
+    return () => RemoteControlManager.removeKeydownListener(remoteControlListener);
+  }, []);
+
   return (<Page name={"propdetail"}>
     <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1, padding: scaledPixels(80) }}>
       <SpatialNavigationScrollView
@@ -86,8 +107,8 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
             router.navigate(`/search/${property.id}`);
           }} />
         </View>
-        <View style={{ gap: scaledPixels(32) }}>
-          <DefaultFocus>
+        <SpatialNavigationNode ref={sectionsNodeRef}>
+          <View style={{ gap: scaledPixels(32) }}>
             {
               sections.map(section => {
                 switch (section.type) {
@@ -104,8 +125,8 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
                 }
               })
             }
-          </DefaultFocus>
-        </View>
+          </View>
+        </SpatialNavigationNode>
       </SpatialNavigationScrollView>
     </ImageBackground>
   </Page>);

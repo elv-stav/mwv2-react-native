@@ -10,12 +10,10 @@ import RemoteControlManager from "@/remote-control/RemoteControlManager";
 export const useKey = (key: SupportedKeys, callback: (pressedKey: SupportedKeys) => boolean) => {
   useEffect(() => {
     const remoteControlListener = (actualKey: SupportedKeys) => {
-      if (actualKey !== key) return;
+      if (actualKey !== key) return false;
       return callback(key);
     };
-    // @ts-expect-error TODO fix the type error
     RemoteControlManager.addKeydownListener(remoteControlListener);
-    // @ts-expect-error TODO fix the type error
     return () => RemoteControlManager.removeKeydownListener(remoteControlListener);
   }, [key, callback]);
 };
