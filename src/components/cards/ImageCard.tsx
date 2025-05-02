@@ -17,7 +17,8 @@ type ImageCardProps = {
   aspectRatio?: number;
   playable?: boolean;
   inaccessible?: boolean;
-  overlay?: ReactElement;
+  focusedOverlay?: ReactElement;
+  unfocusedOverlay?: ReactElement;
 }
 
 /**
@@ -29,7 +30,8 @@ const ImageCard = observer(({
                               imageSource,
                               onSelect,
                               onFocus,
-                              overlay,
+                              focusedOverlay,
+                              unfocusedOverlay,
                               aspectRatio = 1.0,
                               playable = false,
                               inaccessible = false,
@@ -49,7 +51,7 @@ const ImageCard = observer(({
           {(playable && !isFocused) && <Ionicons name={"play"} color={"white"}
                                                  size={scaledPixels(90)}
                                                  style={{ opacity: 0.8, }} />}
-          {isFocused && overlay}
+          {isFocused ? focusedOverlay : unfocusedOverlay}
         </Overlay>}
       </Container>
     )}

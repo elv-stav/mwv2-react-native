@@ -10,31 +10,41 @@ import { router } from "expo-router";
 import { MediaTypes } from "@/utils/MediaTypes";
 import Log from "@/utils/Log";
 import ImageCard from "@/components/cards/ImageCard";
-import { Typography } from "@/components/Typography";
+import { Typography, TypographyProps } from "@/components/Typography";
 import styled from "@emotion/native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
+import { View } from "react-native";
+import Toast from "react-native-toast-message";
 
 const CarouselCard = observer(({ sectionItem, context }: {
   sectionItem: SectionItemModel,
   context: PermissionContext
 }) => {
-  // context = { ...context, sectionItemId: sectionItem.id };
+  context = { ...context, sectionItemId: sectionItem.id, mediaItemId: sectionItem.media?.id };
   const { thumbnail, aspectRatio } = sectionItem.thumbnailAndRatio;
   const headers = sectionItem.display.headers?.join("\u00A0\u00A0\u00A0\u00A0");
   const title = sectionItem.display.title;
   const subtitle = sectionItem.display.subtitle;
+
+  const permissions = sectionItem.media?.permissions?._content || sectionItem.permissions?._content;
+  const showPurchaseOptions = PermissionUtil.showPurchaseOptions(permissions) || PermissionUtil.showAlternatePage(permissions);
+
   return <ImageCard
-    onSelect={() => onSectionItemClick(sectionItem, { propertyId: "TODO" })}
+    onSelect={() => onSectionItemClick(sectionItem, context)}
     imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
     aspectRatio={aspectRatio}
     playable={MediaTypes.isPlayable(sectionItem.media?.media_type ?? undefined)}
-    overlay={
+    focusedOverlay={
       <OverlayContainer>
-        {!!headers && <Headers numberOfLines={1}>{headers}</Headers>}
-        {!!title && <Title numberOfLines={1}>{title}</Title>}
-        {!!subtitle && <Subtitle numberOfLines={1}>{subtitle}</Subtitle>}
+        {!!showPurchaseOptions && <PurchaseOptionsText />}
+        {!!headers && <Headers>{headers}</Headers>}
+        {!!title && <Title>{title}</Title>}
+        {!!subtitle && <Subtitle>{subtitle}</Subtitle>}
       </OverlayContainer>
     }
+    unfocusedOverlay={<>
+      {!!showPurchaseOptions && <DimOverlay />}
+    </>}
   />;
 });
 
@@ -60,12 +70,12 @@ const onMediaItemClick = (media: MediaItemModel) => {
   // Cache the item before nav
   runInAction(() => (mediaPropertyStore.mediaItems[media.id] = media));
 
-  const permissions = media.normalizedPermissions?._content;
+  const permissions = media.permissions?._content;
   if (PermissionUtil.showAlternatePage(permissions)) {
     // On tv we don't really show alt page, we just show purcahse options and later on navigate to alternate_page_id
-    Log.w("IMPL: Purchase prompt");
-  } else if (PermissionUtil.showPurchaseOptions()) {
-    Log.w("IMPL: Purchase prompt");
+    Toast.show({ text1: "locked item: not yet impl" });
+  } else if (PermissionUtil.showPurchaseOptions(permissions)) {
+    Toast.show({ text1: "locked item: not yet impl" });
   } else if (media.type === "list" || media.type === "collection") {
     console.log("TODO: show media grid");
   } else if (false /*media is a live video that hasn't started yet*/) {
@@ -81,6 +91,18 @@ const onMediaItemClick = (media: MediaItemModel) => {
   }
 };
 
+const PurchaseOptionsText = () => {
+  return <>
+    <Typography style={{
+      fontWeight: "bold",
+      fontSize: scaledPixels(24),
+    }}>VIEW PURCHASE OPTIONS</Typography>
+    <View style={{ flex: 1 }} />
+  </>;
+};
+
+const OneLineText = ({ ...props }: TypographyProps) => <Typography numberOfLines={1} {...props} />;
+
 const OverlayContainer = styled.View({
   width: "100%",
   height: "100%",
@@ -88,14 +110,19 @@ const OverlayContainer = styled.View({
   padding: scaledPixels(32),
 });
 
-const Headers = styled(Typography)({
+const DimOverlay = styled(OverlayContainer)({
+  backgroundColor: "rgba(0, 0, 0, 0.8)",
+  position: "absolute",
+});
+
+const Headers = styled(OneLineText)({
   color: "#A5A6A8",
   fontSize: scaledPixels(18),
 });
 
-const Title = styled(Typography)({});
+const Title = styled(OneLineText)({});
 
-const Subtitle = styled(Typography)({
+const Subtitle = styled(OneLineText)({
   color: "#818590",
   fontSize: scaledPixels(18),
 });

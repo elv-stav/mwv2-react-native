@@ -153,30 +153,6 @@ function _sanitizePermissions({item}) {
     item.permissions = {};
   }
 
-  // Media items have a permissions array instead of the same structure as prop/page/section.
-  // Massage it to conform.
-  if (Array.isArray(item.permissions)) {
-    let permissionItems;
-    if (item.public) {
-      // Server can still send a non-empty dto.permissions list even if the item is
-      // public. In that case we should ignore the list completely.
-      permissionItems = [];
-    } else {
-      permissionItems = item.permissions;
-    }
-
-    const itemIds = [];
-    permissionItems.forEach((permissionItem) => {
-      if (permissionItem?.permission_item_id) {
-        itemIds.push(permissionItem.permission_item_id);
-      }
-    });
-
-    item.permissions = {
-      permission_item_ids: itemIds
-    };
-  }
-
   if (item.permissions.property_permissions === undefined && item.id.startsWith("iq__")) {
     // This is a Property, make sure it also has a property_permissions object
     Log.d(`Found a page without page_permissions, creating default.`);
