@@ -68,7 +68,7 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
   }
   return (
     <View style={{ height: theme.sizes.carousel.row.height, gap: theme.sizes.carousel.row.gap }}>
-      {hasTitleRow && <TitleRow title={title} subtitle={subtitle} viewAllHref={viewAllHref} />}
+      {!!hasTitleRow && <TitleRow title={title} subtitle={subtitle} viewAllHref={viewAllHref} />}
       <SpatialNavigationNode>
         {({ isActive }) =>
           <SpatialNavigationVirtualizedList
@@ -95,8 +95,8 @@ const TitleRow = observer(({ title, subtitle, viewAllHref }: {
   const router = useRouter();
   return (<>
     <View style={styles.titleContainer}>
-      {title && <Typography>{title}</Typography>}
-      {viewAllHref && <TvButton title={"View All"} onSelect={() => router.navigate(viewAllHref)} />}
+      {!!title && <Typography>{title}</Typography>}
+      {!!viewAllHref && <TvButton title={"View All"} onSelect={() => router.navigate(viewAllHref)} />}
     </View>
   </>);
 });

@@ -30,9 +30,9 @@ const CarouselCard = observer(({ sectionItem, context }: {
     playable={MediaTypes.isPlayable(sectionItem.media?.media_type ?? undefined)}
     overlay={
       <OverlayContainer>
-        {headers && <Headers numberOfLines={1}>{headers}</Headers>}
-        {title && <Title numberOfLines={1}>{title}</Title>}
-        {subtitle && <Subtitle numberOfLines={1}>{subtitle}</Subtitle>}
+        {!!headers && <Headers numberOfLines={1}>{headers}</Headers>}
+        {!!title && <Title numberOfLines={1}>{title}</Title>}
+        {!!subtitle && <Subtitle numberOfLines={1}>{subtitle}</Subtitle>}
       </OverlayContainer>
     }
   />;
