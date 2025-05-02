@@ -21,7 +21,6 @@ import TvButton from "@/components/TvButton";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { BottomArrow, TopArrow } from "@/components/Arrows";
-import Toast from "react-native-toast-message";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -84,7 +83,7 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
       >
         <View style={styles.searchButtonContainer}>
           <TvButton title={"Search"} onSelect={() => {
-            Toast.show({ text1: "not impl yet" });
+            router.navigate(`/search/${property.id}`);
           }} />
         </View>
         <View style={{ gap: scaledPixels(32) }}>
