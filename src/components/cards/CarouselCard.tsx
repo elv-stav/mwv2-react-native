@@ -10,6 +10,9 @@ import { router } from "expo-router";
 import { MediaTypes } from "@/utils/MediaTypes";
 import Log from "@/utils/Log";
 import ImageCard from "@/components/cards/ImageCard";
+import { Typography } from "@/components/Typography";
+import styled from "@emotion/native";
+import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 
 const CarouselCard = observer(({ sectionItem, context }: {
   sectionItem: SectionItemModel,
@@ -17,11 +20,21 @@ const CarouselCard = observer(({ sectionItem, context }: {
 }) => {
   // context = { ...context, sectionItemId: sectionItem.id };
   const { thumbnail, aspectRatio } = sectionItem.thumbnailAndRatio;
+  const headers = sectionItem.display.headers?.join("\u00A0\u00A0\u00A0\u00A0");
+  const title = sectionItem.display.title;
+  const subtitle = sectionItem.display.subtitle;
   return <ImageCard
     onSelect={() => onSectionItemClick(sectionItem, { propertyId: "TODO" })}
     imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
     aspectRatio={aspectRatio}
     playable={MediaTypes.isPlayable(sectionItem.media?.media_type ?? undefined)}
+    overlay={
+      <OverlayContainer>
+        {headers && <Headers numberOfLines={1}>{headers}</Headers>}
+        {title && <Title numberOfLines={1}>{title}</Title>}
+        {subtitle && <Subtitle numberOfLines={1}>{subtitle}</Subtitle>}
+      </OverlayContainer>
+    }
   />;
 });
 
@@ -67,5 +80,24 @@ const onMediaItemClick = (media: MediaItemModel) => {
     Log.e("unhandled click", media);
   }
 };
+
+const OverlayContainer = styled.View({
+  width: "100%",
+  height: "100%",
+  justifyContent: "flex-end",
+  padding: scaledPixels(32),
+});
+
+const Headers = styled(Typography)({
+  color: "#A5A6A8",
+  fontSize: scaledPixels(18),
+});
+
+const Title = styled(Typography)({});
+
+const Subtitle = styled(Typography)({
+  color: "#818590",
+  fontSize: scaledPixels(18),
+});
 
 export default CarouselCard;

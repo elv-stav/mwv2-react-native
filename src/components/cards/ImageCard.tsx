@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
 import { useFocusAnimation } from "@/design-system/helpers/useFocusAnimation";
-import React from "react";
+import React, { ReactElement } from "react";
 import styled from "@emotion/native/dist/emotion-native.cjs";
 import { Animated, Image } from "react-native";
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
@@ -17,6 +17,7 @@ type ImageCardProps = {
   aspectRatio?: number;
   playable?: boolean;
   inaccessible?: boolean;
+  overlay?: ReactElement;
 }
 
 /**
@@ -28,6 +29,7 @@ const ImageCard = observer(({
                               imageSource,
                               onSelect,
                               onFocus,
+                              overlay,
                               aspectRatio = 1.0,
                               playable = false,
                               inaccessible = false,
@@ -47,6 +49,7 @@ const ImageCard = observer(({
           {(playable && !isFocused) && <Ionicons name={"play"} color={"white"}
                                                  size={scaledPixels(90)}
                                                  style={{ opacity: 0.8, }} />}
+          {isFocused && overlay}
         </Overlay>}
       </Container>
     )}
