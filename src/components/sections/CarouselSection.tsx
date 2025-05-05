@@ -12,6 +12,8 @@ import { SectionItemModel } from "@/data/models/SectionItemModel";
 import { LeftArrow, RightArrow } from "@/components/Arrows";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import { useRouter } from "expo-router";
+import Log from "@/utils/Log";
+import { PermissionContext } from "@/data/helpers/PermissionContext";
 
 const SUPPORTED_ITEM_TYPES = [
   "media",
@@ -53,7 +55,7 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
 
   const viewAllHref = useMemo(() => {
     if (items.length > displayLimit || items.length > VIEW_ALL_THRESHOLD) {
-      return `/view?sectionId=${section.id}`;
+      return `/view?pctx=${PermissionContext.serialize(context)}`;
     } else {
       return undefined;
     }
@@ -93,6 +95,7 @@ const TitleRow = observer(({ title, subtitle, viewAllHref }: {
   title?: string, subtitle?: string, viewAllHref?: string
 }) => {
   const router = useRouter();
+  // TODO: add subtitle
   return (<>
     <View style={styles.titleContainer}>
       {!!title && <Typography>{title}</Typography>}

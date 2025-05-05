@@ -155,13 +155,13 @@ function _sanitizePermissions({item}) {
 
   if (item.permissions.property_permissions === undefined && item.id.startsWith("iq__")) {
     // This is a Property, make sure it also has a property_permissions object
-    Log.d(`Found a page without page_permissions, creating default.`);
+    // Log.d(`Found a property without page_permissions, creating default.`);
     item.permissions.property_permissions = [];
   }
 
   if (item.permissions.page_permissions === undefined && (item.id === "main" || item.id.startsWith("ppge"))) {
     // This is a Page, make sure it also has a page_permissions object
-    Log.d(`Found a page without page_permissions, creating default.`);
+    // Log.d(`Found a page without page_permissions, creating default.`);
     item.permissions.page_permissions = [];
   }
 }

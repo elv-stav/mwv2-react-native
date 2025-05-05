@@ -25,6 +25,7 @@ import {
   SpatialNavigationNodeRef
 } from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
 import RemoteControlManager from "@/remote-control/RemoteControlManager";
+import { PermissionContext } from "@/data/helpers/PermissionContext";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();

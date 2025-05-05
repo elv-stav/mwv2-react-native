@@ -15,6 +15,7 @@ import styled from "@emotion/native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
+import { PermissionContext } from "@/data/helpers/PermissionContext";
 
 const CarouselCard = observer(({ sectionItem, context }: {
   sectionItem: SectionItemModel,
@@ -51,7 +52,7 @@ const CarouselCard = observer(({ sectionItem, context }: {
 function onSectionItemClick(item: SectionItemModel, permissionContext: PermissionContext) {
   switch (item.type) {
     case "media":
-      onMediaItemClick(item.media!);
+      onMediaItemClick(item.media!, permissionContext);
       break;
     case "page_link":
       // Will only work once "MediaPropertyDetails" actually uses pageId
@@ -66,22 +67,23 @@ function onSectionItemClick(item: SectionItemModel, permissionContext: Permissio
   }
 }
 
-const onMediaItemClick = (media: MediaItemModel) => {
+const onMediaItemClick = (media: MediaItemModel, permissionContext: PermissionContext) => {
   // Cache the item before nav
   runInAction(() => (mediaPropertyStore.mediaItems[media.id] = media));
 
   const permissions = media.permissions?._content;
+  const pctx = PermissionContext.serialize(permissionContext);
   if (PermissionUtil.showAlternatePage(permissions)) {
     // On tv we don't really show alt page, we just show purcahse options and later on navigate to alternate_page_id
     Toast.show({ text1: "locked item: not yet impl" });
   } else if (PermissionUtil.showPurchaseOptions(permissions)) {
     Toast.show({ text1: "locked item: not yet impl" });
   } else if (media.type === "list" || media.type === "collection") {
-    router.navigate(`/view?mediaContainerId=${media.id}`);
+    router.navigate(`/view?pctx=${pctx}`);
   } else if (false /*media is a live video that hasn't started yet*/) {
     console.log("TODO: show Upcoming Video page (countdown page)");
   } else if (media.media_type === MediaTypes.VIDEO || media.media_type === MediaTypes.LIVE_VIDEO) {
-    router.navigate(`/watch/${media.id}`);
+    router.navigate(`/watch/${media.id}?pctx=${pctx}`);
   } else if (media.media_type === MediaTypes.IMAGE || media.media_type === MediaTypes.GALLERY) {
     router.navigate(`/gallery/${media.id}`);
     // } else if (media.media_file || media.media_links) {

@@ -13,23 +13,19 @@ import {
 import { useTheme } from "@emotion/react";
 import CarouselCard from "@/components/cards/CarouselCard";
 import { action } from "mobx";
-
-type NavParams = {
-  mediaContainerId?: string, sectionId?: string
-}
+import { PermissionContext } from "@/data/helpers/PermissionContext";
 
 /**
  * A "View All" screen for either media lists/collections, or Sections.
- * Pass query params [mediaContainerId] or [sectionId] to determine which type of media grid to display.
+ * Pass a [PermissionContext] in query params, with [mediaItemId] or [sectionId] to determine
+ * which type of media grid to display.
  */
 const MediaGrid = observer(({}) => {
-  const { mediaContainerId, sectionId } = useLocalSearchParams<NavParams>();
-  //TODO: pass permissionContext in query
-  const context: PermissionContext = {
-    propertyId: "",
-    mediaItemId: mediaContainerId,
-    sectionId: sectionId,
-  };
+  const { pctx } = useLocalSearchParams<{ pctx: string }>();
+  const context = PermissionContext.deserialize(pctx);
+  const mediaContainerId = context.mediaItemId;
+  // Section ID
+  const sectionId = context.sectionId;
 
   const items = useMemo(action(() => {
     if (mediaContainerId) {

@@ -42,7 +42,7 @@ const ImageGallery = observer(({}) => {
       };
     }));
     const renderItem = useCallback(({ item }: { item: ImageData }) => (
-      <ImageCard title={""} imageSource={item.url} onFocus={() => {
+      <ImageCard imageSource={item.url} onFocus={() => {
         setSelectedImage(item.url);
       }} />), []);
     return (<Page>
