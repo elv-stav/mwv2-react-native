@@ -1,3 +1,5 @@
+import "@/utils/polyfills/array.prototype.findLast.ts"
+
 import { observer } from "mobx-react-lite";
 import { Directions, SpatialNavigation, SpatialNavigationDeviceTypeProvider } from "react-tv-space-navigation";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
