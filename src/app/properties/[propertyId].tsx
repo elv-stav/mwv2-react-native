@@ -26,6 +26,7 @@ import {
 } from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
 import RemoteControlManager from "@/remote-control/RemoteControlManager";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
+import { SupportedKeys } from "@/remote-control/SupportedKeys";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -84,7 +85,11 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
   //  will have their first keyboard event consumed.
   const sectionsNodeRef = useRef<SpatialNavigationNodeRef | null>(null);
   useEffect(() => {
-    const remoteControlListener = () => {
+    const remoteControlListener = (key: SupportedKeys) => {
+      if (key === SupportedKeys.Back) {
+        // Don't capture "Back" presses, let them go to the router.
+        return false;
+      }
       sectionsNodeRef?.current?.focus();
       // First key handled, remove the listener.
       RemoteControlManager.removeKeydownListener(remoteControlListener);
