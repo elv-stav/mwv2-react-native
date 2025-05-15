@@ -1,20 +1,30 @@
 import { SupportedKeys } from './SupportedKeys';
 import { RemoteControlManagerInterface } from './RemoteControlManager.interface';
 import CustomEventEmitter from './CustomEventEmitter';
-import Toast from "react-native-toast-message";
+import { Dict } from "@/utils/Dict";
 
 const LONG_PRESS_DURATION = 500;
 
 class RemoteControlManager implements RemoteControlManagerInterface {
+
+  private static readonly keyMapping: Dict<SupportedKeys> = {
+    ArrowRight: SupportedKeys.Right,
+    ArrowLeft: SupportedKeys.Left,
+    ArrowUp: SupportedKeys.Up,
+    ArrowDown: SupportedKeys.Down,
+    Enter: SupportedKeys.Enter,
+    Backspace: SupportedKeys.Back,
+    Escape: SupportedKeys.Back,
+    // LG TVs use "GoBack" instead of "Backspace"
+    GoBack: SupportedKeys.Back,
+  };
+
+  private static readonly arrowKeys = [
+    SupportedKeys.Up, SupportedKeys.Down, SupportedKeys.Left, SupportedKeys.Right
+  ];
+
   constructor() {
     window.addEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('tizenhwkey', (ev: any) => {
-      if (ev.keyName === "back") {
-        Toast.show({ text1: "tizen back" });
-        ev.code = "Backspace"; // Map Tizen back key to Backspace
-        this.handleKeyDown(ev);
-      }
-    });
     window.addEventListener('keyup', this.handleKeyUp);
   }
 
@@ -31,21 +41,19 @@ class RemoteControlManager implements RemoteControlManagerInterface {
   };
 
   private handleKeyDown = (event: KeyboardEvent) => {
-    const mappedKey = {
-      ArrowRight: SupportedKeys.Right,
-      ArrowLeft: SupportedKeys.Left,
-      ArrowUp: SupportedKeys.Up,
-      ArrowDown: SupportedKeys.Down,
-      Enter: SupportedKeys.Enter,
-      Backspace: SupportedKeys.Back,
-    }[event.code];
+    if (event.defaultPrevented) {
+      return;
+    }
 
+    const mappedKey = RemoteControlManager.keyMapping[event.code || event.key];
     if (!mappedKey) {
       return;
     }
 
     // Prevent extra scrolling on tizen
-    event.preventDefault();
+    if (RemoteControlManager.arrowKeys.includes(mappedKey)) {
+      event.preventDefault();
+    }
 
     if (mappedKey === SupportedKeys.Enter) {
       if (!this.isEnterKeyDown) {
