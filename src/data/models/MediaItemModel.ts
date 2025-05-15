@@ -44,10 +44,15 @@ export const MediaItemModel = DisplaySettingsModel.extend({
 
   // Media that is set to public=false, but also doesn't define any Permissions - is inaccessible.
   public: z.boolean().nullish().transform(nullToUndefined),
+
+  // Only used to grab "versionHash" of the media item.
+  media_link: z.object({ ".": z.object({ source: z.string().nullish() }) }).nullish().transform(nullToUndefined),
 }).transform(obj => ({
   ...obj,
   // Override [permissions] with the standard structure.
-  permissions: normalizePermissions(obj.permissions, obj.public)
+  permissions: normalizePermissions(obj.permissions, obj.public),
+
+  versionHash: obj.media_link?.["."]?.source,
 }));
 
 /**
