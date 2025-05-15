@@ -36,11 +36,11 @@ export default class CustomEventEmitter<Events extends Record<EventType, unknown
 
   emit = <Key extends keyof Events>(eventType: Key, evt?: Events[Key]) => {
     const eventTypeHandlers = this.handlers.get(eventType);
-    // @ts-expect-error TODO fix the type error
+    if (!eventTypeHandlers || !evt) {
+      return;
+    }
     for (let index = eventTypeHandlers.length - 1; index >= 0; index--) {
-      // @ts-expect-error TODO fix the type error
       const handler = eventTypeHandlers[index];
-      // @ts-expect-error TODO fix the type error
       if (handler(evt)) {
         return;
       }
