@@ -17,6 +17,8 @@ import { mediaPropertyStore, tokenStore } from "@/data/stores";
 import { observer } from "mobx-react-lite";
 import { action } from "mobx";
 import { useRouter } from "expo-router";
+import Center from "@/components/Center";
+import Loader from "@/components/Loader";
 
 const Discover = observer(() => {
   const [bgImage, setBgImage] = useState<ImageSourcePropType | undefined>(undefined);
@@ -44,6 +46,10 @@ const Discover = observer(() => {
   // Increase left padding when logged in to accommodate for menu width
   const isLoggedIn = tokenStore.isLoggedIn;
   const padding = isLoggedIn ? { paddingLeft: 140 } : {};
+
+  if (!data?.length) {
+    return <Center style={styles.container}><Loader /></Center>;
+  }
 
   return <>
     <ImageBackground style={[styles.container, padding]} source={bgImage} resizeMode={"cover"}>

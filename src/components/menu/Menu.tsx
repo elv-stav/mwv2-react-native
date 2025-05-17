@@ -17,9 +17,12 @@ import { Typography } from "@/components/Typography";
 import styled from "@emotion/native/dist/emotion-native.cjs";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { DimensionValue } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import useMousePosition from "@/hookes/useMousePosition";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Log from "@/utils/Log";
 
 type MenuProps = {
-  onMenuItemSelected?: () => void,
+  onMenuCloseRequested?: () => void,
 }
 
 const MenuButton = ({ title, icon, onSelect, expand, isSelected }: {
@@ -41,7 +44,23 @@ const MenuButton = ({ title, icon, onSelect, expand, isSelected }: {
   </SpatialNavigationFocusableView>;
 };
 
-const Menu = observer(({ onMenuItemSelected }: MenuProps) => {
+const useCloseMenuOnMouseOut = (isActive: boolean, onClose?: () => void) => {
+  const { x } = useMousePosition();
+
+  const closeMenu = useMemo(() => {
+    // Close menu once cursor traveled more than 1/3 of the screen
+    return isActive && (x || 0) > scaledPixels(1920 / 3);
+  }, [x,/* DO NOT add [isActive] to the dep array. We only want to observe x */]);
+
+  useEffect(() => {
+    if (closeMenu) {
+      // Trigger callback only once when condition is met.
+      onClose?.();
+    }
+  }, [closeMenu]);
+};
+
+const Menu = observer(({ onMenuCloseRequested }: MenuProps) => {
   const router = useRouter();
   const isLoggedIn = tokenStore.isLoggedIn;
   const path = usePathname();
@@ -51,6 +70,7 @@ const Menu = observer(({ onMenuItemSelected }: MenuProps) => {
   }
   return (<SpatialNavigationNode>
     {({ isActive }) => {
+      useCloseMenuOnMouseOut(isActive, onMenuCloseRequested);
       const menuWidth = isActive ? "100%" : scaledPixels(180);
       return (
         <MenuContainer direction={"vertical"} width={menuWidth}>

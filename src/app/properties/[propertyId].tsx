@@ -27,6 +27,7 @@ import {
 import RemoteControlManager from "@/remote-control/RemoteControlManager";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
+import Center from "@/components/Center";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -53,7 +54,7 @@ const PropertyDetail = observer(() => {
   }, [property, pageId]);
 
   if (!property || !viewData) {
-    return <Loader />;
+    return <Center><Loader /></Center>;
   }
   return <PropertyDetailView {...viewData} />;
 });

@@ -4,7 +4,7 @@ import { View } from "react-native";
 const Center = styled(View)({
   height: "100%",
   width: "100%",
-  // justifyContent: 'center',
+  justifyContent: 'center',
   alignItems: 'center',
   // alignContent: 'center',
   flex: 1,
