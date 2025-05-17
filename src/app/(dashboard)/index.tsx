@@ -45,7 +45,7 @@ const Discover = observer(() => {
 
   // Increase left padding when logged in to accommodate for menu width
   const isLoggedIn = tokenStore.isLoggedIn;
-  const padding = isLoggedIn ? { paddingLeft: 140 } : {};
+  const padding = isLoggedIn ? { paddingLeft: scaledPixels(210) } : {};
 
   if (!data?.length) {
     return <Center style={styles.container}><Loader /></Center>;
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: theme.colors.background.mainHover,
     paddingVertical: scaledPixels(55),
-    paddingHorizontal: scaledPixels(100),
+    paddingHorizontal: scaledPixels(168),
     overflow: 'hidden',
   },
   rowStyle: { gap: theme.sizes.propertyCard.gap },
