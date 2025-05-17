@@ -8,8 +8,9 @@ export const sizes = {
     long: { width: scaledPixels(416), height: scaledPixels(250) },
   },
   propertyCard: {
-    width: scaledPixels(320),
-    height: scaledPixels(480)
+    width: scaledPixels(306),
+    height: scaledPixels(450),
+    gap: scaledPixels(22),
   },
   carousel: {
     card: {

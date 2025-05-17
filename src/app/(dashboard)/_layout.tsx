@@ -28,8 +28,8 @@ const Dashboard = observer(({}) => {
   return (
     <Page name={"dashboard"}>
       <SpatialNavigationView direction={"horizontal"} style={{ width: "100%", height: "100%" }}>
-        <Stack screenOptions={{ headerShown: false }} />
         <Menu />
+        <Stack screenOptions={{ headerShown: false }} />
       </SpatialNavigationView>
     </Page>
   );

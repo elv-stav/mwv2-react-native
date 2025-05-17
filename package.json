@@ -40,7 +40,8 @@
     "react-qr-code": "^2.0.15",
     "react-tv-space-navigation": "^5.1.1",
     "urijs": "^1.19.11",
-    "zod": "^3.24.3"
+    "zod": "^3.24.3",
+    "expo-image": "~2.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

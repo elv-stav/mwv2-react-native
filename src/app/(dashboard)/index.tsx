@@ -4,7 +4,8 @@ import {
   SpatialNavigationVirtualizedGrid
 } from "react-tv-space-navigation";
 import React, { useCallback, useEffect, useState } from "react";
-import { Image, ImageBackground, ImageSourcePropType, StyleSheet } from "react-native";
+import { Image } from "expo-image";
+import { ImageBackground, ImageSourcePropType, StyleSheet, View } from "react-native";
 import { useTheme } from "@emotion/react";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { PropertyCard } from "@/components/cards/PropertyCard";
@@ -42,7 +43,7 @@ const Discover = observer(() => {
 
   // Increase left padding when logged in to accommodate for menu width
   const isLoggedIn = tokenStore.isLoggedIn;
-  const padding = isLoggedIn ? { paddingLeft: 190 } : {};
+  const padding = isLoggedIn ? { paddingLeft: 140 } : {};
 
   return <>
     <ImageBackground style={[styles.container, padding]} source={bgImage} resizeMode={"cover"}>
@@ -54,11 +55,14 @@ const Discover = observer(() => {
         header={
           <DefaultFocus>
             <SpatialNavigationFocusableView>
-              <Image style={styles.logo} source={discoverLogo} resizeMode={"contain"} />
+              <Image style={styles.logo}
+                     source={discoverLogo}
+                     contentPosition={"top left"}
+                     contentFit={"contain"} />
             </SpatialNavigationFocusableView>
           </DefaultFocus>
         }
-        itemHeight={theme.sizes.propertyCard.height * theme.scale.focused}
+        itemHeight={theme.sizes.propertyCard.height + theme.sizes.propertyCard.gap}
         rowContainerStyle={styles.rowStyle}
         ascendingArrow={<BottomArrow />}
         ascendingArrowContainerStyle={styles.bottomArrowContainer}
@@ -77,10 +81,11 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     backgroundColor: theme.colors.background.mainHover,
-    padding: scaledPixels(75),
+    paddingVertical: scaledPixels(55),
+    paddingHorizontal: scaledPixels(100),
     overflow: 'hidden',
   },
-  rowStyle: { gap: scaledPixels(30) },
+  rowStyle: { gap: theme.sizes.propertyCard.gap },
   topArrowContainer: {
     width: '100%',
     height: 100,
@@ -101,7 +106,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: scaledPixels(210),
-    width: scaledPixels(876),
-    marginBottom: scaledPixels(20),
+    // Take up the full width of the screen, but maintain aspect ratio
+    width: scaledPixels(1920),
+    marginBottom: scaledPixels(30),
   }
 });
