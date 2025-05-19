@@ -46,7 +46,6 @@ const MenuButton = ({ title, icon, onSelect, expand, isSelected }: {
 
 const useCloseMenuOnMouseOut = (isActive: boolean, onClose?: () => void) => {
   const { x } = useMousePosition();
-
   const closeMenu = useMemo(() => {
     // Close menu once cursor traveled more than 1/3 of the screen
     return isActive && (x || 0) > scaledPixels(1920 / 3);
@@ -54,7 +53,7 @@ const useCloseMenuOnMouseOut = (isActive: boolean, onClose?: () => void) => {
 
   useEffect(() => {
     if (closeMenu) {
-      // Trigger callback only once when condition is met.
+      // Trigger callback only once when the condition is met.
       onClose?.();
     }
   }, [closeMenu]);
@@ -64,14 +63,24 @@ const Menu = observer(({ onMenuCloseRequested }: MenuProps) => {
   const router = useRouter();
   const isLoggedIn = tokenStore.isLoggedIn;
   const path = usePathname();
-  if (!isLoggedIn) {
-    // No menu while not logged in
-    return;
-  }
+
+  const [triggerMenuClose, setTriggerMenuClose] = useState(false);
+  useEffect(() => {
+    if (triggerMenuClose) {
+      onMenuCloseRequested?.();
+      setTriggerMenuClose(false);
+    }
+  }, [triggerMenuClose]);
+
   return (<SpatialNavigationNode>
     {({ isActive }) => {
       useCloseMenuOnMouseOut(isActive, onMenuCloseRequested);
       const menuWidth = isActive ? "100%" : scaledPixels(180);
+      if (!isLoggedIn) {
+        // No menu while not logged in.
+        // But we still have to render the SpatialNavNode to not confuse LRUD.
+        return <></>;
+      }
       return (
         <MenuContainer direction={"vertical"} width={menuWidth}>
           <Gradient start={{ x: 0.9, y: 0 }} end={{ x: 1, y: 0 }}
@@ -82,19 +91,28 @@ const Menu = observer(({ onMenuCloseRequested }: MenuProps) => {
             <MenuButton title={"Home"}
                         icon={homeIcon}
                         expand={isActive}
-                        onSelect={() => router.dismissTo("/")}
+                        onSelect={() => {
+                          setTriggerMenuClose(true);
+                          router.dismissTo("/");
+                        }}
                         isSelected={path === "/"}
             />
             <MenuButton title={"My Items"}
                         icon={myItemsIcon}
                         expand={isActive}
-                        onSelect={() => Toast.show({ text1: "not impl yet" })}
-                        isSelected={false}
+                        onSelect={() => {
+                          setTriggerMenuClose(true);
+                          Toast.show({ text1: "not impl yet" });
+                        }}
+                        isSelected={path === "/myitems"}
             />
             <MenuButton title={"Profile"}
                         icon={profileIcon}
                         expand={isActive}
-                        onSelect={() => router.navigate("/profile")}
+                        onSelect={() => {
+                          setTriggerMenuClose(true);
+                          router.navigate("/profile");
+                        }}
                         isSelected={path === "/profile"}
             />
           </Gradient>
