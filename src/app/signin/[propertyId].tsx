@@ -2,11 +2,10 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { action, runInAction } from "mobx";
 import { mediaPropertyStore, rootStore, tokenStore } from "@/data/stores";
-import { ActivityIndicator, ImageBackground, StyleSheet } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { Typography } from "@/components/Typography";
 import QRCode from "react-qr-code";
-import { theme } from "@/design-system/theme/theme";
 import TvButton from "@/components/TvButton";
 import Loader from "@/components/Loader";
 import { Page } from "@/components/Page";
@@ -68,9 +67,8 @@ const SignIn = observer(() => {
     <ImageBackground
       source={property?.loginBackgroundImage?.urlSource()}
       style={styles.container}>
-      <Typography   {...{/*className="sign-in-page__title"*/ }}>Sign In</Typography>
-      {activationData ? <QrAndCode url={url} code={activationData.id} /> :
-        <Loader /*className={"sign-in-page__qr-loader"}*/ />}
+      <Typography style={styles.title}>Sign In</Typography>
+      <QrAndCode url={url} code={activationData?.id} />
       <SpatialNavigationView direction={"horizontal"} style={styles.buttonContainer}>
         <DefaultFocus>
           <TvButton onSelect={action(() => tokenStore.refreshActivationData())} title={"Request New Code"} />
@@ -81,7 +79,7 @@ const SignIn = observer(() => {
   </Page>;
 });
 
-const QrAndCode = observer(({ url, code }: { url?: string, code: string }) => {
+const QrAndCode = observer(({ url, code }: { url?: string, code?: string }) => {
   const [shortUrl, setShortUrl] = useState<string | null>(null);
   useEffect(() => {
     (async function () {
@@ -91,15 +89,21 @@ const QrAndCode = observer(({ url, code }: { url?: string, code: string }) => {
       }
     )();
   }, [url]);
-  if (!shortUrl) {
-    return <ActivityIndicator size={"large"} />;
+  const size = scaledPixels(360);
+  const padding = styles.qrCode.padding;
+  let content;
+  if (!code || !shortUrl) {
+    content = <Loader style={{ width: "100%", height: "100%" }} />;
+  } else {
+    content = <QRCode value={shortUrl} style={styles.qrCode} size={size - (padding * 2)} />;
   }
-  return <>
-    <Typography style={styles.activationText}>{code}</Typography>
-    <Link href={shortUrl} target="_blank">
-      <QRCode value={shortUrl} style={styles.qrCode} />
+  return (<View style={{ gap: scaledPixels(20) }}>
+    <Typography style={styles.title}>{code || " "}</Typography>
+    {/* @ts-ignore this href is going outside the app, so the href isn't recognized*/}
+    <Link href={shortUrl || ""} target="_blank" style={{ width: size, height: size }}>
+      {content}
     </Link>
-  </>;
+  </View>);
 });
 
 const styles = StyleSheet.create({
@@ -108,21 +112,22 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: scaledPixels(75),
     alignItems: "center",
+    justifyContent: "center",
+    gap: scaledPixels(40)
   },
   buttonContainer: {
     flexDirection: "row",
-    gap: scaledPixels(20),
-
+    gap: scaledPixels(30),
   },
-  activationText: {
-    marginBottom: 12,
+  title: {
+    textAlign: "center",
+    fontSize: scaledPixels(62),
+    fontWeight: "bold",
+    marginBottom: scaledPixels(32),
   },
   qrCode: {
-    backgroundColor: theme.colors.primary.contrastText,
-    width: 200,
-    height: 200,
-    marginBottom: 32,
-    padding: 12,
+    backgroundColor: "white",
+    padding: scaledPixels(18),
   }
 });
 
