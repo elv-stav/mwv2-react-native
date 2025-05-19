@@ -11,7 +11,7 @@ rm -rf .tizen/.build
 rm -rf .tizen/.buildSrc
 
 # Copy Tizen files
-cp -r .tizen/ .tizen/.buildSrc
+cp -r .tizen/webapp .tizen/.buildSrc
 # Copy web-app files
 cp -r dist/ .tizen/.buildSrc
 
