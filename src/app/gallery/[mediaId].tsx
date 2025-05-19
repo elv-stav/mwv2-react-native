@@ -13,6 +13,7 @@ import { SpatialNavigationVirtualizedList } from "react-tv-space-navigation";
 import { theme } from "@/design-system/theme/theme";
 import { LeftArrow, RightArrow } from "@/components/Arrows";
 import ImageCard from "@/components/cards/ImageCard";
+import Toast from "react-native-toast-message";
 
 type ImageData = {
   url: ImageURISource | undefined;
@@ -27,6 +28,7 @@ const ImageGallery = observer(({}) => {
   useFocusEffect(() => {
     if (!media) {
       // TODO: handle fetching media if it isn't already cached
+      Toast.show({ text1: "Missing media, to be implemented.." });
       router.back();
     }
   });
@@ -34,6 +36,8 @@ const ImageGallery = observer(({}) => {
   if (!media) {
     return <></>;
   }
+
+  let content;
   if (media.gallery) {
     const images: ImageData[] = media.gallery.map((galleryItem => {
       return {
@@ -45,32 +49,31 @@ const ImageGallery = observer(({}) => {
       <ImageCard imageSource={item.url} onFocus={() => {
         setSelectedImage(item.url);
       }} />), []);
-    return (<Page>
-      <ImageBackground source={selectedImage || images[0]?.url}
-                       resizeMode={"cover"}
-                       style={{
-                         width: '100%',
-                         height: '100%',
-                         justifyContent: "flex-end",
-                         flexDirection: "column"
-                       }}>
-        {
-          <SpatialNavigationVirtualizedList
-            orientation={"horizontal"}
-            data={images}
-            renderItem={renderItem}
-            itemSize={theme.sizes.carousel.card.height}
-            descendingArrow={<LeftArrow />}
-            descendingArrowContainerStyle={styles.leftArrowContainer}
-            ascendingArrow={<RightArrow />}
-            ascendingArrowContainerStyle={styles.rightArrowContainer}
-          />
-        }
-      </ImageBackground>
-    </Page>);
+
+    content = (<ImageBackground source={selectedImage || images[0]?.url}
+                                resizeMode={"cover"}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  justifyContent: "flex-end",
+                                  flexDirection: "column"
+                                }}>
+      {
+        <SpatialNavigationVirtualizedList
+          orientation={"horizontal"}
+          data={images}
+          renderItem={renderItem}
+          itemSize={theme.sizes.carousel.card.height}
+          descendingArrow={<LeftArrow />}
+          descendingArrowContainerStyle={styles.leftArrowContainer}
+          ascendingArrow={<RightArrow />}
+          ascendingArrowContainerStyle={styles.rightArrowContainer}
+        />
+      }
+    </ImageBackground>);
   } else {
     const { thumbnail } = DisplaySettingsUtil.getThumbnailAndRatio(media);
-    return <ImageBackground source={thumbnail?.urlSource()} style={{
+    content = (<ImageBackground source={thumbnail?.urlSource()} style={{
       width: '100%',
       height: '100%',
       justifyContent: "flex-end",
@@ -89,8 +92,10 @@ const ImageGallery = observer(({}) => {
       }}>
         {media.title}
       </Typography>
-    </ImageBackground>;
+    </ImageBackground>);
   }
+
+  return (<Page name={"ImageGallery"}>{content}</Page>);
 });
 
 const styles = StyleSheet.create({
