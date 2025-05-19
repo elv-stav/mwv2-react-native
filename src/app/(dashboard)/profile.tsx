@@ -8,7 +8,6 @@ import { StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import Utils from "@/utils/elv-client-utils";
 import { useCallback, useRef } from "react";
-import Log from "@/utils/Log";
 import {
   SpatialNavigationNodeRef
 } from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
@@ -19,7 +18,6 @@ const Profile = observer(({}) => {
   const config = fabricConfigStore.config;
   const buttonRef = useRef<SpatialNavigationNodeRef>(null);
   useFocusEffect(useCallback(() => {
-    Log.i("profile on");
     buttonRef?.current?.focus?.();
   }, [buttonRef]));
   return (<>
