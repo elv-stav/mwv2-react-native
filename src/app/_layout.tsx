@@ -66,7 +66,9 @@ const App = observer(({}) => {
               setDocTitle(buildPath(e.data.state.routes.slice(-1)[0]));
             }
           }} />
-          {(process.env.NODE_ENV == "development") && <Toast />}
+          {/* Temporarily enable toast msgs on all builds */}
+          <Toast />
+          {/*{(process.env.NODE_ENV == "development") && <Toast />}*/}
         </View>
       </SpatialNavigationDeviceTypeProvider>
     </ThemeProvider>
