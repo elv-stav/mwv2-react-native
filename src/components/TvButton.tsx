@@ -34,12 +34,14 @@ export default TvButton;
 
 const Container = styled(Animated.View)<{ isFocused: boolean }>(({ isFocused, theme }) => ({
   alignSelf: 'baseline',
-  backgroundColor: isFocused ? 'white' : 'black',
-  padding: theme.spacings.$4,
-  borderRadius: scaledPixels(12),
+  backgroundColor: isFocused ? '#D4D4D4' : '#3E3F40',
+  paddingVertical: scaledPixels(14),
+  paddingHorizontal: scaledPixels(40),
+  borderRadius: scaledPixels(10),
   cursor: 'pointer',
 }));
 
-const ColoredTypography = styled(Typography)<{ isFocused: boolean }>(({ isFocused }) => ({
+const ColoredTypography = styled(Typography)<{ isFocused: boolean }>(({ isFocused, theme }) => ({
   color: isFocused ? 'black' : 'white',
+  fontSize: theme.typography.button.fontSize,
 }));

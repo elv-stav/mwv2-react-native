@@ -33,6 +33,9 @@ export const typography = {
       lineHeight: scaledPixels(32),
     },
   },
+  button: {
+    fontSize: scaledPixels(40),
+  },
 } as const;
 
 export type TypographyVariant = keyof typeof typography;
