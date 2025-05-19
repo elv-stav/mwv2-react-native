@@ -1,11 +1,14 @@
 import { Animated, View } from "react-native";
 import { ButtonProps } from "react-native/Libraries/Components/Button";
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
-import { forwardRef } from "react";
+import { forwardRef, RefObject } from "react";
 import { useFocusAnimation } from "@/design-system/helpers/useFocusAnimation";
 import styled from "@emotion/native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { Typography } from "@/components/Typography";
+import {
+  SpatialNavigationNodeRef
+} from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
 
 const ButtonContent = forwardRef<View, { label: string; isFocused: boolean }>((props, ref) => {
   const { isFocused, label } = props;
@@ -17,11 +20,14 @@ const ButtonContent = forwardRef<View, { label: string; isFocused: boolean }>((p
   );
 });
 
-type TvButtonProps = Omit<ButtonProps, 'onPress'> & { onSelect?: () => void }
+type TvButtonProps = Omit<ButtonProps, 'onPress'> & {
+  onSelect?: () => void,
+  buttonRef?: RefObject<SpatialNavigationNodeRef>
+};
 
-const TvButton = ({ title, onSelect }: TvButtonProps) => {
+const TvButton = ({ title, onSelect, buttonRef }: TvButtonProps) => {
     return (
-      <SpatialNavigationFocusableView onSelect={onSelect}>
+      <SpatialNavigationFocusableView onSelect={onSelect} ref={buttonRef}>
         {({ isFocused, isRootActive }) => (
           <ButtonContent label={title} isFocused={isFocused && isRootActive} />
         )}

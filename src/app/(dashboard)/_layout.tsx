@@ -9,6 +9,7 @@ import { Page } from "@/components/Page";
 import {
   SpatialNavigationNodeRef
 } from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
+import Log from "@/utils/Log";
 
 const Dashboard = observer(({}) => {
   const onDirectionHandledWithoutMovement = useCallback(
@@ -33,7 +34,16 @@ const Dashboard = observer(({}) => {
   return (
     <Page name={"dashboard"}>
       <SpatialNavigationView direction={"horizontal"} style={{ width: "100%", height: "100%" }}>
-        <Menu onMenuCloseRequested={() => contentRef?.current?.focus?.()} />
+        <Menu onMenuCloseRequested={() => {
+          try {
+            contentRef?.current?.focus?.();
+          } catch (e) {
+            // This should really only happen in development, when starting the app another a path that isn't "/",
+            // and thus "contentRef" still hasn't rendered something that can be focused.
+            // It's fine to ignore it, but the menu will just stay open instead of closing.
+            Log.w("failed to assign focus to Dashboard content", e);
+          }
+        }} />
         <SpatialNavigationNode ref={contentRef}>
           <Stack screenOptions={{ headerShown: false }} />
         </SpatialNavigationNode>

@@ -67,6 +67,7 @@ const Menu = observer(({ onMenuCloseRequested }: MenuProps) => {
   const [triggerMenuClose, setTriggerMenuClose] = useState(false);
   useEffect(() => {
     if (triggerMenuClose) {
+      // TODO: set focus on the "selected" menu button right before closing, so it's selected next time the menu opens.
       onMenuCloseRequested?.();
       setTriggerMenuClose(false);
     }

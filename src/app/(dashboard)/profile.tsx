@@ -7,10 +7,21 @@ import { fabricConfigStore, tokenStore } from "@/data/stores";
 import { StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import Utils from "@/utils/elv-client-utils";
+import { useCallback, useRef } from "react";
+import Log from "@/utils/Log";
+import {
+  SpatialNavigationNodeRef
+} from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
+import { useFocusEffect } from "expo-router";
 
 const Profile = observer(({}) => {
   const walletHash = Utils.AddressToHash(tokenStore.walletAddress ?? "");
   const config = fabricConfigStore.config;
+  const buttonRef = useRef<SpatialNavigationNodeRef>(null);
+  useFocusEffect(useCallback(() => {
+    Log.i("profile on");
+    buttonRef?.current?.focus?.();
+  }, [buttonRef]));
   return (<>
     <SpatialNavigationView direction={"vertical"} style={styles.container}>
       <View style={styles.infoContainer}>
@@ -27,6 +38,7 @@ const Profile = observer(({}) => {
 
         <View style={styles.buttonContainer}>
           <TvButton
+            buttonRef={buttonRef}
             title={"Sign Out"}
             onSelect={() => tokenStore.signOut()} />
         </View>
@@ -42,6 +54,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: theme.colors.background.main,
     height: "100%",
+    justifyContent: "center",
   },
   infoContainer: {
     width: "60%",
@@ -55,11 +68,12 @@ const styles = StyleSheet.create({
   infoRow: {
     backgroundColor: "#232323",
     margin: scaledPixels(12),
-    padding: scaledPixels(12),
-    borderRadius: 4
+    padding: scaledPixels(20),
+    borderRadius: scaledPixels(8),
   },
   buttonContainer: {
     width: "100%",
     alignItems: "center",
+    marginTop: scaledPixels(30),
   },
 });
