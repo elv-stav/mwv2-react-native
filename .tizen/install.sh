@@ -20,7 +20,7 @@ done
 shift $(( OPTIND - 1 ))
 
 # Find existing package
-package=$(find .tizen/.build -name "*.wgt" | head -n 1)
+package=$(find .tizen/.build -name "*.wgt" -exec basename {} \; | head -n 1)
 
 if [[ -n "$package" ]] && [[ "$skipBuild" = "true" ]]; then
   echo "Skipping build step. Installing existing package $package"
@@ -30,4 +30,4 @@ else
 fi
 
 # Install the package
-tizen install -n "Eluvio Media Wallet.wgt" -- .tizen/.build
+tizen install -n "$package" -- .tizen/.build

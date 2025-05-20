@@ -4,7 +4,7 @@
         xmlns="http://www.w3.org/ns/widgets"
         id="https://eluv.io/media-wallet"
         version="0.0.1" viewmodes="maximized">
-    <tizen:application id="5gDg6vGj92.MediaWalletPackaged" package="5gDg6vGj92" required_version="2.3"/>
+    <tizen:application id="5gDg6vGj92.MediaWalletDev" package="5gDg6vGj92" required_version="2.3"/>
     <content src="index.html"/>
     <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
     <icon src="icon.png"/>

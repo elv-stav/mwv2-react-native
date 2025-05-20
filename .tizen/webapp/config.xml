@@ -4,12 +4,12 @@
         xmlns="http://www.w3.org/ns/widgets"
         id="https://eluv.io/media-wallet"
         version="0.0.1" viewmodes="maximized">
-    <tizen:application id="dJefeZjxyA.MediaWalletPackaged" package="dJefeZjxyA" required_version="2.3"/>
+    <tizen:application id="xFIu0ONX2k.EluvioMediaWallet" package="xFIu0ONX2k" required_version="2.3"/>
     <content src="index.html"/>
     <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
     <icon src="icon.png"/>
     <tizen:metadata key="http://tizen.org/metadata/app_ui_type/base_screen_resolution" value="extensive"/>
-    <name>Eluvio Media Wallet</name>
+    <name>EluvioMediaWallet</name>
     <tizen:profile name="tv-samsung"/>
 
     <tizen:privilege name="http://developer.samsung.com/privilege/network.public"/>
