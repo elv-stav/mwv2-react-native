@@ -22,7 +22,7 @@ shift $(( OPTIND - 1 ))
 # Find existing package
 package=$(find .tizen/.build -name "*.wgt" | head -n 1)
 
-if [[ -n "$package" ]] && [[ $skipBuild ]]; then
+if [[ -n "$package" ]] && [[ "$skipBuild" = "true" ]]; then
   echo "Skipping build step. Installing existing package $package"
 else
   echo "Building before install"
