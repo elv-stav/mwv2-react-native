@@ -2,17 +2,18 @@ import styled from '@emotion/native';
 import { Image } from 'react-native';
 import arrowSource from "@/assets/arrow-left.png";
 import React from 'react';
+import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 
 
 const LeftArrowImage = styled(Image)({
-  height: 70,
-  width: 50,
+  height: scaledPixels(90),
+  width: scaledPixels(70),
   transform: [{ rotate: '180deg' }],
 });
 
 const RightArrowImage = styled(Image)({
-  height: 70,
-  width: 50,
+  height: scaledPixels(90),
+  width: scaledPixels(70),
 });
 
 export const LeftArrow = React.memo(() => {
@@ -26,14 +27,14 @@ export const RightArrow = React.memo(() => {
 RightArrow.displayName = 'RightArrow';
 
 const BottomArrowImage = styled(Image)({
-  height: 70,
-  width: 50,
+  height: scaledPixels(90),
+  width: scaledPixels(70),
   transform: [{ rotate: '90deg' }],
 });
 
 const TopArrowImage = styled(Image)({
-  height: 70,
-  width: 50,
+  height: scaledPixels(90),
+  width: scaledPixels(70),
   transform: [{ rotate: '270deg' }],
 });
 
