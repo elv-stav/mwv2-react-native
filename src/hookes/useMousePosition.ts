@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Log from "@/utils/Log";
 
 const useMousePosition = () => {
   const [mousePosition, setMousePosition] = useState({ x: null, y: null });

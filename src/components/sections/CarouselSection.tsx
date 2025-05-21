@@ -12,7 +12,6 @@ import { SectionItemModel } from "@/data/models/SectionItemModel";
 import { LeftArrow, RightArrow } from "@/components/Arrows";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import { Href, useRouter } from "expo-router";
-import Log from "@/utils/Log";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
 
 const SUPPORTED_ITEM_TYPES = [

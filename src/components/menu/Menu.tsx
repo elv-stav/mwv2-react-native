@@ -18,8 +18,7 @@ import styled from "@emotion/native/dist/emotion-native.cjs";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { DimensionValue } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import useMousePosition from "@/hookes/useMousePosition";
-import { useEffect, useMemo, useRef, useState } from "react";
-import Log from "@/utils/Log";
+import { useEffect, useMemo, useState } from "react";
 
 type MenuProps = {
   onMenuCloseRequested?: () => void,

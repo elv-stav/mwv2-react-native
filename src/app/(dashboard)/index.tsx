@@ -5,7 +5,7 @@ import {
 } from "react-tv-space-navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { Image } from "expo-image";
-import { ImageBackground, ImageSourcePropType, StyleSheet, View } from "react-native";
+import { ImageBackground, ImageSourcePropType, StyleSheet } from "react-native";
 import { useTheme } from "@emotion/react";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { PropertyCard } from "@/components/cards/PropertyCard";
