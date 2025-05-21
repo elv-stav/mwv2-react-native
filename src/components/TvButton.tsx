@@ -67,6 +67,7 @@ const ColoredTypography = styled(Typography)<{ isFocused: boolean, fontSize?: nu
                                                                                          }) => ({
   color: isFocused ? 'black' : 'white',
   fontSize: fontSize || theme.typography.button.fontSize,
+  fontFamily: theme.typography.button.fontFamily,
 }));
 
 function ButtonBgColor(isFocused: boolean, style: TvButtonStyle): ColorValue {

@@ -14,6 +14,7 @@
     "@eluvio/elv-player-js": "github:eluv-io/elv-player-js#spatial-nav",
     "@emotion/native": "^11.11.0",
     "@emotion/react": "^11.14.0",
+    "@expo-google-fonts/inter": "^0.3.0",
     "@expo/metro-runtime": "~4.0.1",
     "@expo/vector-icons": "^14.1.0",
     "@react-navigation/native": "^7.1.6",
@@ -23,6 +24,7 @@
     "console-feed": "^3.8.0",
     "expo": "~52.0.46",
     "expo-constants": "~17.0.8",
+    "expo-image": "~2.0.7",
     "expo-linear-gradient": "~14.0.2",
     "expo-linking": "~7.0.5",
     "expo-router": "~4.0.20",
@@ -42,8 +44,7 @@
     "react-qr-code": "^2.0.15",
     "react-tv-space-navigation": "^5.1.1",
     "urijs": "^1.19.11",
-    "zod": "^3.24.3",
-    "expo-image": "~2.0.7"
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

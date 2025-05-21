@@ -1,32 +1,34 @@
 import styled from '@emotion/native';
 import { ReactNode } from 'react';
 import { TextProps } from 'react-native';
-import { FontWeight, TypographyVariant } from "@/design-system/theme/typography";
+import { InterFontFamilies, TypographyStyle } from "@/design-system/theme/typography";
+import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 
-export type TypographyProps = TextProps & {
-  variant?: TypographyVariant;
-  fontWeight?: FontWeight;
+// Remove "style" from TextProps to make sure we pass the correct style type.
+export type TypographyProps = Omit<TextProps, "style"> & {
+  fontFamily?: InterFontFamilies;
   children?: ReactNode;
+  style?: TypographyStyle;
 };
 
 export const Typography = ({
-                             variant = 'body',
-                             fontWeight = 'regular',
+                             fontFamily = 'Inter_400Regular',
                              children,
                              ...textProps
                            }: TypographyProps) => {
   return (
-    <StyledText variant={variant} fontWeight={fontWeight} {...textProps}>
+    <StyledText fontFamily={fontFamily} {...textProps} >
       {children}
     </StyledText>
   );
 };
 
 const StyledText = styled.Text<{
-  variant: TypographyVariant;
-  fontWeight: FontWeight;
-}>(({ variant, fontWeight, theme }) => ({
-  ...theme.typography[variant][fontWeight],
+  fontFamily: InterFontFamilies;
+}>(({ fontFamily, theme }) => ({
+  fontFamily,
+  fontSize: scaledPixels(24),
+  lineHeight: scaledPixels(32),
   color: 'white',
   flexWrap: 'wrap',
 }));
