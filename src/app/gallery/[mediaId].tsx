@@ -78,13 +78,13 @@ const ImageGallery = observer(({}) => {
       height: '100%',
       justifyContent: "flex-end",
     }}>
-      {/*@ts-ignore lineHeight as % probably only works on web */}
       <Typography style={{
         fontSize: scaledPixels(40),
         textAlign: "center",
-        fontWeight: "700",
+        fontFamily: "Inter_700Bold",
         width: "100%",
         backgroundColor: "#000000b2",
+        // @ts-ignore lineHeight as % probably only works on web
         lineHeight: "150%",
         paddingHorizontal: scaledPixels(100),
         paddingVertical: scaledPixels(90),

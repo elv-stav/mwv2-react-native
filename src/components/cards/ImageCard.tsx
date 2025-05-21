@@ -8,9 +8,11 @@ import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { Ionicons } from "@expo/vector-icons";
 import Center from "@/components/Center";
+import { DimensionValue } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
 type ImageCardProps = {
   imageSource?: ImageURISource;
+  height?: DimensionValue,
   href?: string;
   onSelect?: () => void;
   onFocus?: () => void;
@@ -28,6 +30,7 @@ type ImageCardProps = {
  */
 const ImageCard = observer(({
                               imageSource,
+                              height,
                               onSelect,
                               onFocus,
                               focusedOverlay,
@@ -39,6 +42,7 @@ const ImageCard = observer(({
   return (<SpatialNavigationFocusableView onSelect={onSelect} onFocus={onFocus}>
     {({ isFocused }) => (
       <Container
+        height={height}
         isFocused={isFocused}
         inaccessible={inaccessible}
         aspectRatio={aspectRatio}
@@ -59,11 +63,12 @@ const ImageCard = observer(({
 });
 
 const Container = styled(Animated.View)<{
+  height?: DimensionValue;
   isFocused: boolean;
   aspectRatio: number;
   inaccessible: boolean;
-}>(({ isFocused, aspectRatio, inaccessible, theme }) => ({
-  height: theme.sizes.carousel.card.height,
+}>(({ height, isFocused, aspectRatio, inaccessible, theme }) => ({
+  height: height || theme.sizes.carousel.card.height,
   aspectRatio: aspectRatio,
   overflow: 'hidden',
   borderRadius: scaledPixels(18),

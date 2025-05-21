@@ -11,6 +11,7 @@ import Loader from "@/components/Loader";
 import { Page } from "@/components/Page";
 import { DefaultFocus, SpatialNavigationView } from "react-tv-space-navigation";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
+import styled from "@emotion/native";
 
 const SignIn = observer(() => {
   const { propertyId } = useLocalSearchParams<{ propertyId: string }>();
@@ -67,7 +68,7 @@ const SignIn = observer(() => {
     <ImageBackground
       source={property?.loginBackgroundImage?.urlSource()}
       style={styles.container}>
-      <Typography style={styles.title}>Sign In</Typography>
+      <Title>Sign In</Title>
       <QrAndCode url={url} code={activationData?.id} />
       <SpatialNavigationView direction={"horizontal"} style={styles.buttonContainer}>
         <DefaultFocus>
@@ -98,12 +99,19 @@ const QrAndCode = observer(({ url, code }: { url?: string, code?: string }) => {
     content = <QRCode value={shortUrl} style={styles.qrCode} size={size - (padding * 2)} />;
   }
   return (<View style={{ gap: scaledPixels(20) }}>
-    <Typography style={styles.title}>{code || " "}</Typography>
+    <Title>{code || " "}</Title>
     {/* @ts-ignore this href is going outside the app, so the href isn't recognized*/}
     <Link href={shortUrl || ""} target="_blank" style={{ width: size, height: size }}>
       {content}
     </Link>
   </View>);
+});
+
+const Title = styled(Typography)({
+  textAlign: "center",
+  fontSize: scaledPixels(62),
+  fontFamily: "Inter_700Bold",
+  marginBottom: scaledPixels(32),
 });
 
 const styles = StyleSheet.create({
@@ -118,12 +126,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     gap: scaledPixels(30),
-  },
-  title: {
-    textAlign: "center",
-    fontSize: scaledPixels(62),
-    fontWeight: "bold",
-    marginBottom: scaledPixels(32),
   },
   qrCode: {
     backgroundColor: "white",

@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { Typography } from "@/components/Typography";
 import { useLocalSearchParams } from "expo-router";
 import { mediaPropertyStore } from "@/data/stores";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { SectionItemModel } from "@/data/models/SectionItemModel";
 import { Page } from "@/components/Page";
 import {
@@ -10,10 +10,12 @@ import {
   SpatialNavigationFocusableView,
   SpatialNavigationVirtualizedGrid
 } from "react-tv-space-navigation";
-import { useTheme } from "@emotion/react";
 import CarouselCard from "@/components/cards/CarouselCard";
 import { action } from "mobx";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
+import Toast from "react-native-toast-message";
+import { scaledPixels } from "@/design-system/helpers/scaledPixels";
+import { StyleSheet } from "react-native";
 
 /**
  * A "View All" screen for either media lists/collections, or Sections.
@@ -26,6 +28,7 @@ const MediaGrid = observer(({}) => {
   const mediaContainerId = context.mediaItemId;
   // Section ID
   const sectionId = context.sectionId;
+  const [title, setTitle] = useState("");
 
   const items = useMemo(action(() => {
     if (mediaContainerId) {
@@ -33,32 +36,39 @@ const MediaGrid = observer(({}) => {
       const itemIds = container.media || container.media_lists;
       if (itemIds) {
         //TODO: fetch items from the store/network
+        Toast.show({ text1: "Media collections/lists not supported yet" });
       }
       return [];
     } else if (sectionId) {
-      return mediaPropertyStore.sections[sectionId].content;
+      const section = mediaPropertyStore.sections[sectionId];
+      setTitle(section.display?.title || "");
+      return section.content;
     } else {
       return [];
     }
   }), [mediaContainerId, sectionId]);
 
-  const renderItem = useCallback(action(({ item }: { item: SectionItemModel }) =>
-    <CarouselCard sectionItem={item} context={context} />), []);
+  const height = scaledPixels(240);
+  const renderItem = useCallback(
+    action(({ item }: { item: SectionItemModel }) =>
+      <CarouselCard height={height} sectionItem={item} context={context} />),
+    []);
 
-  const theme = useTheme();
 
   return (<Page>
     <DefaultFocus>
       <SpatialNavigationVirtualizedGrid
+        style={styles.grid}
+        rowContainerStyle={styles.row}
         data={items}
         renderItem={renderItem}
-        itemHeight={theme.sizes.carousel.card.height}
+        itemHeight={height + styles.row.gap}
         header={
           <SpatialNavigationFocusableView>
-            <Typography>TITLE</Typography>
+            <Typography style={{ fontSize: scaledPixels(32) }}>{title}</Typography>
           </SpatialNavigationFocusableView>
         }
-        headerSize={60}
+        headerSize={scaledPixels(90)}
         numberOfColumns={4}
       />
     </DefaultFocus>
@@ -66,3 +76,13 @@ const MediaGrid = observer(({}) => {
 });
 
 export default MediaGrid;
+
+const styles = StyleSheet.create({
+  grid: {
+    paddingHorizontal: scaledPixels(90),
+    paddingTop: scaledPixels(50)
+  },
+  row: {
+    gap: scaledPixels(20),
+  }
+});

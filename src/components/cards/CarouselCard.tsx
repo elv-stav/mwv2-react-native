@@ -16,10 +16,12 @@ import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
+import { DimensionValue } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
-const CarouselCard = observer(({ sectionItem, context }: {
+const CarouselCard = observer(({ sectionItem, context, height }: {
   sectionItem: SectionItemModel,
-  context: PermissionContext
+  context: PermissionContext,
+  height?: DimensionValue
 }) => {
   context = { ...context, sectionItemId: sectionItem.id, mediaItemId: sectionItem.media?.id };
   const { thumbnail, aspectRatio } = sectionItem.thumbnailAndRatio;
@@ -31,6 +33,7 @@ const CarouselCard = observer(({ sectionItem, context }: {
   const showPurchaseOptions = PermissionUtil.showPurchaseOptions(permissions) || PermissionUtil.showAlternatePage(permissions);
 
   return <ImageCard
+    height={height}
     onSelect={() => onSectionItemClick(sectionItem, context)}
     imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
     aspectRatio={aspectRatio}
@@ -96,7 +99,7 @@ const onMediaItemClick = (media: MediaItemModel, permissionContext: PermissionCo
 const PurchaseOptionsText = () => {
   return <>
     <Typography style={{
-      fontWeight: "bold",
+      fontFamily: "Inter_700Bold",
       fontSize: scaledPixels(24),
     }}>VIEW PURCHASE OPTIONS</Typography>
     <View style={{ flex: 1 }} />
