@@ -66,9 +66,9 @@ const Container = styled(Animated.View)<{
   height: theme.sizes.carousel.card.height,
   aspectRatio: aspectRatio,
   overflow: 'hidden',
-  borderRadius: 12,
+  borderRadius: scaledPixels(18),
   borderColor: isFocused ? theme.colors.primary.light : 'transparent',
-  borderWidth: 2,
+  borderWidth: scaledPixels(4),
   opacity: inaccessible ? 0.2 : 1,
   cursor: 'pointer',
 }));

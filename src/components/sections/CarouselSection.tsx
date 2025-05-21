@@ -11,7 +11,7 @@ import { useCallback, useMemo } from "react";
 import { SectionItemModel } from "@/data/models/SectionItemModel";
 import { LeftArrow, RightArrow } from "@/components/Arrows";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import Log from "@/utils/Log";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
 
@@ -53,7 +53,7 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
     return result;
   }, [section]);
 
-  const viewAllHref = useMemo(() => {
+  const viewAllHref = useMemo((): Href | undefined => {
     if (items.length > displayLimit || items.length > VIEW_ALL_THRESHOLD) {
       return `/view?pctx=${PermissionContext.serialize(context)}`;
     } else {
@@ -92,14 +92,17 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
 });
 
 const TitleRow = observer(({ title, subtitle, viewAllHref }: {
-  title?: string, subtitle?: string, viewAllHref?: string
+  title?: string, subtitle?: string, viewAllHref?: Href
 }) => {
   const router = useRouter();
   // TODO: add subtitle
   return (<>
     <View style={styles.titleContainer}>
       {!!title && <Typography>{title}</Typography>}
-      {!!viewAllHref && <TvButton title={"View All"} onSelect={() => router.navigate(viewAllHref)} />}
+      {!!viewAllHref &&
+        <TvButton title={"VIEW ALL"}
+                  style={{ variant: 'outline', fontSize: scaledPixels(28) }}
+                  onSelect={() => router.navigate(viewAllHref)} />}
     </View>
   </>);
 });

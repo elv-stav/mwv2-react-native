@@ -1,4 +1,4 @@
-import { Animated, View } from "react-native";
+import { Animated, ColorValue, View } from "react-native";
 import { ButtonProps } from "react-native/Libraries/Components/Button";
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
 import { forwardRef, RefObject } from "react";
@@ -10,26 +10,33 @@ import {
   SpatialNavigationNodeRef
 } from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
 
-const ButtonContent = forwardRef<View, { label: string; isFocused: boolean }>((props, ref) => {
-  const { isFocused, label } = props;
-  const anim = useFocusAnimation(isFocused);
-  return (
-    <Container style={anim} isFocused={isFocused} ref={ref}>
-      <ColoredTypography isFocused={isFocused}>{label}</ColoredTypography>
-    </Container>
-  );
-});
+const ButtonContent = forwardRef<View, { label: string; isFocused: boolean, style?: TvButtonStyle }>(
+  ({ isFocused, label, style = {} }, ref) => {
+    const anim = useFocusAnimation(isFocused);
+    return (
+      <Container ref={ref} style={anim} isFocused={isFocused} buttonStyle={style}>
+        <ColoredTypography isFocused={isFocused} fontSize={style.fontSize}>{label}</ColoredTypography>
+      </Container>
+    );
+  }
+);
+
+type TvButtonStyle = {
+  variant?: 'fill' | 'outline';
+  fontSize?: number;
+}
 
 type TvButtonProps = Omit<ButtonProps, 'onPress'> & {
+  style?: TvButtonStyle,
   onSelect?: () => void,
   buttonRef?: RefObject<SpatialNavigationNodeRef>
 };
 
-const TvButton = ({ title, onSelect, buttonRef }: TvButtonProps) => {
+const TvButton = ({ title, style, onSelect, buttonRef }: TvButtonProps) => {
     return (
       <SpatialNavigationFocusableView onSelect={onSelect} ref={buttonRef}>
         {({ isFocused, isRootActive }) => (
-          <ButtonContent label={title} isFocused={isFocused && isRootActive} />
+          <ButtonContent label={title} style={style} isFocused={isFocused && isRootActive} />
         )}
       </SpatialNavigationFocusableView>
     );
@@ -38,16 +45,47 @@ const TvButton = ({ title, onSelect, buttonRef }: TvButtonProps) => {
 
 export default TvButton;
 
-const Container = styled(Animated.View)<{ isFocused: boolean }>(({ isFocused, theme }) => ({
+const Container = styled(Animated.View)<{ isFocused: boolean, buttonStyle: TvButtonStyle }>(({
+                                                                                               isFocused,
+                                                                                               buttonStyle,
+                                                                                               theme
+                                                                                             }) => ({
   alignSelf: 'baseline',
-  backgroundColor: isFocused ? '#D4D4D4' : '#3E3F40',
+  backgroundColor: ButtonBgColor(isFocused, buttonStyle),
   paddingVertical: scaledPixels(14),
   paddingHorizontal: scaledPixels(40),
   borderRadius: scaledPixels(10),
+  borderWidth: scaledPixels(4),
+  borderColor: ButtonBorderColor(isFocused, buttonStyle),
   cursor: 'pointer',
 }));
 
-const ColoredTypography = styled(Typography)<{ isFocused: boolean }>(({ isFocused, theme }) => ({
+const ColoredTypography = styled(Typography)<{ isFocused: boolean, fontSize?: number }>(({
+                                                                                           isFocused,
+                                                                                           fontSize,
+                                                                                           theme
+                                                                                         }) => ({
   color: isFocused ? 'black' : 'white',
-  fontSize: theme.typography.button.fontSize,
+  fontSize: fontSize || theme.typography.button.fontSize,
 }));
+
+function ButtonBgColor(isFocused: boolean, style: TvButtonStyle): ColorValue {
+  if (isFocused) {
+    return "#D4D4D4";
+  }
+
+  switch (style.variant) {
+    case "outline":
+      return "transparent";
+    case "fill":
+    default:
+      return "#3E3F40";
+  }
+}
+
+function ButtonBorderColor(isFocused: boolean, style: TvButtonStyle): ColorValue {
+  if (style.variant === "outline") {
+    return "#D4D4D4";
+  }
+  return ButtonBgColor(isFocused, style);
+}
