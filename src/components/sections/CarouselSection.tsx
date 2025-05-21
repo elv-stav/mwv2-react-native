@@ -13,6 +13,7 @@ import { LeftArrow, RightArrow } from "@/components/Arrows";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import { Href, useRouter } from "expo-router";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
+import styled from "@emotion/native/dist/emotion-native.cjs";
 
 const SUPPORTED_ITEM_TYPES = [
   "media",
@@ -94,10 +95,12 @@ const TitleRow = observer(({ title, subtitle, viewAllHref }: {
   title?: string, subtitle?: string, viewAllHref?: Href
 }) => {
   const router = useRouter();
-  // TODO: add subtitle
   return (<>
     <View style={styles.titleContainer}>
-      {!!title && <Typography>{title}</Typography>}
+      {(!!title || !!subtitle) && <View style={{ gap: scaledPixels(20) }}>
+        {!!title && <Title>{title}</Title>}
+        {!!subtitle && <Subtitle>{subtitle}</Subtitle>}
+      </View>}
       {!!viewAllHref &&
         <TvButton title={"VIEW ALL"}
                   style={{ variant: 'outline', fontSize: scaledPixels(28) }}
@@ -105,6 +108,14 @@ const TitleRow = observer(({ title, subtitle, viewAllHref }: {
     </View>
   </>);
 });
+
+const Title = styled(Typography)(() => ({
+  fontSize: scaledPixels(32),
+}));
+const Subtitle = styled(Typography)(() => ({
+  fontSize: scaledPixels(32),
+  fontFamily: "Inter_100Thin",
+}));
 
 const styles = StyleSheet.create({
   titleContainer: {

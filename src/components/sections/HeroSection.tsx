@@ -4,6 +4,7 @@ import { SectionComponentProps } from "@/components/sections/SectionComponentPro
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { useEffect, useState } from "react";
 import { Typography } from "@/components/Typography";
+import styled from "@emotion/native";
 
 const HeroSection = observer(({ section }: SectionComponentProps) => {
   return (<>
@@ -25,11 +26,26 @@ const HeroSection = observer(({ section }: SectionComponentProps) => {
             height: logoHeight,
             width: logoWidth,
           }} />}
-        {display?.title && <Typography>{display.title}</Typography>}
-        {display?.description && <Typography>{display.description}</Typography>}
+        {display?.title && <Title>{display.title}</Title>}
+        {display?.description && <Subtitle>{display.description}</Subtitle>}
       </View>;
     })}
   </>);
+});
+
+const Title = styled(Typography)({
+  fontSize: scaledPixels(48),
+  fontFamily: "Inter_700Bold",
+  marginTop: scaledPixels(70),
+  marginRight: scaledPixels(660),
+});
+
+const Subtitle = styled(Typography)({
+  fontSize: scaledPixels(24),
+  fontFamily: "Inter_500Medium",
+  marginTop: scaledPixels(50),
+  marginBottom: scaledPixels(30),
+  marginRight: scaledPixels(660),
 });
 
 export default HeroSection;

@@ -17,7 +17,7 @@ export const sizes = {
       height: scaledPixels(280)
     },
     title: {
-      height: scaledPixels(32),
+      height: scaledPixels(70),
     },
     row: {
       gap: scaledPixels(20),
