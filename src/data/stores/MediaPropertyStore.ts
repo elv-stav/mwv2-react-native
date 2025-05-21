@@ -102,6 +102,10 @@ export class MediaPropertyStore {
           permissionStates: property.permission_auth_state
         });
         this.sections[section.id] = section;
+        // Also save subsections
+        section.sections_resolved?.forEach(subsection => {
+          this.sections[subsection.id] = subsection;
+        });
       });
 
       this.sectionsByPage[`${property.id}_${page.id}`] = sections;
