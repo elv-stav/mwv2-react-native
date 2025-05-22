@@ -14,7 +14,7 @@ type MediaPermissions = z.infer<typeof MediaPermissions>
 export const MediaItemModel = DisplaySettingsModel.extend({
   id: z.string(),
   media_file: AssetLinkModel.nullish().transform(nullToUndefined),
-// media_link:MediaLinkDto?, // I don't think we need this anymore
+
   media_type: z.string().nullish().transform(nullToUndefined),
   type: z.string(),
   poster_image: AssetLinkModel.nullish().transform(nullToUndefined),

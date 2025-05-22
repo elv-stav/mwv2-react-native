@@ -6,7 +6,6 @@ import styled from "@emotion/native/dist/emotion-native.cjs";
 import { Animated, Image } from "react-native";
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
-import { Ionicons } from "@expo/vector-icons";
 import Center from "@/components/Center";
 import { DimensionValue } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
@@ -17,7 +16,6 @@ type ImageCardProps = {
   onSelect?: () => void;
   onFocus?: () => void;
   aspectRatio?: number;
-  playable?: boolean;
   inaccessible?: boolean;
   focusedOverlay?: ReactElement;
   unfocusedOverlay?: ReactElement;
@@ -36,7 +34,6 @@ const ImageCard = observer(({
                               focusedOverlay,
                               unfocusedOverlay,
                               aspectRatio = 1.0,
-                              playable = false,
                               inaccessible = false,
                             }: ImageCardProps) => {
   return (<SpatialNavigationFocusableView onSelect={onSelect} onFocus={onFocus}>
@@ -52,9 +49,6 @@ const ImageCard = observer(({
           width: '100%',
         }} />
         {<Overlay isFocused={isFocused}>
-          {(playable && !isFocused) && <Ionicons name={"play"} color={"white"}
-                                                 size={scaledPixels(90)}
-                                                 style={{ opacity: 0.8, }} />}
           {isFocused ? focusedOverlay : unfocusedOverlay}
         </Overlay>}
       </Container>
