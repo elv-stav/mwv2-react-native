@@ -14,6 +14,7 @@ import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import { Href, useRouter } from "expo-router";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
 import styled from "@emotion/native/dist/emotion-native.cjs";
+import { ImageBackground } from "expo-image";
 
 const SUPPORTED_ITEM_TYPES = [
   "media",
@@ -31,7 +32,6 @@ const VIEW_ALL_THRESHOLD = 5;
 const CarouselSection = observer(({ section, context }: SectionComponentProps) => {
   context = { ...context, sectionId: section.id };
   const display = section.display;
-  // const bgImage = rootStore.ResolveUrl(display.inline_background_image_tv || display.inline_background_image);
   const title = display?.title;
   const subtitle = display?.subtitle;
   const hasTitleRow = title || subtitle;
@@ -65,11 +65,31 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
     <CarouselCard sectionItem={item} context={context} />
   ), []);
 
+
+  const sectionBgImage = useMemo(() => {
+    const url = section.display?.inline_background_image?.url();
+    if (url) {
+      return { uri: `${url}?width=${scaledPixels(1920)}` };
+    }
+    return null;
+  }, [section.display?.inline_background_image]);
+  const sectionBgColor = section.display?.inline_background_color || "transparent";
+
   if (items.length === 0) {
     return null;
   }
+
   return (
-    <View style={{ height: theme.sizes.carousel.row.height, gap: theme.sizes.carousel.row.gap }}>
+    <ImageBackground
+      contentPosition={"top left"}
+      source={sectionBgImage}
+      style={{
+        height: theme.sizes.carousel.row.height,
+        gap: theme.sizes.carousel.row.gap,
+        backgroundColor: sectionBgColor,
+        paddingHorizontal: theme.sizes.carousel.contentPadding,
+        paddingVertical: scaledPixels(20),
+      }}>
       {!!hasTitleRow && <TitleRow title={title} subtitle={subtitle} viewAllHref={viewAllHref} />}
       <SpatialNavigationNode>
         {({ isActive }) =>
@@ -87,7 +107,7 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
           />
         }
       </SpatialNavigationNode>
-    </View>
+    </ImageBackground>
   );
 });
 

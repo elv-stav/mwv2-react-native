@@ -5,6 +5,7 @@ import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { useEffect, useState } from "react";
 import { Typography } from "@/components/Typography";
 import styled from "@emotion/native";
+import { theme } from "@/design-system/theme/theme";
 
 const HeroSection = observer(({ section }: SectionComponentProps) => {
   return (<>
@@ -20,7 +21,7 @@ const HeroSection = observer(({ section }: SectionComponentProps) => {
         });
       }, []);
 
-      return <View key={item.id}>
+      return <View key={item.id} style={{paddingHorizontal: theme.sizes.carousel.contentPadding}}>
         {logo &&
           <Image source={logo} resizeMode={"contain"} style={{
             height: logoHeight,

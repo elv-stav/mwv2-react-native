@@ -13,6 +13,7 @@ export const sizes = {
     gap: scaledPixels(22),
   },
   carousel: {
+    contentPadding: scaledPixels(80),
     card: {
       height: scaledPixels(280)
     },
@@ -21,8 +22,9 @@ export const sizes = {
     },
     row: {
       gap: scaledPixels(20),
+      paddingVertical: scaledPixels(60),
       get height() {
-        return (sizes.carousel.card.height + this.gap + sizes.carousel.title.height) * scale.focused;
+        return (sizes.carousel.card.height * scale.focused) + sizes.carousel.title.height + sizes.carousel.row.paddingVertical;
       }
     }
   },

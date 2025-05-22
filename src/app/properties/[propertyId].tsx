@@ -101,8 +101,9 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
   }, []);
 
   return (<Page name={"propdetail"}>
-    <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1, padding: scaledPixels(80) }}>
+    <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1 }}>
       <SpatialNavigationScrollView
+        offsetFromStart={scaledPixels(300)}
         style={{ overflow: "visible" }}
         ascendingArrow={<BottomArrow />}
         ascendingArrowContainerStyle={styles.bottomArrowContainer}
@@ -115,7 +116,7 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
           })} />
         </View>
         <SpatialNavigationNode ref={sectionsNodeRef}>
-          <View style={{ gap: scaledPixels(32) }}>
+          <>
             {
               sections.map(section => {
                 switch (section.type) {
@@ -132,7 +133,7 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
                 }
               })
             }
-          </View>
+          </>
         </SpatialNavigationNode>
       </SpatialNavigationScrollView>
     </ImageBackground>
