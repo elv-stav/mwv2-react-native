@@ -45,3 +45,12 @@ tizen build-web -out ../.build/tizen-web-build -- ./.tizen/.buildSrc
 
 # Actually create a wgt package
 tizen package -t wgt -s Eluvio-Cert -- .tizen/.build/tizen-web-build -o .tizen/.build
+
+# Tizen is dumb and will fail to install any packages with spaces in the file name,
+# so rename the package to remove spaces
+find .tizen/.build -maxdepth 1 -type f -name "*.wgt" | while read -r filename; do
+  newname="${filename// /_}"
+  if [ "$filename" != "$newname" ]; then
+    mv -v "$filename" "$newname"
+  fi
+done
