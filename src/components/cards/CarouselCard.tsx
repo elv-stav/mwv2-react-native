@@ -116,8 +116,8 @@ const onMediaItemClick = (media: MediaItemModel, permissionContext: PermissionCo
     Toast.show({ text1: "locked item: not yet impl" });
   } else if (media.type === "list" || media.type === "collection") {
     router.navigate(`/view?pctx=${pctx}`);
-  } else if (false /*media is a live video that hasn't started yet*/) {
-    console.log("TODO: show Upcoming Video page (countdown page)");
+  } else if (media.live_video && !LiveVideoUtil.isStreamStarted(media)) {
+    router.navigate(`/countdown/${media.id}?pctx=${pctx}`);
   } else if (media.media_type === MediaTypes.VIDEO || media.media_type === MediaTypes.LIVE_VIDEO) {
     router.navigate(`/watch/${media.id}?pctx=${pctx}`);
   } else if (media.media_type === MediaTypes.IMAGE || media.media_type === MediaTypes.GALLERY) {
