@@ -14,9 +14,10 @@ import { theme } from "@/design-system/theme/theme";
 import { LeftArrow, RightArrow } from "@/components/Arrows";
 import ImageCard from "@/components/cards/ImageCard";
 import Toast from "react-native-toast-message";
+import { AssetLinkModel } from "@/data/models/AssetLinkModel";
 
 type ImageData = {
-  url: ImageURISource | undefined;
+  link?: AssetLinkModel;
   ratio: number | null;
 }
 
@@ -41,16 +42,16 @@ const ImageGallery = observer(({}) => {
   if (media.gallery) {
     const images: ImageData[] = media.gallery.map((galleryItem => {
       return {
-        url: galleryItem.thumbnail?.urlSource(),
+        link: galleryItem.thumbnail,
         ratio: AspectRatio.fromString(galleryItem.thumbnail_aspect_ratio)
       };
     }));
     const renderItem = useCallback(({ item }: { item: ImageData }) => (
-      <ImageCard imageSource={item.url} onFocus={() => {
-        setSelectedImage(item.url);
+      <ImageCard imageSource={item.link?.urlSource?.(theme.sizes.carousel.card.height)} onFocus={() => {
+        setSelectedImage(item.link?.urlSource?.(scaledPixels(1080)));
       }} />), []);
 
-    content = (<ImageBackground source={selectedImage || images[0]?.url}
+    content = (<ImageBackground source={selectedImage || images[0]?.link?.urlSource?.(scaledPixels(1080))}
                                 resizeMode={"cover"}
                                 style={{
                                   width: '100%',
@@ -73,7 +74,7 @@ const ImageGallery = observer(({}) => {
     </ImageBackground>);
   } else {
     const { thumbnail } = DisplaySettingsUtil.getThumbnailAndRatio(media);
-    content = (<ImageBackground source={thumbnail?.urlSource()} style={{
+    content = (<ImageBackground source={thumbnail?.urlSource?.(scaledPixels(1080))} style={{
       width: '100%',
       height: '100%',
       justifyContent: "flex-end",
