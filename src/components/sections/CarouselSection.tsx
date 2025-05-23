@@ -14,7 +14,8 @@ import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import { Href, useRouter } from "expo-router";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
 import styled from "@emotion/native/dist/emotion-native.cjs";
-import { ImageBackground } from "expo-image";
+import { Image, ImageBackground, useImage } from "expo-image";
+import { MediaSectionModel } from "@/data/models/MediaSectionModel";
 
 const SUPPORTED_ITEM_TYPES = [
   "media",
@@ -65,7 +66,6 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
     <CarouselCard sectionItem={item} context={context} />
   ), []);
 
-
   const sectionBgImage = useMemo(() => {
     const url = section.display?.inline_background_image?.url();
     if (url) {
@@ -79,6 +79,8 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
     return null;
   }
 
+  const hasLogo = !!(section.display?.logo || section.display?.logo_text);
+
   return (
     <ImageBackground
       contentPosition={"top left"}
@@ -90,33 +92,60 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
         paddingHorizontal: theme.sizes.carousel.contentPadding,
         paddingVertical: scaledPixels(20),
       }}>
-      {!!hasTitleRow && <TitleRow title={title} subtitle={subtitle} viewAllHref={viewAllHref} />}
-      <SpatialNavigationNode>
-        {({ isActive }) =>
-          <SpatialNavigationVirtualizedList
-            orientation={"horizontal"}
-            data={items}
-            renderItem={renderItem}
-            itemSize={item =>
-              theme.sizes.carousel.card.height * (item.thumbnailAndRatio.aspectRatio || 1.0) * theme.scale.focused
-            }
-            descendingArrow={isActive ? <LeftArrow /> : undefined}
-            descendingArrowContainerStyle={styles.leftArrowContainer}
-            ascendingArrow={isActive ? <RightArrow /> : undefined}
-            ascendingArrowContainerStyle={styles.rightArrowContainer}
-          />
-        }
-      </SpatialNavigationNode>
+      {!!hasTitleRow &&
+        <TitleRow
+          title={title}
+          subtitle={subtitle}
+          viewAllHref={viewAllHref}
+          extraMarginLeft={hasLogo ? scaledPixels(260) : 0} />}
+      <View style={{ flexDirection: "row" }}>
+        <SectionLogo section={section} />
+        <SpatialNavigationNode>
+          {({ isActive }) =>
+            <SpatialNavigationVirtualizedList
+              orientation={"horizontal"}
+              data={items}
+              renderItem={renderItem}
+              itemSize={item =>
+                theme.sizes.carousel.card.height * (item.thumbnailAndRatio.aspectRatio || 1.0) * theme.scale.focused
+              }
+              descendingArrow={isActive ? <LeftArrow /> : undefined}
+              descendingArrowContainerStyle={styles.leftArrowContainer}
+              ascendingArrow={isActive ? <RightArrow /> : undefined}
+              ascendingArrowContainerStyle={styles.rightArrowContainer}
+            />
+          }
+        </SpatialNavigationNode>
+      </View>
     </ImageBackground>
   );
 });
 
-const TitleRow = observer(({ title, subtitle, viewAllHref }: {
-  title?: string, subtitle?: string, viewAllHref?: Href
+
+const SectionLogo = (({ section }: { section: MediaSectionModel }) => {
+  const logo = section.display?.logo?.urlSource(scaledPixels(200));
+  const text = section.display?.logo_text;
+  const image = useImage(logo || "");
+  if (!logo && !text) {
+    return null;
+  }
+  return (<View style={{
+    alignItems: "center",
+    justifyContent: "center",
+    gap: scaledPixels(30),
+    marginRight: scaledPixels(60),
+  }}>
+    <Image source={image} style={{ width: image?.width, height: image?.height }} />
+    <Typography>{section.display?.logo_text}</Typography>
+  </View>);
+});
+
+const TitleRow = observer(({ title, subtitle, viewAllHref, extraMarginLeft = 0 }: {
+  title?: string, subtitle?: string, viewAllHref?: Href, extraMarginLeft?: number
 }) => {
   const router = useRouter();
   return (<>
-    <View style={styles.titleContainer}>
+    <View style={[styles.titleContainer, { marginLeft: extraMarginLeft }]}>
       {(!!title || !!subtitle) && <View style={{ gap: scaledPixels(20) }}>
         {!!title && <Title>{title}</Title>}
         {!!subtitle && <Subtitle>{subtitle}</Subtitle>}
