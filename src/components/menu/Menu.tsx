@@ -36,7 +36,7 @@ const MenuButton = ({ title, icon, onSelect, expand, isSelected }: {
       const tint = FgForState(isSelected, isFocused, expand);
       return (
         <ButtonContainer isSelected={isSelected} isFocused={isFocused} isExpanded={expand}>
-          <Image source={icon} style={{ width: 26, aspectRatio: 1 }} contentFit={"contain"} tintColor={tint} />
+          <Image source={icon} style={{ width: scaledPixels(40), aspectRatio: 1 }} contentFit={"contain"} tintColor={tint} />
           {expand && <Typography style={{ color: tint }}>{title}</Typography>}
         </ButtonContainer>);
     }}

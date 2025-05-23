@@ -18,11 +18,11 @@ export const sizes = {
       height: scaledPixels(280)
     },
     title: {
-      height: scaledPixels(70),
+      height: scaledPixels(100),
     },
     row: {
       gap: scaledPixels(20),
-      paddingVertical: scaledPixels(60),
+      paddingVertical: scaledPixels(110),
       get height() {
         return (sizes.carousel.card.height * scale.focused) + sizes.carousel.title.height + sizes.carousel.row.paddingVertical;
       }

@@ -64,25 +64,41 @@ const CarouselCard = observer(({ sectionItem, context, height }: {
 
   const permissions = sectionItem.media?.permissions?._content || sectionItem.permissions?._content;
   const showPurchaseOptions = PermissionUtil.showPurchaseOptions(permissions) || PermissionUtil.showAlternatePage(permissions);
+  const isDisabled = PermissionUtil.isDisabled(permissions);
 
-  return <ImageCard
-    height={height}
-    onSelect={() => onSectionItemClick(sectionItem, context)}
-    imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
-    aspectRatio={aspectRatio}
-    focusedOverlay={
-      <OverlayContainer>
-        {!!showPurchaseOptions && <PurchaseOptionsText />}
-        {!!headers && <Headers>{headers}</Headers>}
-        {!!title && <Title>{title}</Title>}
-        {!!subtitle && <Subtitle>{subtitle}</Subtitle>}
-      </OverlayContainer>
-    }
-    unfocusedOverlay={<>
-      <VideoOverlay media={sectionItem.media} containerHeight={height} />
-      {!!showPurchaseOptions && <DimOverlay />}
-    </>}
-  />;
+  return <>
+    <ImageCard
+      height={height}
+      onSelect={() => !isDisabled && onSectionItemClick(sectionItem, context)}
+      imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
+      aspectRatio={aspectRatio}
+      focusedOverlay={
+        <OverlayContainer>
+          {!!showPurchaseOptions && <PurchaseOptionsText />}
+          {!!headers && <Headers>{headers}</Headers>}
+          {!!title && <Title>{title}</Title>}
+          {!!subtitle && <Subtitle>{subtitle}</Subtitle>}
+        </OverlayContainer>
+      }
+      unfocusedOverlay={<>
+        <VideoOverlay media={sectionItem.media} containerHeight={height} />
+        {!!showPurchaseOptions && <DimOverlay />}
+      </>}
+    />
+    {/*
+     I couldn't figure out why numberOfLines=1 makes the parent element size change,
+     but with numberOfLines=2, ellipsis works fine and the parent doesn't grow.
+     So instead of fighting with it, I just prefix a new blank line and change the lineHeight to compensate.
+     */}
+    {/*TODO: dim if disabled*/}
+    <FooterText numberOfLines={2}>{"\n"}{title}</FooterText>
+  </>;
+});
+
+const FooterText = styled(Typography)({
+  fontFamily: "Inter_500Medium",
+  fontSize: scaledPixels(20),
+  lineHeight: scaledPixels(20),
 });
 
 function onSectionItemClick(item: SectionItemModel, permissionContext: PermissionContext) {

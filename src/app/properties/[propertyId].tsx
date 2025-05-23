@@ -100,11 +100,12 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
     RemoteControlManager.addKeydownListener(remoteControlListener);
     return () => RemoteControlManager.removeKeydownListener(remoteControlListener);
   }, []);
+  const offset = scaledPixels(500);
 
   return (<Page name={"propdetail"}>
     <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1 }}>
       <SpatialNavigationScrollView
-        offsetFromStart={scaledPixels(300)}
+        offsetFromStart={offset}
         style={{ overflow: "visible" }}
         ascendingArrow={<BottomArrow />}
         ascendingArrowContainerStyle={styles.bottomArrowContainer}
@@ -135,6 +136,8 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
                 }
               })
             }
+            {/*Empty row to make the last focusable row slide up a little higher*/}
+            <View style={{ height: offset }} />
           </>
         </SpatialNavigationNode>
       </SpatialNavigationScrollView>
