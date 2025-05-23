@@ -17,7 +17,6 @@ import { SectionTypes } from "@/data/models/SectionItemModel";
 import CarouselSection from "@/components/sections/CarouselSection";
 import HeroSection from "@/components/sections/HeroSection";
 import ContainerSection from "@/components/sections/ContainerSection";
-import TvButton from "@/components/TvButton";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { BottomArrow, TopArrow } from "@/components/Arrows";
@@ -28,6 +27,8 @@ import RemoteControlManager from "@/remote-control/RemoteControlManager";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
 import Center from "@/components/Center";
+import TvIconButton from "@/components/TvIconButton";
+import { theme } from "@/design-system/theme/theme";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -111,9 +112,10 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
         descendingArrowContainerStyle={styles.topArrowContainer}
       >
         <View style={styles.searchButtonContainer}>
-          <TvButton title={"Search"} onSelect={action(() => {
-            router.navigate(`/search/${property.id}`);
-          })} />
+          <TvIconButton
+            icon={"search"}
+            size={scaledPixels(64)}
+            onSelect={action(() => router.navigate(`/search/${property.id}`))} />
         </View>
         <SpatialNavigationNode ref={sectionsNodeRef}>
           <>
@@ -141,7 +143,10 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
 });
 
 const styles = StyleSheet.create({
-  searchButtonContainer: { width: "100%", alignItems: "flex-end" },
+  searchButtonContainer: {
+    alignSelf: "flex-end",
+    padding: scaledPixels(48),
+  },
   topArrowContainer: {
     width: '100%',
     height: 100,
