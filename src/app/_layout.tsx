@@ -15,6 +15,7 @@ import { NavigationRoute, ParamListBase } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import { Console, Hook, Unhook } from "console-feed";
 import { Message } from "console-feed/lib/definitions/Component";
+import { Ionicons } from "@expo/vector-icons";
 
 SpatialNavigation.configureRemoteControl({
   remoteControlSubscriber: (callback) => {
@@ -50,6 +51,11 @@ const App = observer(({}) => {
     return null;
   }
 
+  // expo-vector-icons has a weird issue on Tizen where it displays a chinese character on first load.
+  // Even preloading the font ahead of time doesn't solve this, until the font is actually rendered once.
+  // So we render a hidden icon to force the font to load.
+  const iconFontLoader =<Ionicons name={"play"} size={0}/>
+
   return (
     <ThemeProvider theme={theme}>
       <Head>
@@ -57,6 +63,7 @@ const App = observer(({}) => {
       </Head>
       <SpatialNavigationDeviceTypeProvider>
         <View style={{ width: "100%", height: "100%", flexDirection: "row" }}>
+          {iconFontLoader}
           <InAppConsole />
           <Stack screenOptions={{
             headerShown: false,
