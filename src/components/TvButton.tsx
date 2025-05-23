@@ -15,7 +15,8 @@ const ButtonContent = forwardRef<View, { label: string; isFocused: boolean, styl
     const anim = useFocusAnimation(isFocused);
     return (
       <Container ref={ref} style={anim} isFocused={isFocused} buttonStyle={style}>
-        <ColoredTypography isFocused={isFocused} fontSize={style.fontSize}>{label}</ColoredTypography>
+        <ColoredTypography isFocused={isFocused} fontSize={style.fontSize}
+                           buttonStyle={style}>{label}</ColoredTypography>
       </Container>
     );
   }
@@ -48,7 +49,6 @@ export default TvButton;
 const Container = styled(Animated.View)<{ isFocused: boolean, buttonStyle: TvButtonStyle }>(({
                                                                                                isFocused,
                                                                                                buttonStyle,
-                                                                                               theme
                                                                                              }) => ({
   alignSelf: 'baseline',
   backgroundColor: ButtonBgColor(isFocused, buttonStyle),
@@ -60,12 +60,13 @@ const Container = styled(Animated.View)<{ isFocused: boolean, buttonStyle: TvBut
   cursor: 'pointer',
 }));
 
-const ColoredTypography = styled(Typography)<{ isFocused: boolean, fontSize?: number }>(({
-                                                                                           isFocused,
-                                                                                           fontSize,
-                                                                                           theme
-                                                                                         }) => ({
-  color: isFocused ? 'black' : 'white',
+const ColoredTypography = styled(Typography)<{ isFocused: boolean, fontSize?: number, buttonStyle: TvButtonStyle }>(({
+                                                                                                                       isFocused,
+                                                                                                                       fontSize,
+                                                                                                                       buttonStyle,
+                                                                                                                       theme
+                                                                                                                     }) => ({
+  color: ButtonTextColor(isFocused, buttonStyle),
   fontSize: fontSize || theme.typography.button.fontSize,
   fontFamily: theme.typography.button.fontFamily,
 }));
@@ -85,8 +86,16 @@ function ButtonBgColor(isFocused: boolean, style: TvButtonStyle): ColorValue {
 }
 
 function ButtonBorderColor(isFocused: boolean, style: TvButtonStyle): ColorValue {
-  if (style.variant === "outline") {
-    return "#D4D4D4";
+  if (!isFocused && style.variant === "outline") {
+    return "#7B7B7B";
   }
   return ButtonBgColor(isFocused, style);
+}
+
+function ButtonTextColor(isFocused: boolean, style: TvButtonStyle): ColorValue {
+  if (style.variant === "outline") {
+    return isFocused ? "#3E3F40" : "#7B7B7B";
+  }
+
+  return ButtonBgColor(!isFocused, style);
 }
