@@ -21,14 +21,14 @@ const HeroSection = observer(({ section }: SectionComponentProps) => {
         });
       }, []);
 
-      return <View key={item.id} style={{paddingHorizontal: theme.sizes.carousel.contentPadding}}>
-        {logo &&
+      return <View key={item.id} style={{ paddingHorizontal: theme.sizes.carousel.contentPadding }}>
+        {!!logo &&
           <Image source={logo} resizeMode={"contain"} style={{
             height: logoHeight,
             width: logoWidth,
           }} />}
-        {display?.title && <Title>{display.title}</Title>}
-        {display?.description && <Subtitle>{display.description}</Subtitle>}
+        {!!display?.title && <Title>{display.title}</Title>}
+        {!!display?.description && <Subtitle>{display.description}</Subtitle>}
       </View>;
     })}
   </>);
