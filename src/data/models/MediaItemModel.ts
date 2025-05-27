@@ -8,7 +8,9 @@ import { nullToUndefined } from "@/data/models/zod-extensions";
  * Media items come in from the backend with a different permissions structure than other items.
  * This is the backend structure we'll parse, and then transform it to [PermissionSettings]
  */
-const MediaPermissions = z.object({ permission_item_id: z.string() });
+const MediaPermissions = z.object({
+  permission_item_id: z.string().nullish().transform(nullToUndefined)
+});
 type MediaPermissions = z.infer<typeof MediaPermissions>
 
 export const MediaItemModel = DisplaySettingsModel.extend({
