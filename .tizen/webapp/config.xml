@@ -3,7 +3,7 @@
         xmlns:tizen="http://tizen.org/ns/widgets"
         xmlns="http://www.w3.org/ns/widgets"
         id="https://eluv.io/media-wallet"
-        version="0.0.1" viewmodes="maximized">
+        version="0.0.2" viewmodes="maximized">
     <tizen:application id="xFIu0ONX2k.EluvioMediaWallet" package="xFIu0ONX2k" required_version="2.3"/>
     <content src="index.html"/>
     <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
