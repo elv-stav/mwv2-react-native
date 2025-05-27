@@ -12,6 +12,7 @@ import {
   SpatialNavigationNodeRef
 } from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
 import { useFocusEffect } from "expo-router";
+import Env from "@/data/Env";
 
 const Profile = observer(({}) => {
   const walletHash = Utils.AddressToHash(tokenStore.walletAddress ?? "");
@@ -28,8 +29,7 @@ const Profile = observer(({}) => {
         <Typography style={styles.infoRow}>User Id: {`iusr${walletHash}`}</Typography>
 
         <Typography style={styles.title}>FABRIC</Typography>
-        {/*Hardcoded to main for now*/}
-        <Typography style={styles.infoRow}>Network: main</Typography>
+        <Typography style={styles.infoRow}>Network: {Env.prettyName}</Typography>
         <Typography style={styles.infoRow}>Fabric node: {`${config?.fabricBaseUrl}`}</Typography>
         <Typography style={styles.infoRow}>Authority Service: {`${config?.authdBaseUrl}`}</Typography>
         <Typography style={styles.infoRow}>Eth Service: {`${config?.network.services.ethereum_api[0]}`}</Typography>

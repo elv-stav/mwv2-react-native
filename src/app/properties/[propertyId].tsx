@@ -28,7 +28,7 @@ import { PermissionContext } from "@/data/helpers/PermissionContext";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
 import Center from "@/components/Center";
 import TvIconButton from "@/components/TvIconButton";
-import { theme } from "@/design-system/theme/theme";
+import Env from "@/data/Env";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -264,8 +264,7 @@ const buildPurchaseUrl = async (permissionContext: PermissionContext, permission
     email: tokenStore.userEmail,
   };
 
-  // Hardcoded to Main network. No demov3 support.
-  const url = new URL("https://wallet.contentfabric.io/");
+  const url = new URL(Env.walletUrl);
   url.pathname += permissionContext.propertyId + "/";
   url.pathname += permissionContext.pageId;
   if (context) {

@@ -5,13 +5,11 @@ import { FetchResponse } from "expo/build/winter/fetch/FetchResponse";
 import type { NativeHeadersType } from "expo/src/winter/fetch/NativeRequest";
 import { router } from "expo-router";
 import { runInAction } from "mobx";
-
-//  This token is pre-generated for the "main" network
-const staticToken = "eyJxc3BhY2VfaWQiOiAiaXNwYzJSVW9SZTllUjJ2MzNIQVJRVVZTcDFyWVh6dzEifQ==";
+import Env from "@/data/Env";
 
 export default async function makeAuthServiceRequest(url: string, init?: FetchRequestInit): Promise<FetchResponse> {
   init = init || {};
-  const token = runInAction(() => tokenStore.fabricToken) || staticToken;
+  const token = runInAction(() => tokenStore.fabricToken) || Env.staticToken;
   let headers = normalizeHeadersInit(init?.headers);
   init.headers = overrideHeaders(headers, [["Authorization", `Bearer ${token}`]]);
   try {
