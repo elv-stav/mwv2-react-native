@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite";
 import { Typography } from "@/components/Typography";
-import { useLocalSearchParams } from "expo-router";
 import { mediaPropertyStore } from "@/data/stores";
 import { useCallback, useMemo, useState } from "react";
 import { SectionItemModel } from "@/data/models/SectionItemModel";
@@ -12,10 +11,10 @@ import {
 } from "react-tv-space-navigation";
 import CarouselCard from "@/components/cards/CarouselCard";
 import { action } from "mobx";
-import { PermissionContext } from "@/data/helpers/PermissionContext";
 import Toast from "react-native-toast-message";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { StyleSheet } from "react-native";
+import usePermissionContextQuery from "@/hooks/usePermissionContextQuery";
 
 /**
  * A "View All" screen for either media lists/collections, or Sections.
@@ -23,8 +22,7 @@ import { StyleSheet } from "react-native";
  * which type of media grid to display.
  */
 const MediaGrid = observer(({}) => {
-  const { pctx } = useLocalSearchParams<{ pctx: string }>();
-  const context = PermissionContext.deserialize(pctx);
+  const context = usePermissionContextQuery();
   const mediaContainerId = context.mediaItemId;
   // Section ID
   const sectionId = context.sectionId;
