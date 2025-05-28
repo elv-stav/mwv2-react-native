@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { ImageURISource } from "react-native/Libraries/Image/ImageSource";
 import { AspectRatio } from "@/utils/AspectRatio";
 import { Page } from "@/components/Page";
-import { ImageBackground, StyleSheet } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
 import { DisplaySettingsUtil } from "@/utils/DisplaySettingsUtil";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { SpatialNavigationVirtualizedList } from "react-tv-space-navigation";
@@ -18,7 +18,7 @@ import { AssetLinkModel } from "@/data/models/AssetLinkModel";
 
 type ImageData = {
   link?: AssetLinkModel;
-  ratio: number | null;
+  ratio: number;
 }
 
 const ImageGallery = observer(({}) => {
@@ -43,34 +43,47 @@ const ImageGallery = observer(({}) => {
     const images: ImageData[] = media.gallery.map((galleryItem => {
       return {
         link: galleryItem.thumbnail,
-        ratio: AspectRatio.fromString(galleryItem.thumbnail_aspect_ratio)
+        ratio: AspectRatio.fromString(galleryItem.thumbnail_aspect_ratio) || 1,
       };
     }));
-    const renderItem = useCallback(({ item }: { item: ImageData }) => (
-      <ImageCard imageSource={item.link?.urlSource?.(theme.sizes.carousel.card.height)} onFocus={() => {
-        setSelectedImage(item.link?.urlSource?.(scaledPixels(1080)));
-      }} />), []);
+    const renderItem = useCallback(({ item }: { item: ImageData }) => {
+      const [alpha, setAlpha] = useState(0.75);
+      return (<View style={{ opacity: alpha }}>
+          <ImageCard
+            imageSource={item.link?.urlSource?.(theme.sizes.carousel.card.height)}
+            aspectRatio={item.ratio}
+            onFocus={() => {
+              setAlpha(1);
+              setSelectedImage(item.link?.urlSource?.(scaledPixels(1080)));
+            }}
+            onBlur={() => setAlpha(0.75)}
+          />
+        </View>
+      );
+    }, []);
+    const gap = scaledPixels(30);
 
     content = (<ImageBackground source={selectedImage || images[0]?.link?.urlSource?.(scaledPixels(1080))}
                                 resizeMode={"cover"}
                                 style={{
                                   width: '100%',
                                   height: '100%',
-                                  justifyContent: "flex-end",
-                                  flexDirection: "column"
+                                  padding: scaledPixels(60),
+                                  // flex-end didn't work with SpatialNavigationVirtualizedList, so I'm manually adding
+                                  // enough top padding to push the thumbnail row down to where it should be
+                                  paddingTop: scaledPixels(1080 - 60) - theme.sizes.carousel.card.height,
                                 }}>
-      {
-        <SpatialNavigationVirtualizedList
-          orientation={"horizontal"}
-          data={images}
-          renderItem={renderItem}
-          itemSize={theme.sizes.carousel.card.height}
-          descendingArrow={<LeftArrow />}
-          descendingArrowContainerStyle={styles.leftArrowContainer}
-          ascendingArrow={<RightArrow />}
-          ascendingArrowContainerStyle={styles.rightArrowContainer}
-        />
-      }
+      <SpatialNavigationVirtualizedList
+        style={{ gap: 300 }}
+        orientation={"horizontal"}
+        data={images}
+        renderItem={renderItem}
+        itemSize={item => (theme.sizes.carousel.card.height * item.ratio) + gap}
+        descendingArrow={<LeftArrow />}
+        descendingArrowContainerStyle={styles.leftArrowContainer}
+        ascendingArrow={<RightArrow />}
+        ascendingArrowContainerStyle={styles.rightArrowContainer}
+      />
     </ImageBackground>);
   } else {
     const { thumbnail } = DisplaySettingsUtil.getThumbnailAndRatio(media);

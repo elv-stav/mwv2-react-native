@@ -15,6 +15,7 @@ type ImageCardProps = {
   href?: string;
   onSelect?: () => void;
   onFocus?: () => void;
+  onBlur?: () => void;
   aspectRatio?: number;
   enabled?: boolean;
   focusedOverlay?: ReactElement;
@@ -31,6 +32,7 @@ const ImageCard = observer(({
                               height,
                               onSelect,
                               onFocus,
+                              onBlur,
                               focusedOverlay,
                               unfocusedOverlay,
                               aspectRatio = 1.0,
@@ -53,7 +55,10 @@ const ImageCard = observer(({
 
   let content;
   if (enabled) {
-    content = <SpatialNavigationFocusableView onSelect={onSelect} onFocus={onFocus}>
+    content = <SpatialNavigationFocusableView
+      onSelect={onSelect}
+      onFocus={onFocus}
+      onBlur={onBlur}>
       {({ isFocused }) => card(isFocused)}
     </SpatialNavigationFocusableView>;
   } else {
