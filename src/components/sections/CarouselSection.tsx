@@ -7,7 +7,7 @@ import TvButton from "@/components/TvButton";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import CarouselCard from "@/components/cards/CarouselCard";
 import { theme } from "@/design-system/theme/theme";
-import { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { SectionItemModel } from "@/data/models/SectionItemModel";
 import { LeftArrow, RightArrow } from "@/components/Arrows";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
@@ -16,6 +16,8 @@ import { PermissionContext } from "@/data/helpers/PermissionContext";
 import styled from "@emotion/native/dist/emotion-native.cjs";
 import { Image, ImageBackground, useImage } from "expo-image";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
+import { useTheme } from "@emotion/react";
+import { BannerSection } from "@/components/sections/BannerSection";
 
 const SUPPORTED_ITEM_TYPES = [
   "media",
@@ -62,10 +64,6 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
     }
   }, [items]);
 
-  const renderItem = useCallback(({ item }: { item: SectionItemModel }) => (
-    <CarouselCard sectionItem={item} context={context} />
-  ), []);
-
   const sectionBgImage = useMemo(() => {
     const url = section.display?.inline_background_image?.url();
     if (url) {
@@ -86,7 +84,6 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
       contentPosition={"top left"}
       source={sectionBgImage}
       style={{
-        height: theme.sizes.carousel.row.height,
         gap: theme.sizes.carousel.row.gap,
         backgroundColor: sectionBgColor,
         paddingHorizontal: theme.sizes.carousel.contentPadding,
@@ -101,31 +98,60 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
       <View style={{ flexDirection: "row" }}>
         <SectionLogo section={section} />
         <SpatialNavigationNode>
-          {({ isActive }) =>
-            <SpatialNavigationVirtualizedList
-              orientation={"horizontal"}
-              data={items}
-              renderItem={renderItem}
-              itemSize={item =>
-                theme.sizes.carousel.card.height * (item.thumbnailAndRatio.aspectRatio || 1.0) * theme.scale.focused
-              }
-              descendingArrow={isActive ? <LeftArrow /> : undefined}
-              descendingArrowContainerStyle={styles.leftArrowContainer}
-              ascendingArrow={isActive ? <RightArrow /> : undefined}
-              ascendingArrowContainerStyle={styles.rightArrowContainer}
-            />
-          }
+          {({ isActive }) => {
+            // Supporting Grids is hard. for now we either render a horizontal list, or a column of banners
+            if (isBannerSection) {
+              return <BannerSection items={items} context={context} />;
+            } else {
+              return <SectionRow items={items} isActive={isActive} context={context} />;
+            }
+          }}
         </SpatialNavigationNode>
       </View>
     </ImageBackground>
   );
 });
 
+const SectionRow = observer(({ items, isActive, context }: {
+  items: SectionItemModel[],
+  isActive: boolean,
+  context: PermissionContext
+}) => {
+  const theme = useTheme();
+  const renderItem = useCallback(({ item }: { item: SectionItemModel }) => (
+    <CarouselCard sectionItem={item} context={context} />
+  ), []);
+
+  // This is a rough guess.
+  const footerTextHeight = scaledPixels(30);
+  //[SpatialNavigationVirtualizedList] is really bad at reporting its height,
+  // so we wrap it with a View with a fixed height that should be close enough to the real thing.
+  // This only works while we don't support grids, and thus the height is always the same.
+  const height = theme.sizes.carousel.card.height + footerTextHeight;
+  return <View style={{ height }}>
+    <SpatialNavigationVirtualizedList
+      orientation={"horizontal"}
+      data={items}
+      renderItem={renderItem}
+      itemSize={item =>
+        theme.sizes.carousel.card.height * (item.thumbnailAndRatio.aspectRatio || 1.0) * theme.scale.focused
+      }
+      descendingArrow={isActive ? <LeftArrow /> : undefined}
+      descendingArrowContainerStyle={styles.leftArrowContainer}
+      ascendingArrow={isActive ? <RightArrow /> : undefined}
+      ascendingArrowContainerStyle={styles.rightArrowContainer}
+    />
+  </View>;
+});
 
 const SectionLogo = (({ section }: { section: MediaSectionModel }) => {
   const logo = section.display?.logo?.urlSource(scaledPixels(200));
   const text = section.display?.logo_text;
-  const image = useImage(logo || "");
+  const image = useImage(logo || "", {
+    onError() {
+      // Empty callback to avoid console errors if the logo is not set
+    }
+  });
   if (!logo && !text) {
     return null;
   }

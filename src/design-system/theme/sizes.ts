@@ -24,7 +24,7 @@ export const sizes = {
       gap: scaledPixels(20),
       paddingVertical: scaledPixels(110),
       get height() {
-        return (sizes.carousel.card.height * scale.focused) + sizes.carousel.title.height + sizes.carousel.row.paddingVertical;
+        return (sizes.carousel.card.height * scale.focused) + sizes.carousel.title.height;
       }
     }
   },
