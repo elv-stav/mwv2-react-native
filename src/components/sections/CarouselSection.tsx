@@ -128,7 +128,7 @@ const SectionRow = observer(({ items, isActive, context }: {
   // so we wrap it with a View with a fixed height that should be close enough to the real thing.
   // This only works while we don't support grids, and thus the height is always the same.
   const height = theme.sizes.carousel.card.height + footerTextHeight;
-  return <View style={{ height }}>
+  return <View style={{ height, flex: 1 }}>
     <SpatialNavigationVirtualizedList
       orientation={"horizontal"}
       data={items}
