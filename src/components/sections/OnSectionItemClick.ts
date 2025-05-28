@@ -49,8 +49,8 @@ const OnMediaItemClick = (media: MediaItemModel, permissionContext: PermissionCo
     router.navigate(`/watch/${media.id}?pctx=${pctx}`);
   } else if (media.media_type === MediaTypes.IMAGE || media.media_type === MediaTypes.GALLERY) {
     router.navigate(`/gallery/${media.id}`);
-    // } else if (media.media_file || media.media_links) {
-    //   console.log("TODO: external content qr dialog");
+  } else if (media.media_file || media.media_link) {
+    router.navigate(`/link/${media.id}`);
   } else {
     Log.e("unhandled click", media);
   }

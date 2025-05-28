@@ -54,7 +54,7 @@ const App = observer(({}) => {
   // expo-vector-icons has a weird issue on Tizen where it displays a chinese character on first load.
   // Even preloading the font ahead of time doesn't solve this, until the font is actually rendered once.
   // So we render a hidden icon to force the font to load.
-  const iconFontLoader =<Ionicons name={"play"} size={0}/>
+  const iconFontLoader = <Ionicons name={"play"} size={0} />;
 
   return (
     <ThemeProvider theme={theme}>
