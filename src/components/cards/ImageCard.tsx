@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
+import { SpatialNavigationFocusableView, SpatialNavigationNode } from "react-tv-space-navigation";
 import { useFocusAnimation } from "@/design-system/helpers/useFocusAnimation";
 import React, { ReactElement } from "react";
 import styled from "@emotion/native/dist/emotion-native.cjs";
@@ -16,7 +16,7 @@ type ImageCardProps = {
   onSelect?: () => void;
   onFocus?: () => void;
   aspectRatio?: number;
-  inaccessible?: boolean;
+  enabled?: boolean;
   focusedOverlay?: ReactElement;
   unfocusedOverlay?: ReactElement;
 }
@@ -34,41 +34,49 @@ const ImageCard = observer(({
                               focusedOverlay,
                               unfocusedOverlay,
                               aspectRatio = 1.0,
-                              inaccessible = false,
+                              enabled = true,
                             }: ImageCardProps) => {
-  return (<SpatialNavigationFocusableView onSelect={onSelect} onFocus={onFocus}>
-    {({ isFocused }) => (
-      <Container
-        height={height}
-        isFocused={isFocused}
-        inaccessible={inaccessible}
-        aspectRatio={aspectRatio}
-        style={useFocusAnimation(isFocused)}>
-        <Image source={imageSource} style={{
-          height: '100%',
-          width: '100%',
-        }} />
-        {<Overlay isFocused={isFocused}>
-          {isFocused ? focusedOverlay : unfocusedOverlay}
-        </Overlay>}
-      </Container>
-    )}
-  </SpatialNavigationFocusableView>);
+  const card = (isFocused: boolean) => <Container
+    height={height}
+    isFocused={isFocused}
+    enabled={enabled}
+    aspectRatio={aspectRatio}
+    style={useFocusAnimation(isFocused)}>
+    <Image source={imageSource} style={{
+      height: '100%',
+      width: '100%',
+    }} />
+    {<Overlay isFocused={isFocused}>
+      {isFocused ? focusedOverlay : unfocusedOverlay}
+    </Overlay>}
+  </Container>;
+
+  let content;
+  if (enabled) {
+    content = <SpatialNavigationFocusableView onSelect={onSelect} onFocus={onFocus}>
+      {({ isFocused }) => card(isFocused)}
+    </SpatialNavigationFocusableView>;
+  } else {
+    content = card(false);
+  }
+  return <SpatialNavigationNode>
+    {content}
+  </SpatialNavigationNode>;
 });
 
 const Container = styled(Animated.View)<{
   height?: DimensionValue;
   isFocused: boolean;
   aspectRatio: number;
-  inaccessible: boolean;
-}>(({ height, isFocused, aspectRatio, inaccessible, theme }) => ({
+  enabled: boolean;
+}>(({ height, isFocused, aspectRatio, enabled, theme }) => ({
   height: height || theme.sizes.carousel.card.height,
   aspectRatio: aspectRatio,
   overflow: 'hidden',
   borderRadius: scaledPixels(18),
   borderColor: isFocused ? theme.colors.primary.light : 'transparent',
   borderWidth: scaledPixels(4),
-  opacity: inaccessible ? 0.2 : 1,
+  opacity: enabled ? 1 : 0.5,
   cursor: 'pointer',
 }));
 

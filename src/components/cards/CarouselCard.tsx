@@ -64,6 +64,7 @@ const CarouselCard = observer(({ sectionItem, context, height }: {
 
   return <>
     <ImageCard
+      enabled={!isDisabled}
       height={height}
       onSelect={() => !isDisabled && OnSectionItemClick(sectionItem, context)}
       imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
