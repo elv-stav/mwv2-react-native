@@ -5,7 +5,6 @@ import { MediaItemModel } from "@/data/models/MediaItemModel";
 import { runInAction } from "mobx";
 import { mediaPropertyStore } from "@/data/stores";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
-import Toast from "react-native-toast-message";
 import { LiveVideoUtil } from "@/data/helpers/LiveVideoUtil";
 import { MediaTypes } from "@/utils/MediaTypes";
 import Log from "@/utils/Log";
@@ -23,6 +22,9 @@ function OnSectionItemClick(item: SectionItemModel, permissionContext: Permissio
       const page = item.subproperty_page_id || "";
       router.navigate(`/properties/${item.subproperty_id}/${page}`);
       break;
+    case "item_purchase":
+      router.navigate(`/purchase?pctx=${PermissionContext.serialize(permissionContext)}`);
+      break;
     default:
       console.log(`NOT YET IMPLEMENTED! click on type: ${item.type}`);
   }
@@ -36,9 +38,9 @@ const OnMediaItemClick = (media: MediaItemModel, permissionContext: PermissionCo
   const pctx = PermissionContext.serialize(permissionContext);
   if (PermissionUtil.showAlternatePage(permissions)) {
     // On tv we don't really show alt page, we just show purcahse options and later on navigate to alternate_page_id
-    Toast.show({ text1: "locked item: not yet impl" });
+    router.navigate(`/purchase?pctx=${pctx}`);
   } else if (PermissionUtil.showPurchaseOptions(permissions)) {
-    Toast.show({ text1: "locked item: not yet impl" });
+    router.navigate(`/purchase?pctx=${pctx}`);
   } else if (media.type === "list" || media.type === "collection") {
     router.navigate(`/view?pctx=${pctx}`);
   } else if (media.live_video && !LiveVideoUtil.isStreamStarted(media)) {

@@ -66,7 +66,7 @@ const CarouselCard = observer(({ sectionItem, context, height }: {
     <ImageCard
       enabled={!isDisabled}
       height={height}
-      onSelect={() => !isDisabled && OnSectionItemClick(sectionItem, context)}
+      onSelect={() => OnSectionItemClick(sectionItem, context)}
       imageSource={thumbnail?.urlSource(theme.sizes.carousel.card.height)}
       aspectRatio={aspectRatio}
       focusedOverlay={

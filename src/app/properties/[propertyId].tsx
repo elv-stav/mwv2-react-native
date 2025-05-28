@@ -3,16 +3,14 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
 import { Router, useLocalSearchParams, useRouter } from "expo-router";
-import { mediaPropertyStore, rootStore, tokenStore } from "@/data/stores";
+import { mediaPropertyStore, tokenStore } from "@/data/stores";
 import { action, autorun, runInAction } from "mobx";
 import Loader from "@/components/Loader";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import Log from "@/utils/Log";
-import { Dict } from "@/utils/Dict";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
-import Utils from "@/utils/elv-client-utils";
 import { SectionTypes } from "@/data/models/SectionItemModel";
 import CarouselSection from "@/components/sections/CarouselSection";
 import HeroSection from "@/components/sections/HeroSection";
@@ -28,7 +26,6 @@ import { PermissionContext } from "@/data/helpers/PermissionContext";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
 import Center from "@/components/Center";
 import TvIconButton from "@/components/TvIconButton";
-import Env from "@/data/Env";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -202,17 +199,11 @@ const getFirstAuthorizedPage = action(async ({ property, page, visitedPageIds = 
     }
   } else if (PermissionUtil.showPurchaseOptions(permissions)) {
     // Show purchase options page
-
-    const permissionContext: PermissionContext = {
+    const pctx = PermissionContext.serialize({
       propertyId: property.id,
       pageId: page.id,
-    };
-    const purchaseUrl = await buildPurchaseUrl(
-      permissionContext,
-      permissions.permission_item_ids || [],
-      permissions.secondary_market_purchase_option,
-    );
-    router.replace(`/properties/${property.id}/${page.id}/purchase/${Utils.B64(purchaseUrl)}`);
+    });
+    router.replace(`/purchase?pctx=${pctx}`);
     return Promise.reject("No authorized page, navigated to purchase options");
   } else {
     // This is a request for a specific page, ignore Property permissions, or we'll get stuck in a never-ending loop.
@@ -235,43 +226,5 @@ const getFirstAuthorizedPage = action(async ({ property, page, visitedPageIds = 
     }
   }
 });
-
-const buildPurchaseUrl = async (permissionContext: PermissionContext, permissionItemIds: string[], secondaryMarketPurchaseOption?: string | null) => {
-  const context: Dict<any> = {
-    "type": "purchase"
-  };
-
-  // Start from the most broad id and keep overriding with more specific ids.
-  // Any field that is [null] will not override the previous value.
-  context.id = permissionContext.propertyId;
-  context.id = permissionContext.pageId;
-  context.id = permissionContext.sectionId;
-  context.id = permissionContext.sectionItemId;
-  context.id = permissionContext.mediaItemId;
-
-  // Everything else we have explicitly specified.
-  context.sectionSlugOrId = permissionContext.sectionId;
-  context.sectionItemId = permissionContext.sectionItemId;
-  permissionItemIds = permissionItemIds.filter((x) => x);
-  if (permissionItemIds.length > 0) {
-    context.permissionItemIds = permissionItemIds;
-  }
-  context.secondaryPurchaseOption = secondaryMarketPurchaseOption;
-
-  const auth = {
-    clusterToken: tokenStore.clusterToken,
-    address: tokenStore.walletAddress,
-    email: tokenStore.userEmail,
-  };
-
-  const url = new URL(Env.walletUrl);
-  url.pathname += permissionContext.propertyId + "/";
-  url.pathname += permissionContext.pageId;
-  if (context) {
-    url.searchParams.append("p", Utils.B58(JSON.stringify(context)));
-  }
-  url.searchParams.append("authorization", Utils.B58(JSON.stringify(auth)));
-  return rootStore.CreateShortURL(url.toString());
-};
 
 export default PropertyDetail;
