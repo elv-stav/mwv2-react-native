@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
-import { useKey } from "@/hookes/useKey";
+import { useKey } from "@/hooks/useKey";
 import { useNavigation, useRouter } from "expo-router";
 
 export const GoBackConfiguration = () => {

@@ -5,7 +5,7 @@ import { Directions, SpatialNavigation, SpatialNavigationDeviceTypeProvider } fr
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
 import RemoteControlManager from "@/remote-control/RemoteControlManager";
 import { StyleSheet, View } from "react-native";
-import { useFonts } from "@/hookes/useFonts";
+import { useFonts } from "@/hooks/useFonts";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "@/design-system/theme/theme";
 import { Stack } from "expo-router";
