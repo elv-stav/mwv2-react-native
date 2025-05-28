@@ -1,4 +1,3 @@
-import { SpatialNavigationNode, SpatialNavigationScrollView } from "react-tv-space-navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
@@ -12,12 +11,7 @@ import { PermissionUtil } from "@/data/helpers/PermissionUtil";
 import Log from "@/utils/Log";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
 import { SectionTypes } from "@/data/models/SectionItemModel";
-import CarouselSection from "@/components/sections/CarouselSection";
-import HeroSection from "@/components/sections/HeroSection";
-import ContainerSection from "@/components/sections/ContainerSection";
-import { ImageBackground, StyleSheet, View } from "react-native";
-import { scaledPixels } from "@/design-system/helpers/scaledPixels";
-import { BottomArrow, TopArrow } from "@/components/Arrows";
+import { ImageBackground } from "react-native";
 import {
   SpatialNavigationNodeRef
 } from "react-tv-space-navigation/src/spatial-navigation/types/SpatialNavigationNodeRef";
@@ -25,7 +19,7 @@ import RemoteControlManager from "@/remote-control/RemoteControlManager";
 import { PermissionContext } from "@/data/helpers/PermissionContext";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
 import Center from "@/components/Center";
-import TvIconButton from "@/components/TvIconButton";
+import SectionsList from "@/components/sections/SectionsList";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -76,7 +70,6 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
     propertyId: property.id,
     pageId: page.id,
   };
-  const router = useRouter();
 
   // We're not setting <DefaultFocus> on the Page. But on the first keydown event,
   // we'll focus the sections, skipping the Search button.
@@ -97,74 +90,16 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
     RemoteControlManager.addKeydownListener(remoteControlListener);
     return () => RemoteControlManager.removeKeydownListener(remoteControlListener);
   }, []);
-  const offset = scaledPixels(500);
 
   return (<Page name={"propdetail"}>
     <ImageBackground source={bgUrl} resizeMode={"cover"} style={{ flex: 1 }}>
-      <SpatialNavigationScrollView
-        offsetFromStart={offset}
-        style={{ overflow: "visible" }}
-        ascendingArrow={<BottomArrow />}
-        ascendingArrowContainerStyle={styles.bottomArrowContainer}
-        descendingArrow={<TopArrow />}
-        descendingArrowContainerStyle={styles.topArrowContainer}
-      >
-        <View style={styles.searchButtonContainer}>
-          <TvIconButton
-            icon={"search"}
-            size={scaledPixels(64)}
-            onSelect={action(() => router.navigate(`/search/${property.id}`))} />
-        </View>
-        <SpatialNavigationNode ref={sectionsNodeRef}>
-          <>
-            {
-              sections.map(section => {
-                switch (section.type) {
-                  case SectionTypes.AUTOMATIC:
-                  case SectionTypes.MANUAL:
-                  case SectionTypes.SEARCH:
-                    return <CarouselSection key={section.id} section={section} context={permissionContext} />;
-                  case SectionTypes.HERO:
-                    return <HeroSection key={section.id} section={section} context={permissionContext} />;
-                  case SectionTypes.CONTAINER:
-                    return <ContainerSection key={section.id} section={section} context={permissionContext} />;
-                  default:
-                    return <></>;
-                }
-              })
-            }
-            {/*Empty row to make the last focusable row slide up a little higher*/}
-            <View style={{ height: offset }} />
-          </>
-        </SpatialNavigationNode>
-      </SpatialNavigationScrollView>
+      <SectionsList
+        sections={sections}
+        permissionContext={permissionContext}
+        listRef={sectionsNodeRef}
+        searchHref={`/search/${property.id}`} />
     </ImageBackground>
   </Page>);
-});
-
-const styles = StyleSheet.create({
-  searchButtonContainer: {
-    alignSelf: "flex-end",
-    padding: scaledPixels(48),
-  },
-  topArrowContainer: {
-    width: '100%',
-    height: 100,
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    top: 0,
-    left: 0,
-  },
-  bottomArrowContainer: {
-    width: '100%',
-    height: 100,
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    bottom: -15,
-    left: 0,
-  },
 });
 
 /**
