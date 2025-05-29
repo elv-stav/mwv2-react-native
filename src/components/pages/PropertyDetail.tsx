@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
 import { Router, useLocalSearchParams, useRouter } from "expo-router";
@@ -20,6 +20,7 @@ import { PermissionContext } from "@/data/helpers/PermissionContext";
 import { SupportedKeys } from "@/remote-control/SupportedKeys";
 import Center from "@/components/Center";
 import SectionsList from "@/components/sections/SectionsList";
+import useFocusEffectMemo from "@/hooks/useFocusEffectMemo";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -27,13 +28,13 @@ const PropertyDetail = observer(() => {
   const [viewData, setViewData] = useState<PropertyDetailViewProps | undefined>(undefined);
 
   const router = useRouter();
-  useEffect(action(() => {
+  useFocusEffectMemo(action(() => {
     if (property && !property.login?.settings?.disable_login && !tokenStore.isLoggedIn) {
       router.dismissTo("/");
     }
   }), [property, tokenStore.isLoggedIn]);
 
-  useEffect(() => {
+  useFocusEffectMemo(() => {
     if (!property) {
       return;
     }
@@ -76,7 +77,7 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
   // TODO(stav): there's a bug here that users going from mouse to keyboard navigation,
   //  will have their first keyboard event consumed.
   const sectionsNodeRef = useRef<SpatialNavigationNodeRef | null>(null);
-  useEffect(() => {
+  useFocusEffectMemo(() => {
     const remoteControlListener = (key: SupportedKeys) => {
       if (key === SupportedKeys.Back) {
         // Don't capture "Back" presses, let them go to the router.

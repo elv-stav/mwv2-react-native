@@ -64,7 +64,7 @@ export const Page = ({ children, name }: Props) => {
     >
       <GoBackConfiguration />
       <SpatialNavigationKeyboardLocker />
-      {children}
+      {isFocused && children}
     </SpatialNavigationRoot>
   );
 };
