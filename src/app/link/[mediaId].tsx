@@ -31,7 +31,7 @@ const ExternalLink = observer(({}) => {
       .then(url => setLinkUrl(url || ""));
   }, [mediaLocation, token]);
 
-  return (<Page>
+  return (<Page name={"external-link"}>
     <View style={styles.container}>
       <Typography style={styles.title}>Point your camera to the QR Code below for content</Typography>
       <Typography fontSize={scaledPixels(48)}>Or visit: {linkUrl}</Typography>

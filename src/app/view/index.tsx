@@ -53,7 +53,7 @@ const MediaGrid = observer(({}) => {
     []);
 
 
-  return (<Page>
+  return (<Page name={"media-grid"}>
     <DefaultFocus>
       <SpatialNavigationVirtualizedGrid
         style={styles.grid}

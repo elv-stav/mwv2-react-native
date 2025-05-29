@@ -47,7 +47,7 @@ const Countdown = observer(({}) => {
   });
   const headers = media.headers?.join("\u00A0\u00A0\u00A0\u00A0");
 
-  return <Page>
+  return <Page name={"countdown"}>
     <ImageBackground
       source={bgImage}
       style={{ width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>

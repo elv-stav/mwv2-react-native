@@ -64,7 +64,7 @@ const SignIn = observer(() => {
     }
   }, [signInComplete]);
 
-  return <Page>
+  return <Page name={"sign-in"}>
     <ImageBackground
       source={property?.loginBackgroundImage?.urlSource()}
       style={styles.container}>

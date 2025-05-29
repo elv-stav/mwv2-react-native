@@ -7,7 +7,7 @@ import { Page } from "@/components/Page";
 const VideoPlayer = observer(({}) => {
   const { mediaId } = useLocalSearchParams<{ mediaId: string }>();
   const hash = mediaPropertyStore.mediaItems[mediaId]?.versionHash;
-  return (<Page>
+  return (<Page name={"video-player"}>
     {/*@ts-ignore*/}
     <Video videoHash={hash} />
   </Page>);
