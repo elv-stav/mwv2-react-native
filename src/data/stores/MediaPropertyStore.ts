@@ -114,6 +114,33 @@ export class MediaPropertyStore {
     return sections;
   };
 
+  async Search(property: MediaPropertyModel, searchTerm: string): Promise<MediaSectionModel[]> {
+    const result = await MediaWalletApi.Search(property.id, searchTerm);
+
+    runInAction(() => {
+      // Persist only the MediaItems, not the Sections or SectionItems
+      result
+        // Ignore subsections. Search results shouldn't have any of those.
+        .flatMap(section => section.content)
+        .map(sectionItem => sectionItem.media)
+        .forEach(media => {
+          if (media) {
+            this.mediaItems[media.id] = media;
+          }
+        });
+
+      // Resolve permissions.
+      PermissionResolver.ResolvePermissions({
+        // Wrap with a fake "section container" to resolve permissions.
+        item: { id: "fake_wrapper", sections_resolved: result },
+        parentPermissions: property.permissions?._search,
+        permissionStates: property.permission_auth_state
+      });
+    });
+
+    return result;
+  }
+
   _processProperty = action((property: MediaPropertyModel, propertyMap: PropertyMap = this.properties) => {
     propertyMap[property.id] = property;
     const pages = this.pages[property.id] || {};

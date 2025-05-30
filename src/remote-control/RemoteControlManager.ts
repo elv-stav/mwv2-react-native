@@ -2,6 +2,8 @@ import { SupportedKeys } from './SupportedKeys';
 import { RemoteControlManagerInterface } from './RemoteControlManager.interface';
 import CustomEventEmitter from './CustomEventEmitter';
 import { Dict } from "@/utils/Dict";
+import { NativeSyntheticEvent } from "react-native/Libraries/Types/CoreEventTypes";
+import { TextInputKeyPressEventData } from "react-native/Libraries/Components/TextInput/TextInput";
 
 const LONG_PRESS_DURATION = 500;
 
@@ -40,12 +42,12 @@ class RemoteControlManager implements RemoteControlManagerInterface {
     }, LONG_PRESS_DURATION);
   };
 
-  private handleKeyDown = (event: KeyboardEvent) => {
+  handleKeyDown = (event: KeyboardEvent | NativeSyntheticEvent<TextInputKeyPressEventData>) => {
     if (event.defaultPrevented) {
       return;
     }
 
-    const mappedKey = RemoteControlManager.keyMapping[event.code || event.key];
+    const mappedKey = RemoteControlManager.keyMapping[this.keyCodeFrom(event)];
     if (!mappedKey) {
       return;
     }
@@ -66,6 +68,12 @@ class RemoteControlManager implements RemoteControlManagerInterface {
     this.eventEmitter.emit('keyDown', mappedKey);
   };
 
+  private keyCodeFrom(event: KeyboardEvent | NativeSyntheticEvent<TextInputKeyPressEventData>): string {
+    return (event as KeyboardEvent).code ||
+      (event as KeyboardEvent).key ||
+      (event as NativeSyntheticEvent<TextInputKeyPressEventData>).nativeEvent.key;
+  }
+
   private handleKeyUp = (event: KeyboardEvent) => {
     const mappedKey = {
       Enter: SupportedKeys.Enter,
@@ -79,6 +87,7 @@ class RemoteControlManager implements RemoteControlManagerInterface {
       this.isEnterKeyDown = false;
       if (this.longEnterTimeout) {
         clearTimeout(this.longEnterTimeout);
+        this.longEnterTimeout = null;
         this.eventEmitter.emit('keyDown', mappedKey);
       }
     }

@@ -29,6 +29,15 @@ export const MediaWalletApi = {
       JSON.stringify(sectionIds),
     ).then(response => response.contents);
   },
+
+  async Search(propertyId: string, searchTerm: string): Promise<MediaSectionModel[]> {
+    return request("POST",
+      `properties/${propertyId}/search`,
+      PagedContentSchema(MediaSectionModel),
+      { limit: 30 },
+      JSON.stringify({ search_term: searchTerm })
+    ).then(response => response.contents);
+  },
 };
 
 async function request<R>(method: "GET" | "POST", path: string, resultParser: ZodType<R, any, any>, query: any = {}, body?: BodyInit) {

@@ -19,7 +19,7 @@ import ContainerSection from "@/components/sections/ContainerSection";
 type Props = {
   sections: MediaSectionModel[],
   permissionContext: PermissionContext,
-  listRef: MutableRefObject<SpatialNavigationNodeRef | null>,
+  listRef?: MutableRefObject<SpatialNavigationNodeRef | null>,
   searchHref?: Href
 }
 
@@ -39,7 +39,7 @@ const SectionsList = ({ sections, permissionContext, listRef, searchHref }: Prop
       <TvIconButton
         icon={"search"}
         size={scaledPixels(64)}
-        onSelect={action(() => router.navigate(searchHref))} />
+        onSelect={() => router.navigate(searchHref)} />
     </View>}
     <SpatialNavigationNode ref={listRef}>
       <>
