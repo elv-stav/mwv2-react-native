@@ -27,7 +27,7 @@
     "expo-image": "~2.0.7",
     "expo-linear-gradient": "~14.0.2",
     "expo-linking": "~7.0.5",
-    "expo-router": "~4.0.20",
+    "expo-router": "~4.0.21",
     "expo-status-bar": "~2.0.1",
     "mobx": "^6.13.7",
     "mobx-persist-store": "^1.1.8",
