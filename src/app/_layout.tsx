@@ -42,7 +42,7 @@ SpatialNavigation.configureRemoteControl({
   },
 });
 
-const App = observer(({}) => {
+const App = () => {
   const areFontsLoaded = useFonts();
   // For debugging purposes, we can use the route name as the document title.
   const [docTitle, setDocTitle] = useState("");
@@ -56,8 +56,7 @@ const App = observer(({}) => {
   // So we render a hidden icon to force the font to load.
   const iconFontLoader = <Ionicons name={"play"} size={0} />;
 
-  return (
-    <ThemeProvider theme={theme}>
+  return <ThemeProvider theme={theme}>
       <Head>
         <title>{docTitle}</title>
       </Head>
@@ -78,9 +77,8 @@ const App = observer(({}) => {
           {/*{(process.env.NODE_ENV == "development") && <Toast />}*/}
         </View>
       </SpatialNavigationDeviceTypeProvider>
-    </ThemeProvider>
-  );
-});
+    </ThemeProvider>;
+};
 
 /**
  * Take up a portion of the screen to show console logs. Useful for debugging on TVs where console is hard to access.
