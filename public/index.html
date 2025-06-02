@@ -1,0 +1,70 @@
+<!--
+Custom root layout template to add a splash screen in the HTML level before loading all the JavaScript.
+This is mainly a copy of the default Expo web template.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>mwv2-rn</title>
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+        /* These styles make the body full-height */
+        html,
+        body {
+            height: 100%;
+        }
+
+        /* These styles disable body scrolling if you are using <ScrollView> */
+        body {
+            overflow: hidden;
+            background-color: black;
+        }
+
+        /* These styles make the root element full-height */
+        #root {
+            display: flex;
+            height: 100%;
+            flex: 1;
+            /* Putting splash.jpg in a subfolder breaks dev builds, so just leaving it in root. */
+            background: url("./splash.jpg") no-repeat center center / cover;
+        }
+    </style>
+
+    <script>
+      /**
+       * Wait until "root" has some elements before removing the splash screen.
+       * This is how we tell React has loaded.
+       */
+      function observeReactLoad() {
+        const root = document.getElementById("root");
+        function callback(mutationsList, observer) {
+          for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+              root.style.background = "transparent";
+              observer.disconnect();
+            }
+          }
+        }
+
+        const observer = new MutationObserver(callback);
+        observer.observe(root, {childList: true});
+      }
+
+    </script>
+
+    <!--Generated expo css load and favicon will be injected here ↓ -->
+</head>
+
+<body onload="{ observeReactLoad(); }">
+<!-- Use static rendering with Expo Router to support running without JavaScript. -->
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+<!-- The root element for your Expo app. -->
+<div id="root"></div>
+<!--Generated expo script load will be injected here ↓ -->
+</body>
+</html>
