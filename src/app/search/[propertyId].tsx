@@ -6,7 +6,7 @@ import SectionsList from "@/components/sections/SectionsList";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
 import { mediaPropertyStore } from "@/data/stores";
 import { runInAction } from "mobx";
-import { DefaultFocus } from "react-tv-space-navigation";
+import { DefaultFocus, SpatialNavigationScrollView } from "react-tv-space-navigation";
 import TvInputText from "@/components/TvInputText";
 import { debounce } from "@react-navigation/native-stack/src/utils/debounce";
 import { StyleSheet } from "react-native";
@@ -26,14 +26,16 @@ const SearchPage = observer(({}) => {
   }, [query]);
 
   return (<Page name={"search"}>
-    <DefaultFocus>
-      <TvInputText
-        style={styles.searchBox}
-        placeholder={`Search ${title}`}
-        onChangeText={debounce(setQuery, 1000)}
-      />
-    </DefaultFocus>
-    <SectionsList sections={sections} permissionContext={{ propertyId }} />
+    <SpatialNavigationScrollView>
+      <DefaultFocus>
+        <TvInputText
+          style={styles.searchBox}
+          placeholder={`Search ${title}`}
+          onChangeText={debounce(setQuery, 1000)}
+        />
+      </DefaultFocus>
+      <SectionsList sections={sections} permissionContext={{ propertyId }} />
+    </SpatialNavigationScrollView>
   </Page>);
 });
 
