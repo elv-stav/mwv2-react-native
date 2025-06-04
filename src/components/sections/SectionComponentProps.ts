@@ -4,4 +4,5 @@ import { PermissionContext } from "@/data/helpers/PermissionContext";
 export type SectionComponentProps = {
   section: MediaSectionModel,
   context: PermissionContext,
+  forceGrid?: boolean,
 }

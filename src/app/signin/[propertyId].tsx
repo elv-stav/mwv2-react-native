@@ -12,6 +12,7 @@ import { Page } from "@/components/Page";
 import { DefaultFocus, SpatialNavigationView } from "react-tv-space-navigation";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import styled from "@emotion/native";
+import Log from "@/utils/Log";
 
 const SignIn = observer(() => {
   const { propertyId } = useLocalSearchParams<{ propertyId: string }>();
@@ -83,12 +84,10 @@ const SignIn = observer(() => {
 const QrAndCode = observer(({ url, code }: { url?: string, code?: string }) => {
   const [shortUrl, setShortUrl] = useState<string | null>(null);
   useEffect(() => {
-    (async function () {
-        if (url) {
-          setShortUrl(await rootStore.CreateShortURL(url));
-        }
-      }
-    )();
+    if (url) {
+      rootStore.CreateShortURL(url)
+        .then(shortUrl => setShortUrl(shortUrl));
+    }
   }, [url]);
   const size = scaledPixels(360);
   const padding = styles.qrCode.padding;

@@ -16,7 +16,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { LiveVideoUtil } from "@/data/helpers/LiveVideoUtil";
 import OnSectionItemClick from "@/components/sections/OnSectionItemClick";
 
-const VideoOverlay = ({ media, containerHeight }: { media?: MediaItemModel, containerHeight: DimensionValue }) => {
+const VideoOverlay = observer(({ media, containerHeight }: {
+  media?: MediaItemModel,
+  containerHeight: DimensionValue
+}) => {
   if (media?.media_type !== MediaTypes.VIDEO) {
     return null;
   }
@@ -44,12 +47,12 @@ const VideoOverlay = ({ media, containerHeight }: { media?: MediaItemModel, cont
                      size={iconSize}
                      style={{ opacity: 0.8 }} />;
   }
-};
+});
 
 const CarouselCard = observer(({ sectionItem, context, height }: {
   sectionItem: SectionItemModel,
   context: PermissionContext,
-  height?: DimensionValue
+  height?: number
 }) => {
   context = { ...context, sectionItemId: sectionItem.id, mediaItemId: sectionItem.media?.id };
   height = height || theme.sizes.carousel.card.height;
@@ -62,7 +65,10 @@ const CarouselCard = observer(({ sectionItem, context, height }: {
   const showPurchaseOptions = PermissionUtil.showPurchaseOptions(permissions) || PermissionUtil.showAlternatePage(permissions);
   const isDisabled = PermissionUtil.isDisabled(permissions);
 
-  return <>
+  return <View style={{
+    width: height * (aspectRatio || 1),
+    gap: scaledPixels(12),
+  }}>
     <ImageCard
       enabled={!isDisabled}
       height={height}
@@ -82,20 +88,14 @@ const CarouselCard = observer(({ sectionItem, context, height }: {
         {!!showPurchaseOptions && <DimOverlay />}
       </>}
     />
-    {/*
-     I couldn't figure out why numberOfLines=1 makes the parent element size change,
-     but with numberOfLines=2, ellipsis works fine and the parent doesn't grow.
-     So instead of fighting with it, I just prefix a new blank line and change the lineHeight to compensate.
-     */}
     {/*TODO: dim if disabled*/}
-    <FooterText numberOfLines={2}>{"\n"}{title}</FooterText>
-  </>;
+    <FooterText numberOfLines={1}>{title}</FooterText>
+  </View>;
 });
 
 const FooterText = styled(Typography)({
   fontFamily: "Inter_500Medium",
   fontSize: scaledPixels(20),
-  lineHeight: scaledPixels(20),
 });
 
 const PurchaseOptionsText = () => {

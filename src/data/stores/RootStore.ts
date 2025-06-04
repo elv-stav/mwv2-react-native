@@ -3,6 +3,7 @@ import { MediaPropertyStore } from "@/data/stores/MediaPropertyStore";
 import { FabricConfigStore } from "@/data/stores/FabricConfigStore";
 import { TokenStore } from "@/data/stores/TokenStore";
 import { Dict } from "@/utils/Dict";
+import Log from "@/utils/Log";
 
 export class RootStore {
   mediaPropertyStore: MediaPropertyStore;
@@ -32,7 +33,7 @@ export class RootStore {
         return cache;
       }
     } catch (error) {
-      // this.DebugLog({ error });
+      Log.e("Error creating short URL", error);
       return null;
     }
   }
