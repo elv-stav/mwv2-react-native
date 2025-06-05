@@ -89,12 +89,14 @@ const CarouselSection = observer(({ section, context }: SectionComponentProps) =
         paddingHorizontal: theme.sizes.carousel.contentPadding,
         paddingVertical: scaledPixels(20),
       }}>
-      {!!hasTitleRow &&
-        <TitleRow
-          title={title}
-          subtitle={subtitle}
-          viewAllHref={viewAllHref}
-          extraMarginLeft={hasLogo ? scaledPixels(260) : 0} />}
+      <SpatialNavigationNode>
+        {!!hasTitleRow ?
+          <TitleRow
+            title={title}
+            subtitle={subtitle}
+            viewAllHref={viewAllHref}
+            extraMarginLeft={hasLogo ? scaledPixels(260) : 0} /> : <></>}
+      </SpatialNavigationNode>
       <View style={{ flexDirection: "row" }}>
         <SectionLogo section={section} />
         <SpatialNavigationNode>
