@@ -17,12 +17,17 @@ import ContainerSection from "@/components/sections/ContainerSection";
 
 type Props = {
   sections: MediaSectionModel[],
+  /**
+   * Search results have repeated section IDs between queries, so we need a
+   * way to tell that sections have changed since the last render.
+   */
+  childKeyNonce?: string,
   permissionContext: PermissionContext,
   listRef?: MutableRefObject<SpatialNavigationNodeRef | null>,
   searchHref?: Href
 }
 
-const SectionsList = ({ sections, permissionContext, listRef, searchHref }: Props) => {
+const SectionsList = ({ sections, permissionContext, listRef, searchHref, childKeyNonce = "" }: Props) => {
   const offset = scaledPixels(500);
   const router = useRouter();
 
@@ -48,7 +53,8 @@ const SectionsList = ({ sections, permissionContext, listRef, searchHref }: Prop
               case SectionTypes.AUTOMATIC:
               case SectionTypes.MANUAL:
               case SectionTypes.SEARCH:
-                return <CarouselSection key={section.id} section={section} context={permissionContext} />;
+                return <CarouselSection key={`${childKeyNonce}${section.id}`} section={section}
+                                        context={permissionContext} />;
               case SectionTypes.HERO:
                 return <HeroSection key={section.id} section={section} context={permissionContext} />;
               case SectionTypes.CONTAINER:

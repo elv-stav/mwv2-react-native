@@ -41,7 +41,7 @@ const SearchPage = observer(({}) => {
           onChangeText={debounce(setQuery, 1000)}
         />
       </View>
-      <SectionsList sections={sections} permissionContext={{ propertyId }} />
+      <SectionsList sections={sections} childKeyNonce={query} permissionContext={{ propertyId }} />
     </SpatialNavigationScrollView>
   </Page>);
 });
