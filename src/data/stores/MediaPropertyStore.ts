@@ -137,6 +137,29 @@ export class MediaPropertyStore {
     return result;
   }
 
+  ObserveMediaItems(propertyId: string, itemIds: string[]): MediaItemModel[] {
+    // Assume property is already loaded.
+    const property = this.properties[propertyId];
+    return useObservable(
+      itemIds
+        .map(id => this.mediaItems[id])
+        .filter(it => it),
+      () => {
+        MediaWalletApi.GetMediaItems(propertyId, itemIds)
+          .then(action(items => {
+            items.forEach((it) => {
+              PermissionResolver.ResolvePermissions({
+                item: it,
+                parentPermissions: property.permissions?._content,
+                permissionStates: property.permission_auth_state
+              });
+              this.mediaItems[it.id] = it;
+            });
+          }));
+      }
+    );
+  }
+
   _processProperty = action((property: MediaPropertyModel, propertyMap: PropertyMap = this.properties) => {
     propertyMap[property.id] = property;
     const pages = this.pages[property.id] || {};

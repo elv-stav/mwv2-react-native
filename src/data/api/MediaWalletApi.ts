@@ -6,6 +6,7 @@ import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
 import makeAuthServiceRequest from "@/data/api/ElvHttp";
 import { FetchResponse } from "expo/build/winter/fetch/FetchResponse";
+import { MediaItemModel } from "@/data/models/MediaItemModel";
 
 export const MediaWalletApi = {
   async getProperties(): Promise<MediaPropertyModel[]> {
@@ -36,6 +37,15 @@ export const MediaWalletApi = {
       PagedContentSchema(MediaSectionModel),
       { limit: 30 },
       JSON.stringify({ search_term: searchTerm })
+    ).then(response => response.contents);
+  },
+
+  async GetMediaItems(propertyId: string, mediaItemIds: string[]): Promise<MediaItemModel[]> {
+    return request("POST",
+      `properties/${propertyId}/media_items`,
+      PagedContentSchema(MediaItemModel),
+      {},
+      JSON.stringify(mediaItemIds)
     ).then(response => response.contents);
   },
 };

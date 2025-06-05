@@ -11,10 +11,10 @@ import {
 } from "react-tv-space-navigation";
 import CarouselCard from "@/components/cards/CarouselCard";
 import { toJS } from "mobx";
-import Toast from "react-native-toast-message";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import { StyleSheet } from "react-native";
 import usePermissionContextQuery from "@/hooks/usePermissionContextQuery";
+import { DisplaySettingsUtil } from "@/utils/DisplaySettingsUtil";
 
 /**
  * A "View All" screen for either media lists/collections, or Sections.
@@ -30,12 +30,21 @@ const MediaGrid = observer(({}) => {
   let grid: { items: SectionItemModel[], title?: string };
   if (mediaContainerId) {
     const container = mediaPropertyStore.mediaItems[mediaContainerId];
-    const itemIds = container.media || container.media_lists;
-    if (itemIds) {
-      //TODO: fetch items from the store/network
-      Toast.show({ text1: "Media collections/lists not supported yet" });
-    }
-    grid = { items: [] };
+    const itemIds = container.media || container.media_lists || [];
+    const items: SectionItemModel[] = mediaPropertyStore.ObserveMediaItems(context.propertyId, itemIds)
+      .map((media): SectionItemModel => ({
+        // Warp in a fake SectionItemModel, so we can use the same CarouselCard component
+        id: `fake-section-item-${media.id}`,
+        display: {},
+        type: "media",
+        media: media,
+        use_media_settings: true,
+        thumbnailAndRatio: DisplaySettingsUtil.getThumbnailAndRatio(media),
+      }));
+    grid = {
+      title: container.title || "",
+      items: items || []
+    };
   } else if (sectionId) {
     const section = mediaPropertyStore.sections[sectionId];
     grid = {
