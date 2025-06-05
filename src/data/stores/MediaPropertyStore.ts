@@ -118,16 +118,12 @@ export class MediaPropertyStore {
     const result = await MediaWalletApi.Search(property.id, searchTerm);
 
     runInAction(() => {
-      // Persist only the MediaItems, not the Sections or SectionItems
-      result
-        // Ignore subsections. Search results shouldn't have any of those.
-        .flatMap(section => section.content)
-        .map(sectionItem => sectionItem.media)
-        .forEach(media => {
-          if (media) {
-            this.mediaItems[media.id] = media;
-          }
-        });
+
+      // Search result sections will always have the same IDs (pscaSearchSection0/1/...),
+      // but saving it here enables the View All functionality to just work.
+      result.forEach(section => {
+        this.sections[section.id] = section;
+      });
 
       // Resolve permissions.
       PermissionResolver.ResolvePermissions({
