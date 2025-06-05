@@ -12,7 +12,6 @@ import { Page } from "@/components/Page";
 import { DefaultFocus, SpatialNavigationView } from "react-tv-space-navigation";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 import styled from "@emotion/native";
-import Log from "@/utils/Log";
 
 const SignIn = observer(() => {
   const { propertyId } = useLocalSearchParams<{ propertyId: string }>();

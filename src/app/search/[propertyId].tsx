@@ -1,15 +1,17 @@
 import { observer } from "mobx-react-lite";
 import { Page } from "@/components/Page";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SectionsList from "@/components/sections/SectionsList";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";
 import { mediaPropertyStore } from "@/data/stores";
 import { runInAction } from "mobx";
-import { DefaultFocus, SpatialNavigationScrollView } from "react-tv-space-navigation";
+import { SpatialNavigationScrollView } from "react-tv-space-navigation";
 import TvInputText from "@/components/TvInputText";
 import { debounce } from "@react-navigation/native-stack/src/utils/debounce";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Image } from "expo-image";
+import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 
 const SearchPage = observer(({}) => {
   const { propertyId } = useLocalSearchParams<{ propertyId: string }>();
@@ -23,25 +25,42 @@ const SearchPage = observer(({}) => {
     }
     runInAction(() => mediaPropertyStore.Search(property, query))
       .then(setSections);
-  }, [query]);
+  }, [query, property]);
+  const logo = (property?.tv_header_logo || property?.header_logo)?.urlSource();
+  const pageRef = useRef<ScrollView>(null);
 
   return (<Page name={"search"}>
-    <SpatialNavigationScrollView>
-      <DefaultFocus>
+    <SpatialNavigationScrollView ref={pageRef} offsetFromStart={scaledPixels(160)}>
+      <View style={styles.headerRow}>
+        <Image source={logo} style={styles.logo} contentFit={"contain"} />
         <TvInputText
+          icon="search"
           style={styles.searchBox}
+          textStyle={{ fontSize: scaledPixels(48) }}
           placeholder={`Search ${title}`}
           onChangeText={debounce(setQuery, 1000)}
         />
-      </DefaultFocus>
+      </View>
       <SectionsList sections={sections} permissionContext={{ propertyId }} />
     </SpatialNavigationScrollView>
   </Page>);
 });
 
 const styles = StyleSheet.create({
-  searchBox: {
+  headerRow: {
+    flexDirection: "row",
     width: "100%",
+    alignItems: "center",
+    paddingHorizontal: scaledPixels(78),
+    paddingVertical: scaledPixels(48),
+  },
+  logo: {
+    width: scaledPixels(160),
+    height: scaledPixels(96),
+  },
+  searchBox: {
+    flex: 1,
+    marginLeft: scaledPixels(16),
   },
 });
 

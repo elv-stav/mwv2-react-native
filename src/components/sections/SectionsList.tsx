@@ -10,7 +10,6 @@ import { SpatialNavigationNode, SpatialNavigationScrollView } from "react-tv-spa
 import { BottomArrow, TopArrow } from "@/components/Arrows";
 import { StyleSheet, View } from "react-native";
 import TvIconButton from "@/components/TvIconButton";
-import { action } from "mobx";
 import { SectionTypes } from "@/data/models/SectionItemModel";
 import CarouselSection from "@/components/sections/CarouselSection";
 import HeroSection from "@/components/sections/HeroSection";
