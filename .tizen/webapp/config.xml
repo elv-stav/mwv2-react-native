@@ -3,8 +3,8 @@
         xmlns:tizen="http://tizen.org/ns/widgets"
         xmlns="http://www.w3.org/ns/widgets"
         id="https://eluv.io/media-wallet"
-        version="0.0.2" viewmodes="maximized">
-    <tizen:application id="xFIu0ONX2k.EluvioMediaWallet" package="xFIu0ONX2k" required_version="2.3"/>
+        version="2.0.0" viewmodes="maximized">
+    <tizen:application id="EluvioMWAp.EluvioMediaWallet" package="EluvioMWAp" required_version="2.3"/>
     <content src="index.html"/>
     <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
     <!--  Icon is only used for local builds. Real store installations will use store-provided icons  -->
