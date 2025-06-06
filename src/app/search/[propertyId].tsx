@@ -17,7 +17,7 @@ const SearchPage = observer(({}) => {
   const { propertyId } = useLocalSearchParams<{ propertyId: string }>();
   const [query, setQuery] = useState("");
   const property = mediaPropertyStore.observeProperty(propertyId);
-  const title = property?.title || property?.name || "";
+  const title = property?.displayName || "";
   const [sections, setSections] = useState<MediaSectionModel[]>([]);
   useEffect(() => {
     if (!property) {

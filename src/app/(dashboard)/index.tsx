@@ -56,6 +56,7 @@ const Discover = observer(() => {
       <SpatialNavigationVirtualizedGrid
         data={data}
         renderItem={renderItem}
+        additionalRenderedRows={0}
         numberOfColumns={5}
         headerSize={styles.logo.height + styles.logo.marginBottom}
         header={
