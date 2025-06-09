@@ -30,7 +30,6 @@ const TvInputText = (({ onKeyPress, icon, style, textStyle, ...rest }: Props) =>
         <Input
           ref={ref}
           style={textStyle}
-          isFocused={isFocused}
           onKeyPress={(e) => {
             switch (e.nativeEvent.key) {
               case "ArrowUp":
@@ -46,6 +45,7 @@ const TvInputText = (({ onKeyPress, icon, style, textStyle, ...rest }: Props) =>
           placeholderTextColor={hintColor}
           {...rest}
         />
+        <Underline isFocused={isFocused} />
       </Wrapper>;
     }}
   </SpatialNavigationFocusableView>);
@@ -61,7 +61,7 @@ const Wrapper = styled(View)<{ isFocused: boolean }>(({ isFocused }) => ({
   paddingHorizontal: scaledPixels(20),
 }));
 
-const Input = styled(TextInput)<{ isFocused: boolean }>(({ isFocused }) => ({
+const Input = styled(TextInput)(() => ({
   width: "100%",
   color: "white",
   fontFamily: "Inter_400Regular",
@@ -69,12 +69,19 @@ const Input = styled(TextInput)<{ isFocused: boolean }>(({ isFocused }) => ({
   paddingVertical: scaledPixels(14),
   cursor: 'pointer',
   outlineStyle: "none",
-  borderBottomWidth: isFocused ? 0 : 1,
-  borderBottomColor: "white",
 }));
 
 const Icon = styled(Ionicons)(() => ({
   paddingRight: scaledPixels(10),
+}));
+
+const Underline = styled(View)<{ isFocused: boolean }>(({ isFocused }) => ({
+  position: "absolute",
+  left: 0,
+  bottom: 0,
+  width: "100%",
+  height: isFocused ? 0 : scaledPixels(2),
+  backgroundColor: "white",
 }));
 
 export default TvInputText;
