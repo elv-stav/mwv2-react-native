@@ -16,6 +16,7 @@ import Toast from "react-native-toast-message";
 import { Console, Hook, Unhook } from "console-feed";
 import { Message } from "console-feed/lib/definitions/Component";
 import { Ionicons } from "@expo/vector-icons";
+import { ToastConfig } from "@/utils/Toasts";
 
 SpatialNavigation.configureRemoteControl({
   remoteControlSubscriber: (callback) => {
@@ -57,27 +58,25 @@ const App = () => {
   const iconFontLoader = <Ionicons name={"play"} size={0} />;
 
   return <ThemeProvider theme={theme}>
-      <Head>
-        <title>{docTitle}</title>
-      </Head>
-      <SpatialNavigationDeviceTypeProvider>
-        <View style={{ width: "100%", height: "100%", flexDirection: "row" }}>
-          {iconFontLoader}
-          <InAppConsole />
-          <Stack screenOptions={{
-            headerShown: false,
-            contentStyle: styles.container,
-          }} screenListeners={{
-            state: (e) => {
-              setDocTitle(buildPath(e.data.state.routes.slice(-1)[0]));
-            }
-          }} />
-          {/* Temporarily enable toast msgs on all builds */}
-          <Toast />
-          {/*{(process.env.NODE_ENV == "development") && <Toast />}*/}
-        </View>
-      </SpatialNavigationDeviceTypeProvider>
-    </ThemeProvider>;
+    <Head>
+      <title>{docTitle}</title>
+    </Head>
+    <SpatialNavigationDeviceTypeProvider>
+      <View style={{ width: "100%", height: "100%", flexDirection: "row" }}>
+        {iconFontLoader}
+        <InAppConsole />
+        <Stack screenOptions={{
+          headerShown: false,
+          contentStyle: styles.container,
+        }} screenListeners={{
+          state: (e) => {
+            setDocTitle(buildPath(e.data.state.routes.slice(-1)[0]));
+          }
+        }} />
+        <Toast config={ToastConfig} />
+      </View>
+    </SpatialNavigationDeviceTypeProvider>
+  </ThemeProvider>;
 };
 
 /**

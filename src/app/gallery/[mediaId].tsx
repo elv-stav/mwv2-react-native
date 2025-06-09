@@ -13,8 +13,8 @@ import { SpatialNavigationVirtualizedList } from "react-tv-space-navigation";
 import { theme } from "@/design-system/theme/theme";
 import { LeftArrow, RightArrow } from "@/components/Arrows";
 import ImageCard from "@/components/cards/ImageCard";
-import Toast from "react-native-toast-message";
 import { AssetLinkModel } from "@/data/models/AssetLinkModel";
+import { ProdToast } from "@/utils/Toasts";
 
 type ImageData = {
   link?: AssetLinkModel;
@@ -29,7 +29,7 @@ const ImageGallery = observer(({}) => {
   useFocusEffect(() => {
     if (!media) {
       // TODO: handle fetching media if it isn't already cached
-      Toast.show({ text1: "Missing media, to be implemented.." });
+      ProdToast.show("Media not found. Please try again later.");
       router.back();
     }
   });
