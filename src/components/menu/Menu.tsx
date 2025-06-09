@@ -8,7 +8,6 @@ import {
 } from "react-tv-space-navigation";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePathname, useRouter } from "expo-router";
-import Toast from "react-native-toast-message";
 import { Image } from "expo-image";
 import homeIcon from "@/assets/icons/home.svg";
 import myItemsIcon from "@/assets/icons/my_items.svg";
@@ -36,7 +35,11 @@ const MenuButton = ({ title, icon, onSelect, expand, isSelected }: {
       const tint = FgForState(isSelected, isFocused, expand);
       return (
         <ButtonContainer isSelected={isSelected} isFocused={isFocused} isExpanded={expand}>
-          <Image source={icon} style={{ width: scaledPixels(40), aspectRatio: 1 }} contentFit={"contain"} tintColor={tint} />
+          <Image
+            source={icon}
+            style={{ width: scaledPixels(40), aspectRatio: 1 }}
+            contentFit={"contain"}
+            tintColor={tint} />
           {expand && <Typography style={{ color: tint }}>{title}</Typography>}
         </ButtonContainer>);
     }}
@@ -92,8 +95,8 @@ const Menu = observer(({ onMenuCloseRequested }: MenuProps) => {
                         icon={homeIcon}
                         expand={isActive}
                         onSelect={() => {
-                          setTriggerMenuClose(true);
                           router.dismissTo("/");
+                          setTriggerMenuClose(true);
                         }}
                         isSelected={path === "/"}
             />
@@ -102,7 +105,11 @@ const Menu = observer(({ onMenuCloseRequested }: MenuProps) => {
                         expand={isActive}
                         onSelect={() => {
                           setTriggerMenuClose(true);
-                          Toast.show({ text1: "not impl yet" });
+                          if (path === "/") {
+                            router.navigate("/myitems");
+                          } else {
+                            router.replace("/myitems");
+                          }
                         }}
                         isSelected={path === "/myitems"}
             />
@@ -111,7 +118,11 @@ const Menu = observer(({ onMenuCloseRequested }: MenuProps) => {
                         expand={isActive}
                         onSelect={() => {
                           setTriggerMenuClose(true);
-                          router.navigate("/profile");
+                          if (path === "/") {
+                            router.navigate("/profile");
+                          } else {
+                            router.replace("/profile");
+                          }
                         }}
                         isSelected={path === "/profile"}
             />

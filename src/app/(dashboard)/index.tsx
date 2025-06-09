@@ -19,6 +19,7 @@ import { action } from "mobx";
 import { useRouter } from "expo-router";
 import Center from "@/components/Center";
 import Loader from "@/components/Loader";
+import { useIsFocused } from "@react-navigation/native";
 
 const Discover = observer(() => {
   const [bgImage, setBgImage] = useState<ImageSourcePropType | undefined>(undefined);
@@ -46,6 +47,22 @@ const Discover = observer(() => {
   // Increase left padding when logged in to accommodate for menu width
   const isLoggedIn = tokenStore.isLoggedIn;
   const padding = isLoggedIn ? { paddingLeft: scaledPixels(210) } : {};
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (!isFocused) {
+      // Reset background image when leaving the Discover screen
+      setBgImage(undefined);
+    }
+  }, [isFocused]);
+
+  if (!isFocused) {
+    // This is a workaround to prevent the Discover screen from rendering and capturing key events when in
+    // the nav backstack.
+    // The real fix should be wrapping each screen in a <Page>, and the Menu in its own SpatialNavigationRoot, then
+    // manually managing which root is active.
+    return <></>;
+  }
 
   if (!data?.length) {
     return <Center style={styles.container}><Loader /></Center>;

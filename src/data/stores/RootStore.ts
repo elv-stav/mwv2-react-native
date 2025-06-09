@@ -4,11 +4,13 @@ import { FabricConfigStore } from "@/data/stores/FabricConfigStore";
 import { TokenStore } from "@/data/stores/TokenStore";
 import { Dict } from "@/utils/Dict";
 import Log from "@/utils/Log";
+import NftStore from "@/data/stores/NftStore";
 
 export class RootStore {
   mediaPropertyStore: MediaPropertyStore;
   fabricConfigStore: FabricConfigStore;
   tokenStore: TokenStore;
+  nftStore: NftStore;
 
   // Cache of shortened URLs
   shortURLs: Dict<string> = {};
@@ -18,6 +20,7 @@ export class RootStore {
     this.fabricConfigStore = new FabricConfigStore();
     this.mediaPropertyStore = new MediaPropertyStore();
     this.tokenStore = new TokenStore();
+    this.nftStore = new NftStore();
   }
 
   async CreateShortURL(url: string): Promise<string | null> {

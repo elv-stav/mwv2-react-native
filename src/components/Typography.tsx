@@ -27,11 +27,10 @@ export const Typography = ({
 
 const StyledText = styled.Text<{
   fontFamily: InterFontFamilies;
-  fontSize?: number;
+  fontSize: number;
 }>(({ fontFamily, fontSize }) => ({
   fontFamily,
   fontSize: fontSize,
-  lineHeight: scaledPixels(32),
   color: 'white',
   flexWrap: 'wrap',
 }));

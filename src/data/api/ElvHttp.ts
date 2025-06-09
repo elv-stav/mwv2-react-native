@@ -6,6 +6,7 @@ import type { NativeHeadersType } from "expo/src/winter/fetch/NativeRequest";
 import { router } from "expo-router";
 import { runInAction } from "mobx";
 import Env from "@/data/Env";
+import { ProdToast } from "@/utils/Toasts";
 
 export default async function makeAuthServiceRequest(url: string, init?: FetchRequestInit): Promise<FetchResponse> {
   init = init || {};
@@ -17,6 +18,7 @@ export default async function makeAuthServiceRequest(url: string, init?: FetchRe
     if (response.status == 401) {
       // Token probably expired. Until we have a refresh API, just signout and pop to root
       tokenStore.signOut();
+      ProdToast.show("Session Expired");
       router.dismissTo("/");
     }
     return response;
