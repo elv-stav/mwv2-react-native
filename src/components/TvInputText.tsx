@@ -36,6 +36,8 @@ const TvInputText = (({ onKeyPress, icon, style, textStyle, ...rest }: Props) =>
               case "ArrowDown":
               case "ArrowLeft":
               case "ArrowRight":
+              case "Escape":
+              case "GoBack":
                 RemoteControlManager.handleKeyDown(e);
                 break;
               default:
