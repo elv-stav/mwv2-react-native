@@ -30,8 +30,8 @@ const MyItems = observer(({}) => {
       });
   }, [query]);
 
-  const availableSpace = (scaledPixels(1920) - (HORIZONTAL_PADDING * 2) - (GRID_GAP * (GRID_COLUMNS - 1)));
-  const cardWidth = availableSpace / GRID_COLUMNS;
+  const availableWidth = (scaledPixels(1920) - (HORIZONTAL_PADDING * 2));
+  const cardWidth = (availableWidth - (GRID_GAP * (GRID_COLUMNS - 1))) / GRID_COLUMNS;
   const cardHeight = cardWidth / 0.65;
 
   const renderItem = useCallback(({ item }: { item: NftModel }) => {
@@ -46,15 +46,20 @@ const MyItems = observer(({}) => {
       paddingHorizontal: HORIZONTAL_PADDING,
       paddingVertical: scaledPixels(60),
     }}>
-      <TvInputText
-        icon="search"
-        textStyle={{ fontSize: scaledPixels(48) }}
-        onChangeText={debounce(setQuery, 1000)}
-        style={{ width: "100%", marginBottom: scaledPixels(60) }}
-        placeholder={`Search My Items`}
-      />
       <SpatialNavigationVirtualizedGrid
         data={nfts}
+        header={
+          <TvInputText
+            icon="search"
+            textStyle={{ fontSize: scaledPixels(48) }}
+            onChangeText={debounce(setQuery, 1000)}
+            // width:"100%" doesn't work here because SpatialGrids are weird.
+            style={{ width: availableWidth }}
+            placeholder={`Search My Items`}
+          />
+        }
+        // Totally arbitrary header height that happens to look right.
+        headerSize={scaledPixels(160)}
         style={{ width: "100%", height: "100%" }}
         rowContainerStyle={{ gap: GRID_GAP }}
         renderItem={renderItem}
