@@ -1,10 +1,11 @@
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import styled from "@emotion/native";
-import { Animated, Image } from "react-native";
+import { Animated } from "react-native";
 import { useFocusAnimation } from "@/design-system/helpers/useFocusAnimation";
 import React from "react";
 import { observer } from "mobx-react-lite";
+import FabricImage from "@/components/FabricImage";
 
 type Props = {
   property: MediaPropertyModel,
@@ -13,11 +14,11 @@ type Props = {
 }
 
 export const PropertyCard = observer(({ property, onSelect, onFocus }: Props) => {
-  const imageSource = property.image!.urlSource();
+  const imageLink = property.image;
   return (<SpatialNavigationFocusableView onSelect={onSelect} onFocus={onFocus}>
     {({ isFocused }) => (
       <Container isFocused={isFocused} style={useFocusAnimation(isFocused)}>
-        <PropertyImage source={imageSource} />
+        <PropertyImage imageLink={imageLink} />
       </Container>
     )}
   </SpatialNavigationFocusableView>);
@@ -36,7 +37,7 @@ const Container = styled(Animated.View)<{
 }));
 
 const PropertyImage = React.memo(
-  styled(Image)({
+  styled(FabricImage)({
     height: '100%',
     width: '100%',
   }),
