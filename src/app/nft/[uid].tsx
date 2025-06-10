@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { mediaPropertyStore, nftStore } from "@/data/stores";
+import { mediaPropertyStore, nftStore, rootStore } from "@/data/stores";
 import { Page } from "@/components/Page";
 import NftCard from "@/components/cards/NftCard";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
@@ -15,7 +15,8 @@ import { Typography } from "@/components/Typography";
 import { SpatialNavigationFocusableView } from "react-tv-space-navigation";
 import { NftApi } from "@/data/api/NftApi";
 import { NftInfoModel } from "@/data/models/nft/NftInfo";
-import { DebugToast } from "@/utils/Toasts";
+import { SpatialNavigationOverlay } from "@/components/modals/SpatialNavigationOverlay";
+import QRCode from "react-qr-code";
 
 const CARD_WIDTH = scaledPixels(420);
 // This is duplicated logic from myitems.tsx, so potentially can break;
@@ -180,13 +181,45 @@ const LabeledInfo = ({ label, info, maxLines }: { label: string, info?: (string 
 const ContractAndVersionTab = observer(({ nft }: { nft?: NftModel }) => {
   const hash = nft?.token_uri?.split("/")?.find(it => it.startsWith("hq__"));
   const lookoutUrl = !!nft?.contract_addr && `https://explorer.contentfabric.io/address/${nft?.contract_addr}/transactions`;
+
+  const [shortUrl, setShortUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (lookoutUrl) {
+      rootStore.CreateShortURL(lookoutUrl).then(setShortUrl);
+    }
+  }, [lookoutUrl]);
+
+  const [showModal, setShowModal] = useState(false);
+
   return <SpatialColumn>
     <LabeledInfo label={"Contract Address"} info={nft?.contract_addr} />
     <LabeledInfo label={"Hash"} info={hash} maxLines={1} />
     <View style={{ height: scaledPixels(40) }} />
-    {!!lookoutUrl && <TvButton title={"See more info on the Eluvio Lookout"} onSelect={() => {
-      DebugToast.show("to be implemented");
-    }} />}
+    {!!lookoutUrl &&
+      <TvButton
+        title={"See more info on the Eluvio Lookout"}
+        onSelect={() => setShowModal(true)} />
+    }
+
+    <SpatialNavigationOverlay isModalVisible={showModal} hideModal={() => setShowModal(false)}>
+      <View style={{
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#00000099",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: scaledPixels(36),
+      }}>
+        <Typography fontFamily={"Inter_600SemiBold"} fontSize={scaledPixels(62)}>
+          See More Info on Eluvio Lookout
+        </Typography>
+        <Typography fontFamily={"Inter_500Medium"} fontSize={scaledPixels(52)}>{shortUrl}</Typography>
+        <QRCode value={shortUrl || ""} size={scaledPixels(500)}
+                style={{ padding: scaledPixels(18), backgroundColor: "white" }} />
+        {/*  Adding a Back button here messes with focus/onSelect, so it's easier to just leave it out */}
+        {/*  and rely on hardware Back presses to close the modal */}
+      </View>
+    </SpatialNavigationOverlay>
   </SpatialColumn>;
 });
 
