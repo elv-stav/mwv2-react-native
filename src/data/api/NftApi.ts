@@ -5,6 +5,7 @@ import makeAuthServiceRequest from "@/data/api/ElvHttp";
 import { PagedContentSchema } from "@/data/models/PagedContentModel";
 import { NftModel } from "@/data/models/nft/NftModel";
 import Log from "@/utils/Log";
+import { NftInfoModel } from "@/data/models/nft/NftInfo";
 
 export const NftApi = {
   async getNfts(searchQuery?: string): Promise<NftModel[]> {
@@ -14,6 +15,10 @@ export const NftApi = {
       { name_like: searchQuery || "", limit: 100 }
     ).then(response => response.contents);
   },
+
+  async getNftInfo(contractAddress: string): Promise<NftInfoModel> {
+    return request("GET", `nft/info/${contractAddress}`, NftInfoModel);
+  }
 };
 
 

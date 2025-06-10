@@ -4,6 +4,7 @@ import { nullToUndefined } from "@/data/models/zod-extensions";
 export const NftModel = z.object({
   contract_addr: z.string().nullish().transform(nullToUndefined),
   token_id: z.number().nullish().transform(nullToUndefined),
+  token_uri: z.string().nullish().transform(nullToUndefined),
   meta: z.object({
     display_name: z.string().nullish().transform(nullToUndefined),
     image: z.string().nullish().transform(nullToUndefined),
@@ -11,6 +12,8 @@ export const NftModel = z.object({
   nft_template: z.object({
     display_name: z.string().nullish().transform(nullToUndefined),
     edition_name: z.string().nullish().transform(nullToUndefined),
+    description: z.string().nullish().transform(nullToUndefined),
+    bundled_property_id: z.string().nullish().transform(nullToUndefined),
   }).nullish().transform(nullToUndefined),
 }).transform(obj => ({
   ...obj,

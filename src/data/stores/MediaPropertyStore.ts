@@ -160,7 +160,7 @@ export class MediaPropertyStore {
     );
   }
 
-  _processProperty = action((property: MediaPropertyModel, propertyMap: PropertyMap = this.properties) => {
+  private _processProperty = action((property: MediaPropertyModel, propertyMap: PropertyMap = this.properties) => {
     propertyMap[property.id] = property;
     const pages = this.pages[property.id] || {};
     pages[property.main_page.id] = property.main_page;
