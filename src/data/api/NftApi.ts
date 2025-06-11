@@ -4,7 +4,6 @@ import { FetchResponse } from "expo/build/winter/fetch/FetchResponse";
 import makeAuthServiceRequest from "@/data/api/ElvHttp";
 import { PagedContentSchema } from "@/data/models/PagedContentModel";
 import { NftModel } from "@/data/models/nft/NftModel";
-import Log from "@/utils/Log";
 import { NftInfoModel } from "@/data/models/nft/NftInfo";
 
 export const NftApi = {
@@ -32,7 +31,6 @@ async function request<R>(method: "GET" | "POST", path: string, resultParser: Zo
     });
     const response: FetchResponse = await makeAuthServiceRequest(url.toString(), { method, body });
     const json = await response.json();
-    Log.w("API RESPONSE", json);
     return resultParser.parse(json);
   });
 }

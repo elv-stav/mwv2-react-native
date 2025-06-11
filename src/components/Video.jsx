@@ -25,7 +25,7 @@ const useBitrateLimit = () => {
  * By default, this component captures key events from the window and forwards them to the player.
  * If it's not the only component on screen when [forwardWindowKeyEvents] is true, we might get some odd behavior.
  */
-const Video = observer(({videoHash}) => {
+const Video = observer(({objectId}) => {
   const targetRef = useRef();
 
   // TODO(Stav): this was used for some xbox oddity. Figure out if we need it still.
@@ -61,7 +61,7 @@ const Video = observer(({videoHash}) => {
           },
           sourceOptions: {
             playoutParameters: {
-              versionHash: videoHash,
+              objectId, // Let player figure out the latest version hash
             }
           },
           playerOptions: {
@@ -119,7 +119,7 @@ const Video = observer(({videoHash}) => {
       const player = await playerPromise;
       player.Destroy();
     };
-  }, [targetRef, videoHash]);
+  }, [targetRef, objectId]);
 
   return <div ref={targetRef} style={{width: "100%", height: "100%", backgroundColor: "black"}} />;
 });

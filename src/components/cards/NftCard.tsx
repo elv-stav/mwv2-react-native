@@ -9,7 +9,7 @@ import styled from "@emotion/native/dist/emotion-native.cjs";
 import { Typography } from "@/components/Typography";
 import { observer } from "mobx-react-lite";
 import { useMemo } from "react";
-import ElvClientUtils from "@/utils/elv-client-utils";
+import { Utils } from "@eluvio/elv-client-js";
 
 type Props = {
   nft: NftModel,
@@ -45,7 +45,7 @@ const CardContent = observer(({ nft, isFocused, width, height }: {
 
   const scaledImage = useMemo(() => {
     // noinspection JSSuspiciousNameCombination: Yes, I'm using width as height. sue me.
-    return ElvClientUtils.ResizeImage({ imageUrl: nft.meta.image, height: width });
+    return Utils.ResizeImage({ imageUrl: nft.meta.image, height: width });
   }, [nft.meta.image, width]);
 
   return <ImageBackground source={bg}

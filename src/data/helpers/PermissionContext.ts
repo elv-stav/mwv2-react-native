@@ -1,4 +1,4 @@
-import Utils from "@/utils/elv-client-utils";
+import { Utils } from "@eluvio/elv-client-js";
 import { MediaPropertyModel } from "@/data/models/MediaPropertyModel";
 import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { MediaSectionModel } from "@/data/models/MediaSectionModel";

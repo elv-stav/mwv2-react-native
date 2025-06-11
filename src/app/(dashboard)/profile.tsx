@@ -6,7 +6,7 @@ import { theme } from "@/design-system/theme/theme";
 import { fabricConfigStore, tokenStore } from "@/data/stores";
 import { StyleSheet, View } from "react-native";
 import { scaledPixels } from "@/design-system/helpers/scaledPixels";
-import Utils from "@/utils/elv-client-utils";
+import { Utils } from "@eluvio/elv-client-js";
 import { useCallback, useRef } from "react";
 import {
   SpatialNavigationNodeRef

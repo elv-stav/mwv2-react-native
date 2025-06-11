@@ -15,7 +15,7 @@ import { StyleSheet } from "react-native";
 import { PermissionContext, ResolvedPermissionContext } from "@/data/helpers/PermissionContext";
 import { Dict } from "@/utils/Dict";
 import Env from "@/data/Env";
-import Utils from "@/utils/elv-client-utils";
+import { Utils } from "@eluvio/elv-client-js";
 import { MediaPageModel } from "@/data/models/MediaPageModel";
 import { ResolvedPermissions } from "@/data/models/PermissionSettings";
 import { useEffect, useState } from "react";

@@ -520,7 +520,7 @@ declare module "@eluvio/elv-client-js" {
 
     LROStatus({ libraryId, objectId }: any): any;
 
-    LatestVersionHash({ objectId, versionHash }: any): any;
+    LatestVersionHash({ objectId, versionHash }: { objectId?: string, versionHash?: string }): Promise<string>;
 
     LatestVersionHashV2({ objectId, versionHash }: any): any;
 
@@ -903,7 +903,17 @@ declare module "@eluvio/elv-client-js" {
       assumeV3?: boolean
     }): Promise<ElvClient>;
 
-    static FromNetworkName(...args: any[]): Promise<ElvClient>;
+    static FromNetworkName({}: {
+      networkName: string,
+      region?: string,
+      clientIP?: string,
+      trustAuthorityId?: string,
+      staticToken?: string,
+      ethereumContractTimeout?: number,
+      noCache?: boolean,
+      noAuth?: boolean,
+      assumeV3?: boolean,
+    }): Promise<ElvClient>;
 
     static Networks(...args: any[]): void;
 
@@ -1176,7 +1186,7 @@ declare module "@eluvio/elv-client-js" {
 
     const nullAddress: string;
 
-    function AddressToHash(address: any, key: any): any;
+    function AddressToHash(address: string, key?: boolean): string;
 
     function AddressToLibraryId(address: any): any;
 
@@ -1236,7 +1246,7 @@ declare module "@eluvio/elv-client-js" {
 
     function PublicKeyToAddress(key: any): any;
 
-    function ResizeImage(...args: any[]): void;
+    function ResizeImage({}: { imageUrl?: string, height: number }): string | undefined;
 
     function ResponseToFormat(format: any, response: any, debug: any, logFn: any): any;
 
