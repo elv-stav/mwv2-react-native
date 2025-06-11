@@ -21,6 +21,7 @@ import { SupportedKeys } from "@/remote-control/SupportedKeys";
 import Center from "@/components/Center";
 import SectionsList from "@/components/sections/SectionsList";
 import useFocusEffectMemo from "@/hooks/useFocusEffectMemo";
+import { scaledPixels } from "@/design-system/helpers/scaledPixels";
 
 const PropertyDetail = observer(() => {
   const { propertyId, pageId } = useLocalSearchParams<{ propertyId: string, pageId?: string }>();
@@ -64,8 +65,8 @@ const PropertyDetailView = observer(({ property, page, sections }: PropertyDetai
       .find(section => section.type === SectionTypes.HERO)
       ?.hero_items
       ?.find(item => item.display?.background_image)
-      ?.display?.background_image?.urlSource()
-    || page.layout.background_image?.urlSource(), [sections]);
+      ?.display?.background_image?.urlSource(scaledPixels(1080))
+    || page.layout.background_image?.urlSource(scaledPixels(1080)), [sections]);
 
   const permissionContext: PermissionContext = {
     propertyId: property.id,
